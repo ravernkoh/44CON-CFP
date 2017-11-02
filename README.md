@@ -1,4 +1,4 @@
-# Obscurus
+# 44CON-CFP
 
 **Author**: Aidan Mitchell <aidan@44con.com>
 
