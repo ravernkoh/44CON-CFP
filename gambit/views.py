@@ -2,7 +2,7 @@ from django.views import generic
 
 
 class ErrorView(generic.TemplateView):
-    template_name = 'obscurus/error.html'
+    template_name = 'gambit/error.html'
 
     def __init__(self):
         self.error_value = 0
