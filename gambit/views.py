@@ -1,4 +1,24 @@
 from django.views import generic
+from django.contrib.auth import login
+from gambit.forms import SignUpForm
+from django.contrib.auth.models import User
+from django.utils.encoding import force_text
+from django.utils.encoding import force_bytes
+from django.shortcuts import render, redirect
+from django.utils.http import urlsafe_base64_encode
+from django.utils.http import urlsafe_base64_decode
+from django.template.loader import render_to_string
+from gambit.tokens import account_activation_token
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.sites.shortcuts import get_current_site
+
+class IndexView(generic.TemplateView):
+    template_name = 'gambit/index.html'
+
+
+class ProfileView(LoginRequiredMixin, generic.TemplateView):
+    template_name = 'gambit/profile.html'
+    login_url = 'login'
 
 
 class ErrorView(generic.TemplateView):
