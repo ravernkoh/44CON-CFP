@@ -68,7 +68,11 @@ def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
+            user = form.save()
+            user.refresh_from_db()
+            user.profile.name = form.cleaned_data.get('name')
+            user.profile.country = form.cleaned_data.get('country')
+            user.profile.affiliation = form.cleaned_data.get('affiliation')
             user.is_active = False
             user.save()
             current_site = get_current_site(request)
