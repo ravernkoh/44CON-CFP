@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{% block title %}{% endblock %}44CON CFP {{ CONFERENCE_YEAR }}</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    {% load static %}<link rel="stylesheet" type="text/css" href="{% static 'gambit/style.css' %}" />
+  </head>
+
+  <body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="{% url 'index' %}">44CON CFP {{ CONFERENCE_YEAR }}</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li{% if request.resolver_match.view_name == 'index' %} class="active"{% endif %}><a href="{% url 'index' %}" title="Home"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
+            <li{% if request.resolver_match.view_name == 'profile' %} class="active"{% endif %}><a href="{% url 'profile' %}" title="Profile"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            {% if user.is_authenticated %}
+            <li><p class='navbar-text'>Logged in as: <a class='navbar-link' href='{% url 'profile' %}'>{{ user.get_username }}</a>{% if user.is_superuser %} (<span class='text-primary'>Admin</span>){% endif %}</p></li>
+            <li><a href='{% url 'logout' %}?next={{request.path}}' title="Logout"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span></a></li>
+            {% else %}
+            <li><a href='{% url 'login' %}?next={{request.path}}' title="Login"><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span></a></li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container" role="main">
+    {% if messages %}
+    {% for message in messages %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}<div class="alert alert-danger" role="alert">
+      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> {{ message }}
+    </div>{% endif %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}<div class="alert alert-warning" role="alert">
+      <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> {{ message }}
+    </div>{% endif %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}<div class="alert alert-success" role="alert">
+      <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> {{ message }}
+    </div>{% endif %}
+    {% endfor %}
+    {% endif %}
+      {% block content %}{% endblock %}
+    </div>
+
+    <footer class="footer">
+     <div class="container">
+       <span class="text-muted">Designed, developed, and poorly implemented by <a href='https://twitter.com/nimxj'>Aidan</a>. Copyright &copy; 2017 Sense/Net Ltd. All rights reserved.</span>
+     </div>
+   </footer>
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/clipboard.js/1.5.16/clipboard.min.js" integrity="sha384-RVvxof79LCL9tC4gVje4DE8jfuW3HJ1gdU60KYrw2wB4WfRUEWj7TErsKSSP/hei" crossorigin="anonymous"></script>
+    <script src="{% static 'gambit/init_clip.js' %}"></script>
+    <script src="{% static 'gambit/loader.js' %}"></script>
+  </body>
+</html>

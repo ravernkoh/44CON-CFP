@@ -1,0 +1,14 @@
+{% extends 'gambit/base.html' %}
+{% block title %}Signup - {% endblock %}
+{% block content %}
+<h1>Sign up for 44CON CFP</h1>
+<div class='row'>
+  <div class='col-md-12'>
+    <form method='post'>
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type='submit'>Signup</button> <a href='{% url 'login' %}'>Already got an acccount?</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

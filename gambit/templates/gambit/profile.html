@@ -1,0 +1,13 @@
+{% extends 'gambit/base.html' %}
+{% block title %}User profile - {% endblock %}
+{% block content %}
+<h1>{{ user.username }}</h1>
+<div class='row'>
+  <div class='col-md-12'>
+    <p><strong>Name:</strong> {{ user.profile.name }}</p>
+    <p><strong>Country:</strong> {{ user.profile.country }}</p>
+    {% if user.profile.affiliation %}<p><strong>Affiliation:</strong> {{ user.profile.affiliation }}</p>{% endif %}
+    <p><strong>Contact Email:</strong> {{ user.email }}</p>
+  </div>
+</div>
+{% endblock %}
