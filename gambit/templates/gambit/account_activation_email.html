@@ -1,7 +1,7 @@
 {% autoescape off %}
 Hi {{ user.username }},
 
-Please click on the link below to confirm your registration:
+Please click the link below or paste it into your browser address bar to confirm your account registration for cfp.44con.com:
 
 http://{{ domain }}{% url 'activate' uidb64=uid token=token %}
 {% endautoescape %}
