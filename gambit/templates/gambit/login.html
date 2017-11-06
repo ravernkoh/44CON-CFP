@@ -4,10 +4,11 @@
 <h1>Login to your account</h1>
 <div class='row'>
   <div class='col-md-12'>
+    <p><a href='{% url 'signup' %}'>Create an account</a></p>
     <form method='post'>
       {% csrf_token %}
       <table>{{ form.as_table }}</table>
-      <button type='submit'>Login</button> <a href='{% url 'signup' %}'>Create an account</a>
+      <button type='submit'>Login</button> <a href='{% url 'password_reset' %}'>Forgotten your password?</a>
     </form>
   </div>
 </div>
