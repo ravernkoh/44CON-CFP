@@ -2,3 +2,4 @@
 *.sqlite3
 gambit/migrations/
 gambit/static/
+gambit/media/uploads/
