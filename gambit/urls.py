@@ -1,8 +1,11 @@
-from django.conf.urls import include, url, handler400, handler403, handler404, handler500
 from django.contrib import admin
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
+from django.conf.urls import include, url, handler400, handler403, handler404, handler500
 
 from . import views
+
 
 app_name = 'gambit'
 
@@ -16,13 +19,11 @@ urlpatterns = [
     url(r'^signup/$', views.signup, name='signup'),
     url(r'^password_reset/$', auth_views.password_reset, {'template_name': 'gambit/password_reset_form.html', 'email_template_name': 'gambit/password_reset_email.html', 'subject_template_name': 'gambit/password_reset_subject.txt'}, name='password_reset'),
     url(r'^password_reset/done/$', auth_views.password_reset_done, {'template_name': 'gambit/password_reset_done.html'}, name='password_reset_done'),
-    url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
-        auth_views.password_reset_confirm, {'template_name': 'gambit/password_reset_confirm.html'}, name='password_reset_confirm'),
+    url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', auth_views.password_reset_confirm, {'template_name': 'gambit/password_reset_confirm.html'}, name='password_reset_confirm'),
     url(r'^reset/done/$', auth_views.password_reset_complete, {'template_name': 'gambit/password_reset_complete.html'}, name='password_reset_complete'),
     url(r'^account_activation_sent/$', views.account_activation_sent, name='account_activation_sent'),
-    url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
-        views.activate, name='activate'),
-]
+    url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', views.activate, name='activate'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 handler400 = views.BadRequestView.as_view()
 handler403 = views.PermissionDeniedView.as_view()
