@@ -32,3 +32,28 @@ class Submission(models.Model):
 
     def __str__(self):
         return '{0!s}'.format(self.title)
+
+
+class Author(models.Model):
+    submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
+    uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
+    name = models.CharField(max_length=128)
+    email = models.EmailField()
+    affiliation = models.CharField(max_length=32)
+
+    def __str__(self):
+        return '{0!s}'.format(self.name)
+
+
+class FrontPage(models.Model):
+    lead_paragraph = models.TextField(blank=True)
+    submission_guidance = models.TextField(blank=True)
+    submission_deadline = models.DateTimeField()
+
+    def __str__(self):
+        return 'Seriously, don\'t edit this unless you have explicit permission'
+
+
+    class Meta:
+        verbose_name = 'Front Page Content'
+        verbose_name_plural = 'Front Page Content'
