@@ -1,7 +1,9 @@
 {% extends 'gambit/base.html' %}
 {% block title %}Signup - {% endblock %}
 {% block content %}
-<h1>Sign up for 44CON CFP</h1>
+{% if user.is_authenticated %}<h1>Already logged in!</h1>
+<a href='{% url 'index' %}'>&laquo; Return home</a>
+{% else %}<h1>Sign up for 44CON CFP</h1>
 <div class='row'>
   <div class='col-md-12'>
     <form method='post'>
@@ -10,5 +12,5 @@
       <button type='submit'>Signup</button> <a href='{% url 'login' %}'>Already got an acccount?</a>
     </form>
   </div>
-</div>
+</div>{% endif %}
 {% endblock %}
