@@ -20,6 +20,18 @@ class ProfileView(LoginRequiredMixin, generic.TemplateView):
     template_name = 'gambit/profile.html'
     login_url = 'login'
 
+class SubmissionView(LoginRequiredMixin, generic.TemplateView):
+    template_name = 'gambit/submission.html'
+    login_url = 'login'
+    model = Submission
+
+    def get_context_data(self, **kwargs):
+        '''Return submission data'''
+        context = super(SubmissionView, self).get_context_data(**kwargs)
+        context['submission'] = get_object_or_404(Submission, uuid=self.kwargs['uuid'])
+        context['authors'] = Author.objects.filter(submission=context['submission'])
+        return context
+
 
 class ErrorView(generic.TemplateView):
     template_name = 'gambit/error.html'
