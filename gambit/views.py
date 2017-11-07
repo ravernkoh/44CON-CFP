@@ -4,7 +4,7 @@ from gambit.forms import SignUpForm
 from django.contrib.auth.models import User
 from django.utils.encoding import force_text
 from django.utils.encoding import force_bytes
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.http import urlsafe_base64_encode
 from django.utils.http import urlsafe_base64_decode
 from django.template.loader import render_to_string
@@ -12,13 +12,29 @@ from gambit.tokens import account_activation_token
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.sites.shortcuts import get_current_site
 
+from .models import Submission, Author, FrontPage
+
+
 class IndexView(generic.TemplateView):
     template_name = 'gambit/index.html'
+
+    def get_context_data(self, **kwargs):
+        '''Return front page content'''
+        context = super(IndexView, self).get_context_data(**kwargs)
+        context['front_page_content'] = get_object_or_404(FrontPage, id=1)
+        return context
 
 
 class ProfileView(LoginRequiredMixin, generic.TemplateView):
     template_name = 'gambit/profile.html'
     login_url = 'login'
+
+    def get_context_data(self, **kwargs):
+        '''Return submissions'''
+        context = super(ProfileView, self).get_context_data(**kwargs)
+        context['submissions'] = Submission.objects.filter(user=self.request.user).order_by('submitted_on')
+        return context
+
 
 class SubmissionView(LoginRequiredMixin, generic.TemplateView):
     template_name = 'gambit/submission.html'
@@ -116,7 +132,6 @@ def activate(request, uidb64, token):
         return redirect('index')
     else:
         return render(request, 'gambit/account_activation_invalid.html')
-
 
 def account_activation_sent(request):
     return render(request, 'gambit/account_activation_sent.html')
