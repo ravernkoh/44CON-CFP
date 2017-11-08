@@ -1,15 +1,21 @@
 {% extends 'gambit/base.html' %}
 {% block title %}Login - {% endblock %}
 {% block content %}
-<h1>Login to your account</h1>
+{% if user.is_authenticated %}<h1>Already logged in!</h1>
+<a href='{% url 'index' %}'>&laquo; Return home</a>
+{% else %}<h1>Login to your account</h1>
 <div class='row'>
   <div class='col-md-12'>
     <p><a href='{% url 'signup' %}'>Create an account</a></p>
+  </div>
+</div>
+<div class='row'>
+  <div class=' col-md-6'>
     <form method='post'>
       {% csrf_token %}
-      <table>{{ form.as_table }}</table>
+      <table class='table table-condensed table-responsive'>{{ form.as_table }}</table>
       <button type='submit'>Login</button> <a href='{% url 'password_reset' %}'>Forgotten your password?</a>
     </form>
   </div>
-</div>
+</div>{% endif %}
 {% endblock %}

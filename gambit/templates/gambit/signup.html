@@ -8,7 +8,7 @@
   <div class='col-md-12'>
     <form method='post'>
       {% csrf_token %}
-      {{ form.as_p }}
+      <table class='table table-responsive'>{{ form.as_table }}</table>
       <button type='submit'>Signup</button> <a href='{% url 'login' %}'>Already got an acccount?</a>
     </form>
   </div>

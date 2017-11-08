@@ -22,7 +22,7 @@
         <td>{{ submission.submitted_on|date:'Y-m-d' }}</td>
       </tr>{% empty %}
       <tr>
-        <td>You haven't submitted anything yet!</td>
+        <td colspan='2'>You haven't submitted anything yet!</td>
       </tr>{% endfor %}
     </tbody>
   </table>
