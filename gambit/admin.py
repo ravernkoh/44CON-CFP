@@ -25,13 +25,6 @@ class SubmissionAdmin(admin.ModelAdmin):
     def timestamp(self, obj):
         return defaultfilters.date(obj.submitted_on, 'Y-m-d H:i')
 
-class AuthorAdmin(admin.ModelAdmin):
-    list_display = ('name', 'title',)
-
-    def title(self, obj):
-        return obj.submission.title
-    title.short_description = 'Submission Title'
-
 
 class FrontPageAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'id',)
@@ -45,5 +38,4 @@ class FrontPageAdmin(admin.ModelAdmin):
 
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Submission, SubmissionAdmin)
-admin.site.register(Author, AuthorAdmin)
 admin.site.register(FrontPage, FrontPageAdmin)
