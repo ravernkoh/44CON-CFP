@@ -1,6 +1,8 @@
+from os import path
+
+from django.urls import reverse
 from django.views import generic
 from django.contrib.auth import login
-from gambit.forms import SignUpForm
 from django.contrib.auth.models import User
 from django.utils.encoding import force_text
 from django.utils.encoding import force_bytes
@@ -8,11 +10,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.http import urlsafe_base64_encode
 from django.utils.http import urlsafe_base64_decode
 from django.template.loader import render_to_string
-from gambit.tokens import account_activation_token
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
 
-from .models import Submission, Author, FrontPage
+from .forms import SignUpForm, SubmitForm
+from .models import Submission, FrontPage
+from .tokens import account_activation_token
 
 
 class IndexView(generic.TemplateView):
@@ -45,7 +49,9 @@ class SubmissionView(LoginRequiredMixin, generic.TemplateView):
         '''Return submission data'''
         context = super(SubmissionView, self).get_context_data(**kwargs)
         context['submission'] = get_object_or_404(Submission, uuid=self.kwargs['uuid'])
-        context['authors'] = Author.objects.filter(submission=context['submission'])
+        if context['submission'].file:
+            head, tail = path.split(context['submission'].file.name)
+            context['submission_file_name'] = tail
         return context
 
 
@@ -135,3 +141,20 @@ def activate(request, uidb64, token):
 
 def account_activation_sent(request):
     return render(request, 'gambit/account_activation_sent.html')
+
+@login_required(login_url='login')
+def submit_form_upload(request):
+    if request.method == 'POST':
+        form = SubmitForm(request.POST, request.FILES)
+        if form.is_valid():
+            '''Associates the submission with the logged in user. There may be a more 'elegant' way to achieve this but this works and is robust. Submissions can only be made by logged in users which ensures the presence of the user model in the request.'''
+            f = form.save(commit=False)
+            f.user = request.user
+            f.save()
+            f.refresh_from_db()
+            return redirect(reverse('submission', args=[f.uuid]))
+    else:
+        form = SubmitForm()
+    return render(request, 'gambit/submit.html', {
+        'form': form
+    })

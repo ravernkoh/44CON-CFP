@@ -27,7 +27,10 @@ class Submission(models.Model):
     uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
     submitted_on = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=128)
+    authors = models.TextField(blank=True)
+    contact_email = models.EmailField()
     abstract = models.TextField(blank=True)
+    conflicts = models.TextField(blank=True)
     file = models.FileField(upload_to='uploads/submissions/%Y/%m/%d/', blank=True)
 
     def __str__(self):

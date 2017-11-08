@@ -14,6 +14,7 @@ urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'^profile/$', views.ProfileView.as_view(), name='profile'),
     url(r'^submission/(?P<uuid>[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[89aAbB][a-fA-F0-9]{3}-[a-fA-F0-9]{12})/$', views.SubmissionView.as_view(), name='submission'),
+    url(r'^submit/$', views.submit_form_upload, name='submit'),
     url(r'^login/$', auth_views.login, {'template_name': 'gambit/login.html'}, name ='login'),
     url(r'^logout/$', auth_views.logout, {'next_page': 'index'}, name ='logout'),
     url(r'^signup/$', views.signup, name='signup'),

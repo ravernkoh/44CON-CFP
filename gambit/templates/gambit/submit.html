@@ -1,0 +1,14 @@
+{% extends 'gambit/base.html' %}
+{% block title %}New Submission - {% endblock %}
+{% block content %}
+<h1>Create a new submission</h1>
+<div class='row'>
+  <div class='col-md-12'>
+    <form method='post' enctype='multipart/form-data'>
+      {% csrf_token %}
+      <table class='table table-hover table-responsive'>{{ form.as_table }}</table>
+      <button type='submit'>Submit</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
