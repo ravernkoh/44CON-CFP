@@ -13,6 +13,17 @@ class SignUpForm(UserCreationForm):
     country = forms.CharField(max_length=48, required=True, help_text='Required - Your country of residence.')
     affiliation = forms.CharField(max_length=32, required=False, help_text='Optional - Your employer or place of study.')
 
+    def clean(self):
+        email = self.cleaned_data['email']
+        username = self.cleaned_data['username']
+
+        if email and User.objects.filter(email=email).exists():
+            raise forms.ValidationError(_('Email addresses has already been used.'))
+
+        if username and User.objects.filter(username=username).exists():
+            raise forms.ValidationError(_('Username already exists.'))
+
+
     class Meta:
         model = User
         fields = ['username', 'name', 'country', 'affiliation', 'email', 'password1', 'password2']
