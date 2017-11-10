@@ -1,5 +1,5 @@
 *.pyc
 *.sqlite3
 gambit/migrations/
-gambit/static/
+gambit/static/admin/
 gambit/media/uploads/
