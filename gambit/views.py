@@ -1,4 +1,5 @@
 from os import path
+import logging
 
 from django.urls import reverse
 from django.views import generic
@@ -17,6 +18,11 @@ from django.contrib.sites.shortcuts import get_current_site
 from .forms import SignUpForm, SubmitForm
 from .models import Submission, FrontPage
 from .tokens import account_activation_token
+
+
+# ['CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG']
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 
 class IndexView(generic.TemplateView):
