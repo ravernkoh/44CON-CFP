@@ -11,7 +11,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.http import urlsafe_base64_encode
 from django.utils.http import urlsafe_base64_decode
 from django.template.loader import render_to_string
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
 
@@ -58,6 +58,20 @@ class SubmissionView(LoginRequiredMixin, generic.TemplateView):
         if context['submission'].file:
             head, tail = path.split(context['submission'].file.name)
             context['submission_file_name'] = tail
+
+
+class AllSubmissionsView(LoginRequiredMixin, UserPassesTestMixin, generic.TemplateView):
+    template_name = 'gambit/submissions.html'
+    login_url = 'login'
+    redirect_field_name = 'index'
+
+    def test_func(self):
+        return self.request.user.is_superuser or self.request.user.groups.filter(name='Programme Committee').exists()
+
+    def get_context_data(self, **kwargs):
+        '''Return all submissions'''
+        context = super(AllSubmissionsView, self).get_context_data(**kwargs)
+        context['submissions'] = Submission.objects.all().order_by('submitted_on')
         return context
 
 

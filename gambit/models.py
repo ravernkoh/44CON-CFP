@@ -1,8 +1,10 @@
 from uuid import uuid4
 from django.db import models
+from django.db.models import Avg
 from django.dispatch import receiver
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class Profile(models.Model):
@@ -35,6 +37,25 @@ class Submission(models.Model):
 
     def __str__(self):
         return '{0!s}'.format(self.title)
+
+    def get_reviews(self):
+        return SubmissionReview.objects.filter(submission=self).order_by('submitted_on')
+
+    def get_average_score(self):
+        return SubmissionReview.objects.aggregate(Avg('submission_score'))['submission_score__avg']
+
+
+class SubmissionReview(models.Model):
+    submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
+    submitted_on = models.DateTimeField(auto_now_add=True)
+    expertise_score = models.IntegerField(default=1, validators=[MaxValueValidator(5), MinValueValidator(1)])
+    submission_score = models.IntegerField(default=1, validators=[MaxValueValidator(5), MinValueValidator(1)])
+    comments = models.TextField(blank=True)
+
+    def __str__(self):
+        return '{0!s}'.format(self.uuid)
 
 
 class FrontPage(models.Model):

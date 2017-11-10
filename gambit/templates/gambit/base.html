@@ -30,6 +30,7 @@
             <li{% if request.resolver_match.view_name == 'index' %} class='active'{% endif %}><a href='{% url 'index' %}' title='Home'><span class='glyphicon glyphicon-home' aria-hidden='true'></span></a></li>
             <li{% if request.resolver_match.view_name == 'profile' %} class='active'{% endif %}><a href='{% url 'profile' %}' title='Profile'><span class='glyphicon glyphicon-user' aria-hidden='true'></span></a></li>
             <li{% if request.resolver_match.view_name == 'submit' %} class='active'{% endif %}><a href='{% url 'submit' %}' title='Submit'><span class='glyphicon glyphicon-plus' aria-hidden='true'></span></a></li>
+            {% load has_group %}{% if user.is_superuser or user|has_group:'Programme Committee' %}<li{% if request.resolver_match.view_name == 'all_submissions' %} class='active'{% endif %}><a href='{% url 'all_submissions' %}' title='All Submissions'><span class='glyphicon glyphicon-th-list' aria-hidden='true'></span></a></li>{% endif %}
             {% if user.is_superuser %}<li><a href='{% url 'admin:index' %}' title='Administration Panel'><span class='glyphicon glyphicon-cog' aria-hidden='true'></span></a></li>{% endif %}
           </ul>
           <ul class='nav navbar-nav navbar-right'>

@@ -26,6 +26,20 @@ class SubmissionAdmin(admin.ModelAdmin):
         return defaultfilters.date(obj.submitted_on, 'Y-m-d H:i')
 
 
+class SubmissionReviewAdmin(admin.ModelAdmin):
+    list_display = ('submission', 'reviewer', 'submitted_on', 'uuid_snip')
+
+    def submission(self, obj):
+        return obj.submission.title
+
+    def reviewer(self, obj):
+        return obj.user.username
+
+    def uuid_snip(self, obj):
+        return obj.uuid.hex
+    uuid_snip.short_description = 'UUID'
+
+
 class FrontPageAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'id',)
 
@@ -39,3 +53,4 @@ class FrontPageAdmin(admin.ModelAdmin):
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Submission, SubmissionAdmin)
 admin.site.register(FrontPage, FrontPageAdmin)
+admin.site.register(SubmissionReview, SubmissionReviewAdmin)
