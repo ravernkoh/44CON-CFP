@@ -58,6 +58,8 @@ class SubmissionView(LoginRequiredMixin, generic.TemplateView):
         if context['submission'].file:
             head, tail = path.split(context['submission'].file.name)
             context['submission_file_name'] = tail
+        context['reviews'] = context['submission'].get_reviews()
+        return context
 
 
 class AllSubmissionsView(LoginRequiredMixin, UserPassesTestMixin, generic.TemplateView):
