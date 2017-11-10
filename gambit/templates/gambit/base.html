@@ -38,7 +38,7 @@
             <li><p class='navbar-text'>Logged in as: <a class='navbar-link' href='{% url 'profile' %}'>{{ user.get_username }}</a>{% if user.is_superuser %} (<span class='text-primary'>Admin</span>){% endif %}</p></li>
             <li><a href='{% url 'logout' %}?next={{request.path}}' title='Logout'><span class='glyphicon glyphicon-log-out' aria-hidden='true'></span></a></li>
             {% else %}
-            <li><a href='{% url 'login' %}?next={{request.path}}' title='Login'><span class='glyphicon glyphicon-log-in' aria-hidden='true'></span></a></li>
+            <li {% if request.resolver_match.view_name == 'login' %} class='active'{% endif %}><a href='{% url 'login' %}?next={{request.path}}' title='Login'><span class='glyphicon glyphicon-log-in' aria-hidden='true'></span></a></li>
             {% endif %}
           </ul>
         </div>

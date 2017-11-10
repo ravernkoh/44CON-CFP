@@ -1,9 +1,7 @@
 {% extends 'gambit/base.html' %}
 {% block title %}Login - {% endblock %}
 {% block content %}
-{% if user.is_authenticated %}<h1>Already logged in!</h1>
-<a href='{% url 'index' %}'>&laquo; Return home</a>
-{% else %}<h1>Login to your account</h1>
+<h1>Login to your account</h1>
 <div class='row'>
   <div class='col-md-12'>
     <p><a href='{% url 'signup' %}'>Create an account</a></p>
@@ -17,5 +15,5 @@
       <button type='submit'>Login</button> <a href='{% url 'password_reset' %}'>Forgotten your password?</a>
     </form>
   </div>
-</div>{% endif %}
+</div>
 {% endblock %}

@@ -85,4 +85,4 @@ STATIC_URL = '/static/'
 STATIC_ROOT = path.join(BASE_DIR, 'static')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = path.join(BASE_DIR, 'media')
-LOGIN_REDIRECT_URL = 'login'
+LOGIN_REDIRECT_URL = 'index'
