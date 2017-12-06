@@ -68,5 +68,16 @@ class FrontPage(models.Model):
 
 
     class Meta:
-        verbose_name = 'Front Page Content'
-        verbose_name_plural = 'Front Page Content'
+        verbose_name = 'Front Page'
+        verbose_name_plural = 'Front Page'
+
+
+class HelpPageItem(models.Model):
+    short_description = models.CharField(max_length=32)
+    content = models.TextField(blank=True)
+    lead = models.BooleanField(default=False)
+
+
+    class Meta:
+        verbose_name = 'Help Page'
+        verbose_name_plural = 'Help Page'
