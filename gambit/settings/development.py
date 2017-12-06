@@ -15,3 +15,6 @@ CONTENT_TYPES = ['application/pdf', 'application/msword', 'application/vnd.openx
 # 10MiB = 10485760
 # 15MiB = 15728640
 MAX_UPLOAD_SIZE = 5242880
+
+TIME_ZONE = 'Europe/London'
+USE_TZ = True
