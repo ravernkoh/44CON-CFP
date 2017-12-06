@@ -50,7 +50,31 @@ class FrontPageAdmin(admin.ModelAdmin):
         return False
 
 
+class HelpPageItemAdmin(admin.ModelAdmin):
+    list_display = ('short_description', 'id',)
+
+
+class SessionAdmin(admin.ModelAdmin):
+    list_display = ('session_key', '_username', '_session_data', 'expire_date',)
+    exclude = ('session_data',)
+    readonly_fields = ('session_key', '_session_data',)
+
+    def _session_data(self, obj):
+        return obj.get_decoded()
+    _session_data.short_description = 'Session Data'
+
+    def _username(self, obj):
+        user_id = obj.get_decoded()['_auth_user_id']
+        return User.objects.get(id=user_id)
+    _username.short_description = 'Username'
+
+    def has_add_permission(self, request):
+        return False
+
+
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Submission, SubmissionAdmin)
 admin.site.register(FrontPage, FrontPageAdmin)
 admin.site.register(SubmissionReview, SubmissionReviewAdmin)
+admin.site.register(HelpPageItem, HelpPageItemAdmin)
+admin.site.register(Session, SessionAdmin)

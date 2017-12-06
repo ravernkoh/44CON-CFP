@@ -17,6 +17,7 @@ from django.contrib.sites.shortcuts import get_current_site
 
 from .forms import SignUpForm, SubmitForm
 from .models import Submission, FrontPage
+from .models import Submission, FrontPage, HelpPageItem
 from .tokens import account_activation_token
 
 
@@ -74,6 +75,18 @@ class AllSubmissionsView(LoginRequiredMixin, UserPassesTestMixin, generic.Templa
         '''Return all submissions'''
         context = super(AllSubmissionsView, self).get_context_data(**kwargs)
         context['submissions'] = Submission.objects.all().order_by('submitted_on')
+        return context
+
+
+class HelpView(LoginRequiredMixin, generic.TemplateView):
+    template_name = 'gambit/help.html'
+    login_url = 'login'
+
+    def get_context_data(self, **kwargs):
+        '''Return help page content'''
+        context = super(HelpView, self).get_context_data(**kwargs)
+        context['help_page_lead'] = HelpPageItem.objects.filter(lead=True)[0]
+        context['help_page_items'] = HelpPageItem.objects.exclude(lead=True).order_by('id')
         return context
 
 
