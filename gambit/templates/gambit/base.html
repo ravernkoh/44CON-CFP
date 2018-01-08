@@ -7,8 +7,9 @@
 
     <title>{% block title %}{% endblock %}44CON CFP {{ CONFERENCE_YEAR }}</title>
 
-    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' integrity='sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u' crossorigin='anonymous'>
-    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css' integrity='sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp' crossorigin='anonymous'>
+    <link rel='stylesheet' type='text/css' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' integrity='sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u' crossorigin='anonymous'>
+    <link rel='stylesheet' type='text/css' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css' integrity='sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp' crossorigin='anonymous'>
+    {% block styleinject %}{% endblock %}
 
     {% load static %}<link rel='stylesheet' type='text/css' href='{% static 'gambit/style.css' %}' />
   </head>
@@ -36,7 +37,7 @@
           </ul>
           <ul class='nav navbar-nav navbar-right'>
             {% if user.is_authenticated %}
-            <li><p class='navbar-text'>Logged in as: <a class='navbar-link' href='{% url 'profile' %}'>{{ user.get_username }}</a>{% if user.is_superuser %} (<span class='text-primary'>Admin</span>){% endif %}</p></li>
+            <li><p class='navbar-text'><a class='navbar-link' href='{% url 'profile' %}'>{{ user.get_username }}</a>{% if user.is_superuser %} (<span class='text-primary'>Admin</span>){% endif %}</p></li>
             <li><a href='{% url 'logout' %}?next={{request.path}}' title='Logout'><span class='glyphicon glyphicon-log-out' aria-hidden='true'></span></a></li>
             {% else %}
             <li {% if request.resolver_match.view_name == 'login' %} class='active'{% endif %}><a href='{% url 'login' %}?next={{request.path}}' title='Login'><span class='glyphicon glyphicon-log-in' aria-hidden='true'></span></a></li>
@@ -65,16 +66,15 @@
 
     <footer class='footer'>
      <div class='container'>
-       <span class='text-muted'>Designed, developed, and poorly implemented by <a target='_blank' href='https://twitter.com/nimxj'>Aidan</a>. Copyright &copy; 2017 Sense/Net Ltd. All rights reserved.</span>
+       <span class='text-muted'>Designed, developed, and poorly implemented by <a target='_blank' href='https://twitter.com/nimxj'>aidan@rawhex</a>. Copyright &copy; 2017 Sense/Net Ltd. All rights reserved.</span>
      </div>
    </footer>
 
+    <script type='text/javascript' charset='utf-8' src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js' integrity='sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ' crossorigin='anonymous'></script>
+    <script type='text/javascript' charset='utf-8' src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' integrity='sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa' crossorigin='anonymous'></script>
+    <script type='text/javascript' charset='utf-8' src='https://cdn.jsdelivr.net/clipboard.js/1.5.16/clipboard.min.js' integrity='sha384-RVvxof79LCL9tC4gVje4DE8jfuW3HJ1gdU60KYrw2wB4WfRUEWj7TErsKSSP/hei' crossorigin='anonymous'></script>
+    <script type='text/javascript' charset='utf-8' src='{% static 'gambit/loader.js' %}'></script>
 
-
-    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js' integrity='sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ' crossorigin='anonymous'></script>
-    <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' integrity='sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa' crossorigin='anonymous'></script>
-    <script src='https://cdn.jsdelivr.net/clipboard.js/1.5.16/clipboard.min.js' integrity='sha384-RVvxof79LCL9tC4gVje4DE8jfuW3HJ1gdU60KYrw2wB4WfRUEWj7TErsKSSP/hei' crossorigin='anonymous'></script>
-    <script src='{% static 'gambit/init_clip.js' %}'></script>
-    <script src='{% static 'gambit/loader.js' %}'></script>
+    {% block scriptinject %}{% endblock %}
   </body>
 </html>

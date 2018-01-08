@@ -1,6 +1,5 @@
-from uuid import uuid4
+import uuid
 from django.db import models
-from django.db.models import Avg
 from django.dispatch import receiver
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
@@ -17,6 +16,7 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.username
 
+# During user signup, a linked profile object is tied to the generated user object
 @receiver(post_save, sender=User)
 def update_user_profile(sender, instance, created, **kwargs):
     if created:
@@ -26,29 +26,29 @@ def update_user_profile(sender, instance, created, **kwargs):
 
 class Submission(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True)
     submitted_on = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=128)
     authors = models.TextField(blank=True)
     contact_email = models.EmailField()
     abstract = models.TextField(blank=True)
     conflicts = models.TextField(blank=True)
-    file = models.FileField(upload_to='uploads/submissions/%Y/%m/%d/', blank=True)
+    file = models.FileField(upload_to="uploads/submissions/%Y/%m/%d/", blank=True)
 
     def __str__(self):
         return '{0!s}'.format(self.title)
 
     def get_reviews(self):
-        return SubmissionReview.objects.filter(submission=self).order_by('submitted_on')
+        return SubmissionReview.objects.filter(submission=self).order_by("submitted_on")
 
     def get_average_score(self):
-        return SubmissionReview.objects.aggregate(Avg('submission_score'))['submission_score__avg']
+        return SubmissionReview.objects.aggregate(models.Avg("submission_score"))["submission_score__avg"]
 
 
 class SubmissionReview(models.Model):
     submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True)
     submitted_on = models.DateTimeField(auto_now_add=True)
     expertise_score = models.IntegerField(default=1, validators=[MaxValueValidator(5), MinValueValidator(1)])
     submission_score = models.IntegerField(default=1, validators=[MaxValueValidator(5), MinValueValidator(1)])
@@ -64,12 +64,12 @@ class FrontPage(models.Model):
     submission_deadline = models.DateTimeField()
 
     def __str__(self):
-        return 'Seriously, don\'t edit this unless you have explicit permission'
+        return "Seriously, don't edit this unless you have explicit permission"
 
 
     class Meta:
-        verbose_name = 'Front Page'
-        verbose_name_plural = 'Front Page'
+        verbose_name = "Front Page"
+        verbose_name_plural = "Front Page"
 
 
 class HelpPageItem(models.Model):
@@ -79,5 +79,5 @@ class HelpPageItem(models.Model):
 
 
     class Meta:
-        verbose_name = 'Help Page'
-        verbose_name_plural = 'Help Page'
+        verbose_name = "Help Page"
+        verbose_name_plural = "Help Page"

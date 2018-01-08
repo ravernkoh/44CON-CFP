@@ -1,20 +1,20 @@
 {% extends 'gambit/base.html' %}
 {% block title %}User profile - {% endblock %}
 {% block content %}
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title"><strong>{{ user.username }}</strong></h3>
+<div class='panel panel-default'>
+  <div class='panel-heading'>
+    <h3 class='panel-title'><strong>{{ user.username }}</strong></h3>
   </div>
-  <div class="panel-body">
+  <div class='panel-body'>
     <p><strong>Name:</strong> {{ user.profile.name }}</p>
     <p><strong>Country:</strong> {{ user.profile.country }}</p>
     {% if user.profile.affiliation %}<p><strong>Affiliation:</strong> {{ user.profile.affiliation }}</p>{% endif %}
     <p><strong>Contact Email:</strong> {{ user.email }}</p>
   </div>
-  <table class="table table-striped table-responsive">
+  <table class='table table-striped table-responsive'>
     <thead>
-      <th class="col-md-9">My Submissions</th>
-      <th class="col-md-3">Submission Date</th>
+      <th class='col-md-9'>My Submissions</th>
+      <th class='col-md-3'>Submission Date</th>
     </thead>
     <tbody>
       {% for submission in submissions %}<tr>
