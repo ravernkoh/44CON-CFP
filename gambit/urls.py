@@ -11,13 +11,19 @@ app_name = "gambit"
 
 urlpatterns = [
     url(r"^admin/", admin.site.urls),
-    url(r"^$", views.IndexView.as_view(), name="index"),
-    url(r"^profile/$", views.ProfileView.as_view(), name="profile"),
+    url(r"^$", views.Home.as_view(), name="home"),
+    url(r"^profile/$", views.Profile.as_view(), name="profile"),
     url(r"^submission/(?P<uuid>[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[89aAbB][a-fA-F0-9]{3}-[a-fA-F0-9]{12})/$",
-        views.SubmissionView.as_view(), name="submission"),
+        views.CreateSubmission.as_view(), name="submission"),
     url(r"^submit/$", views.submit_form_upload, name="submit"),
-    url(r"^submissions/$", views.AllSubmissionsView.as_view(), name="all_submissions"),
-    url(r"^help/$", views.HelpView.as_view(), name="help"),
+    url(r"^update_submission/(?P<pk>[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[89aAbB][a-fA-F0-9]{3}-[a-fA-F0-9]{12})/$",
+        views.UpdateSubmission.as_view(), name="update_submission"),
+    url(r"^new_review/(?P<uuid>[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[89aAbB][a-fA-F0-9]{3}-[a-fA-F0-9]{12})/$",
+        views.CreateReview.as_view(), name="new_review"),
+    url(r"^update_review/(?P<pk>[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[89aAbB][a-fA-F0-9]{3}-[a-fA-F0-9]{12})/$",
+        views.UpdateReview.as_view(), name="update_review"),
+    url(r"^submissions/$", views.ListSubmission.as_view(), name="list_submissions"),
+    url(r"^help/$", views.Help.as_view(), name="help"),
     url(r"^login/$", auth_views.login, {"template_name": "gambit/login.html", "redirect_authenticated_user": True,},
         name ="login"),
     url(r"^logout/$", auth_views.logout, {"next_page": "index"}, name ="logout"),
@@ -37,10 +43,10 @@ urlpatterns = [
         name="activate"),
 ]
 
-handler400 = views.BadRequestView.as_view()
-handler403 = views.PermissionDeniedView.as_view()
-handler404 = views.PageNotFoundView.as_view()
-handler500 = views.ServerErrorView.as_view()
+handler400 = views.BadRequest.as_view()
+handler403 = views.PermissionDenied.as_view()
+handler404 = views.PageNotFound.as_view()
+handler500 = views.ServerError.as_view()
 
 # Handle requests for styles if developing locally without a web server proxy
 if not settings.DEBUG:
