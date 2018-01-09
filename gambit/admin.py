@@ -1,4 +1,7 @@
+import csv
+
 from django.contrib import admin
+from django.http import HttpResponse
 from django.template import defaultfilters
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
@@ -22,8 +25,9 @@ admin.site.register(Profile, ProfileAdmin)
 
 
 class SubmissionAdmin(admin.ModelAdmin):
-    list_display = ('title', '_username', '_timestamp',)
+    list_display = ('title', '_username', '_timestamp', '_score',)
     list_filter = ('user__username', 'submitted_on',)
+    actions = ['_export_to_csv']
 
     # Adds button in top right which will open the submission on the live site
     def view_on_site(self, obj):
@@ -40,6 +44,25 @@ class SubmissionAdmin(admin.ModelAdmin):
     def _timestamp(self, obj):
         return defaultfilters.date(obj.submitted_on, 'Y-m-d H:i')
 
+    def _score(self, obj):
+        return obj.get_average_score()
+
+    def _export_to_csv(self, request, queryset):
+        """I apologise for this horrendous method."""
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = "attachment; filename=44CON-CFP-submissions.csv"
+        writer = csv.writer(response)
+        writer.writerow(['Title', 'Authors', 'Contact', 'Score',])
+        submissions = queryset.values_list('title', 'authors', 'contact_email',)
+        for index, submission in enumerate(submissions):
+            # submission is iterated out to create a list instead of a tuple so that the score can be appended
+            # I was lazy with this and there's probably a far more elegant way to do it
+            submission = [field for field in submission]
+            submission.append(queryset[index].get_average_score())
+            writer.writerow(submission)
+        return response
+    _export_to_csv.short_description = "Export to CSV"
+
 
 admin.site.register(Submission, SubmissionAdmin)
 
@@ -47,6 +70,7 @@ admin.site.register(Submission, SubmissionAdmin)
 class SubmissionReviewAdmin(admin.ModelAdmin):
     list_display = ('_submission', '_reviewer', 'submitted_on', '_uuid_snip',)
     list_filter = ('user__username', 'submitted_on',)
+    actions = ['_export_to_csv']
 
     # Adds button in top right which will open the related submission on the live site
     def view_on_site(self, obj):
@@ -64,6 +88,17 @@ class SubmissionReviewAdmin(admin.ModelAdmin):
     def _uuid_snip(self, obj):
         return obj.uuid.hex
     _uuid_snip.short_description = 'UUID'
+
+    def _export_to_csv(self, request, queryset):
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = "attachment; filename=44CON-CFP-review-comments.csv"
+        writer = csv.writer(response)
+        writer.writerow(['Reviewer', 'Comments', 'Submission Title'])
+        reviews = queryset.values_list('user__profile__name', 'comments', 'submission__title',)
+        for review in reviews:
+            writer.writerow(review)
+        return response
+    _export_to_csv.short_description = "Export to CSV"
 
 
 admin.site.register(SubmissionReview, SubmissionReviewAdmin)
