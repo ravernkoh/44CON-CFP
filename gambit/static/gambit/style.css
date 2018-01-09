@@ -27,3 +27,7 @@ body{
 .review_score {
   width: 3em;
 }
+
+ul.errorlist > li {
+  color: #c9302c;
+}
