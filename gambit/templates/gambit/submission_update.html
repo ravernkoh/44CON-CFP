@@ -1,0 +1,15 @@
+{% extends 'gambit/base.html' %}
+{% block title %}Edit Submission - {% endblock %}
+{% block content %}
+<h1>Edit your submission</h1>
+<a href='{% url 'submission' submission.uuid %}'>&laquo; Return to the submission</a>
+<div class='row'>
+  <div class='col-md-12'>
+    <form method='post' enctype='multipart/form-data'>
+      {% csrf_token %}
+      <table class='table table-hover table-responsive'>{{ form.as_table }}</table>
+      <button type='submit'>Submit</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
