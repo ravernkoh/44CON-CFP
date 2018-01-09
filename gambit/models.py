@@ -42,7 +42,7 @@ class Submission(models.Model):
         return SubmissionReview.objects.filter(submission=self).order_by("submitted_on")
 
     def get_average_score(self):
-        return SubmissionReview.objects.aggregate(models.Avg("submission_score"))["submission_score__avg"]
+        return SubmissionReview.objects.filter(submission=self).aggregate(models.Avg("submission_score"))["submission_score__avg"]
 
 
 class SubmissionReview(models.Model):
