@@ -26,7 +26,7 @@ urlpatterns = [
     url(r"^help/$", views.Help.as_view(), name="help"),
     url(r"^login/$", auth_views.login, {"template_name": "gambit/login.html", "redirect_authenticated_user": True,},
         name ="login"),
-    url(r"^logout/$", auth_views.logout, {"next_page": "index"}, name ="logout"),
+    url(r"^logout/$", auth_views.logout, {"next_page": "home"}, name ="logout"),
     url(r"^signup/$", views.signup, name="signup"),
     url(r"^password_reset/$", auth_views.password_reset, {"template_name": "gambit/password_reset_form.html",
         "email_template_name": "gambit/password_reset_email.html",

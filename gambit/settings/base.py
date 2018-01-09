@@ -105,7 +105,7 @@ STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-LOGIN_REDIRECT_URL = "index"
+LOGIN_REDIRECT_URL = "home"
 
 # Custom global variables
 # These require matching declarations in context_processors.py
