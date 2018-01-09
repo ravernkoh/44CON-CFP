@@ -1,5 +1,4 @@
 import os
-import logging
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,6 +19,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -27,6 +27,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
 ]
 
 ROOT_URLCONF = "gambit.urls"
@@ -75,6 +76,10 @@ CACHES = {
     },
 }
 
+CACHE_MIDDLEWARE_ALIAS = "default"
+CACHE_MIDDLEWARE_SECONDS = 360  # type: integer - reminder because it will throw obscure TypeError and I won't remember why
+CACHE_MIDDLEWARE_KEY_PREFIX = ""  # https://docs.djangoproject.com/en/2.0/topics/cache/#the-per-site-cache
+
 PASSWORD_HASHERS = [
     'gambit.hashers.ParanoidBCryptSHA256PasswordHasher',
     'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
@@ -116,5 +121,5 @@ CONTENT_TYPES = [
     'application/vnd.ms-powerpoint',  # .ppt, .pot, .pps, .ppa
 ]
 
-# Maximum size of uploaded files for submissions
+# Maximum size in bytes of uploaded files for submissions
 MAX_UPLOAD_SIZE = 5242880  # 5MiB
