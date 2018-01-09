@@ -12,6 +12,8 @@
     <p><strong>Contact Email:</strong> {{ submission.contact_email }}</p>
     {% if submission.file %}<p><strong>Submission:</strong> <a href='{{ submission.file.url }}'>{{ submission_file_name }} <span class='glyphicon glyphicon-download' aria-hidden='true'></span></a> ({{ submission.file.size|filesizeformat }})</p>{% endif %}
     {% if submission.conflicts %}<p><strong class='text-danger'>Conflicts:</strong> {{ submission.conflicts }}</p>{% endif %}
+    {% if not user == submission.user %}{% if has_reviewed %}<a class='btn btn-primary' href='{% url 'update_review' review_uuid %}'>Edit your review</a>{% else %}<a class='btn btn-primary' href='{% url 'new_review' submission.uuid %}'>Submit a review</a>{% endif %}{% endif %}
+    {% if user == submission.user %}<a class='btn btn-primary' href='{% url 'update_submission' submission.uuid %}'>Edit your submission</a>{% endif %}
   </div>
   {% load has_group %}{% if user.is_superuser or user|has_group:'Programme Committee' %}<table class='table table-striped table-responsive'>
     <thead>
