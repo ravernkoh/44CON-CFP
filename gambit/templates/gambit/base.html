@@ -24,14 +24,14 @@
             <span class='icon-bar'></span>
             <span class='icon-bar'></span>
           </button>
-          <a class='navbar-brand' href='{% url 'index' %}'>44CON CFP {{ CONFERENCE_YEAR }}</a>
+          <a class='navbar-brand' href='{% url 'home' %}'>44CON CFP {{ CONFERENCE_YEAR }}</a>
         </div>
         <div id='navbar' class='navbar-collapse collapse'>
           <ul class='nav navbar-nav'>
-            <li{% if request.resolver_match.view_name == 'index' %} class='active'{% endif %}><a href='{% url 'index' %}' title='Home'><span class='glyphicon glyphicon-home' aria-hidden='true'></span></a></li>
+            <li{% if request.resolver_match.view_name == 'home' %} class='active'{% endif %}><a href='{% url 'home' %}' title='Home'><span class='glyphicon glyphicon-home' aria-hidden='true'></span></a></li>
             <li{% if request.resolver_match.view_name == 'profile' %} class='active'{% endif %}><a href='{% url 'profile' %}' title='Profile'><span class='glyphicon glyphicon-user' aria-hidden='true'></span></a></li>
             <li{% if request.resolver_match.view_name == 'submit' %} class='active'{% endif %}><a href='{% url 'submit' %}' title='Submit'><span class='glyphicon glyphicon-plus' aria-hidden='true'></span></a></li>
-            {% load has_group %}{% if user.is_superuser or user|has_group:'Programme Committee' %}<li{% if request.resolver_match.view_name == 'all_submissions' %} class='active'{% endif %}><a href='{% url 'all_submissions' %}' title='All Submissions'><span class='glyphicon glyphicon-th-list' aria-hidden='true'></span></a></li>{% endif %}
+            {% load has_group %}{% if user.is_superuser or user|has_group:'Programme Committee' %}<li{% if request.resolver_match.view_name == 'list_submissions' %} class='active'{% endif %}><a href='{% url 'list_submissions' %}' title='All Submissions'><span class='glyphicon glyphicon-th-list' aria-hidden='true'></span></a></li>{% endif %}
             {% if user.is_superuser %}<li><a href='{% url 'admin:index' %}' title='Administration Panel'><span class='glyphicon glyphicon-cog' aria-hidden='true'></span></a></li>{% endif %}
             <li{% if request.resolver_match.view_name == 'help' %} class='active'{% endif %}><a href='{% url 'help' %}' title='Help'><span class='glyphicon glyphicon-question-sign' aria-hidden='true'></span></a></li>
           </ul>
@@ -66,7 +66,7 @@
 
     <footer class='footer'>
      <div class='container'>
-       <span class='text-muted'>Designed, developed, and poorly implemented by <a target='_blank' href='https://twitter.com/nimxj'>aidan@rawhex</a>. Copyright &copy; 2017 Sense/Net Ltd. All rights reserved.</span>
+       <span class='text-muted'>Designed, developed, and poorly implemented by aidan@44con.com. Copyright &copy; 2017 Sense/Net Ltd. All rights reserved.</span>
      </div>
    </footer>
 

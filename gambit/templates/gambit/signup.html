@@ -2,9 +2,9 @@
 {% block title %}Signup - {% endblock %}
 {% block content %}
 {% if user.is_authenticated %}<h1>Already logged in!</h1>
-<a href='{% url 'index' %}'>&laquo; Return home</a>
+<a href='{% url 'home' %}'>&laquo; Return home</a>
 {% else %}<h1>Sign up for 44CON CFP</h1>
-<p><a href='{% url 'login' %}?next={% url 'index' %}'>Already got an acccount?</a></p>
+<p><a href='{% url 'login' %}?next={% url 'home' %}'>Already got an acccount?</a></p>
 <div class='row'>
   <div class='col-md-12'>
     <form method='post'>
