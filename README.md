@@ -2,7 +2,7 @@
 
 **Author**: Aidan Mitchell <aidan@44con.com>
 
-**Version**: 0.0.1-alpha
+**Version**: 0.0.1-beta
 
 ## Setup
 1. `pip install -r requirements/base.txt`

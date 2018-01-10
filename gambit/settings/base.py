@@ -107,7 +107,7 @@ LOGIN_REDIRECT_URL = "home"
 
 # Custom global variables
 # These require matching declarations in context_processors.py
-APPLICATION_VERSION = "0.0.1-alpha"
+APPLICATION_VERSION = "0.0.1-beta"
 APPLICATION_NAME = "44CON CFP"
 CONFERENCE_YEAR = "2018"
 
