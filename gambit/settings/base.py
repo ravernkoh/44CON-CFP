@@ -117,8 +117,17 @@ CONTENT_TYPES = [
     'application/msword',  # .doc, .dot
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',  # .docx
     'application/vnd.ms-powerpoint',  # .ppt, .pot, .pps, .ppa
-    'application/zip',  # .zip
 ]
+
+# .zip files can suck it. Why do you not have one universal identifier?
+# Putting these here instead of directly into the CONTENT_TYPES so I know what they're all for
+# Don't judge me
+CONTENT_TYPES.extend([
+    'application/zip',
+    'application/x-zip',
+    'application/octet-stream',
+    'application/x-zip-compressed'
+])
 
 # Maximum size in bytes of uploaded files for submissions
 MAX_UPLOAD_SIZE = 52428000  # 50MiB
