@@ -19,7 +19,6 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -27,7 +26,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware',
 ]
 
 ROOT_URLCONF = "gambit.urls"
@@ -119,7 +117,8 @@ CONTENT_TYPES = [
     'application/msword',  # .doc, .dot
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',  # .docx
     'application/vnd.ms-powerpoint',  # .ppt, .pot, .pps, .ppa
+    'application/zip',  # .zip
 ]
 
 # Maximum size in bytes of uploaded files for submissions
-MAX_UPLOAD_SIZE = 5242880  # 5MiB
+MAX_UPLOAD_SIZE = 52428000  # 50MiB
