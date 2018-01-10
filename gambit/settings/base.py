@@ -1,4 +1,16 @@
 import os
+import logging
+
+import coloredlogs
+
+
+# ['CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG']
+# Invoke with logger.<error_level>(<message>)
+# e.g. logger.debug("This is a test message.")
+# Messages which are LESS severe than the current level will be ignored
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+coloredlogs.install(level="DEBUG")
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -60,10 +72,14 @@ DATABASES = {
     },
 }
 
-ANYMAIL = {
-    "MAILGUN_API_KEY": os.environ.get("MAILGUN_API_KEY"),
-    "MAILGUN_SENDER_DOMAIN": "mg.44con.com",
-}
+try:
+    ANYMAIL = {
+        "MAILGUN_API_KEY": os.environ["MAILGUN_API_KEY"],
+        "MAILGUN_SENDER_DOMAIN": "mg.44con.com",
+    }
+except KeyError as e:
+    logger.debug(f"\nEnvironment variable not set! {e!r}\n")
+    raise SystemExit(1)
 
 EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
 DEFAULT_FROM_EMAIL = "cfp@44con.com"
