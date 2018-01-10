@@ -84,7 +84,7 @@ class SubmitForm(forms.ModelForm):
             'authors': 'Optional - Names of additional authors',
             'contact_email': 'Required - Email address that 44CON Speaker Ops should use for contact',
             'conflicts': 'Optional - If you have any conflicts of interest with the panel - i.e. you are aware of having worked with, co-authored, or co-presented with panel members, please list their names here. It helps us ensure a fair process is followed.',
-            'file': 'If you have any specific requirements, constraints, supporting content, or just pictures of your cat then please upload them using this form.<br />If you have multiple files to upload, the form will accept a zip file.<br />File size limit: 5MiB. Permitted data types: pdf, doc/x, ppt/s, zip',
+            'file': 'If you have any specific requirements, constraints, supporting content, or just pictures of your cat then please upload them using this form.<br />If you have multiple files to upload, the form will accept a zip file.<br />File size limit: 50MiB. Permitted data types: pdf, doc/x, ppt/s, zip',
         }
         widgets = {
             'abstract': forms.Textarea(attrs={'rows': 8, 'cols': 60}),
