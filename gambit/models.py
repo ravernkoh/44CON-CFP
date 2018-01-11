@@ -44,6 +44,9 @@ class Submission(models.Model):
     def get_average_score(self):
         return SubmissionReview.objects.filter(submission=self).aggregate(models.Avg("submission_score"))["submission_score__avg"]
 
+    def get_total_score(self):
+        return SubmissionReview.objects.filter(submission=self).aggregate(models.Sum("submission_score"))["submission_score__sum"]
+
 
 class SubmissionReview(models.Model):
     submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
