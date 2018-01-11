@@ -23,6 +23,16 @@ body{
   padding: 0.75em;
 }
 
+.dt-buttons {
+  margin: 1em;
+}
+
+.dataTables_length, .dataTables_filter {
+  display: inline;
+  margin: 1em;
+  float: right;
+}
+
 .review_score {
   width: 3em;
 }
