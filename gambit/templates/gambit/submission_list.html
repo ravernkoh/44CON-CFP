@@ -1,10 +1,33 @@
 {% extends 'gambit/base.html' %}
 {% block title %}Submission List - {% endblock %}
-{% block styleinject %}<link rel='stylesheet' type='text/css' href='https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css' integrity='sha384-VEpVDzPR2x8NbTDZ8NFW4AWbtT2g/ollEzX/daZdW/YvUBlbgVtsxMftnJ84k0Cn' crossorigin='anonymous'>{% endblock %}
-{% block scriptinject %}<script type='text/javascript' charset='utf-8' src='https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js' integrity='sha384-Z9D45cp3elqajO+xEyjRTIK1Gr3eYsXiyCPIKNog1sIQzpo2fqFDqFdADGiJjzOv' crossorigin='anonymous'></script>
-<script type='text/javascript' charset='utf-8' src='https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js' integrity='sha384-7PXRkl4YJnEpP8uU4ev9652TTZSxrqC8uOpcV1ftVEC7LVyLZqqDUAaq+Y+lGgr9' crossorigin='anonymous'></script>
-<script>$(document).ready(function(){
-    $('#submissions').DataTable();
+{% block styleinject %}{% load static %}<link rel='stylesheet' type='text/css' href='{% static 'gambit/datatables/datatables.min.css' %}'>{% endblock %}
+{% block scriptinject %}<script type='text/javascript' charset='utf-8' src='{% static 'gambit/datatables/datatables.min.js' %}'></script>
+<script>var editor;
+$(document).ready(function(){
+  $('#submissions').DataTable({
+    dom: 'Blfrtip',
+    colReorder: true,
+    fixedHeader: true,
+    pageLength: 10,
+    select: true,
+    responsive: true,
+    buttons: [
+      {
+        text: 'This Years Submissions',
+        action: function(e, dt, node, config) {
+          dt.search('{% now "Y" %}').draw();
+        }
+      },
+      {
+        extend: 'collection',
+        text: 'Export...',
+        buttons: [
+          'excel',
+          'csv'
+        ]
+      }
+    ]
+  });
 });</script>{% endblock %}
 {% block content %}
 <div class='panel panel-default'>
@@ -14,25 +37,22 @@
   <div class='submissions-table'>
     <table id='submissions' class='table table-striped table-responsive'>
       <thead>
-        <th class='col-md-4'>Submission</th>
-        <th class='col-md-2'>Submission Date</th>
-        <th class='col-md-2'>Reviews</th>
-        <th class='col-md-2'>Average Score</th>
-        <th class='col-md-2'>Total Score</th>
+        <th class='col-md-3'>Submission Title</th>
+        <th class='col-md-3'>Reviews</th>
+        <th class='col-md-3'>Average Score</th>
+        <th class='col-md-3'>Submission Date</th>
       </thead>
       <tbody>
         {% for submission in submissions %}{% if user == submission.user %}<tr class='info'>
           <td><a href='{% url 'submission' submission.uuid %}'>{{ submission.title }}</a></td>
-          <td>{{ submission.submitted_on|date:'Y-m-d' }}</td>
           <td>{{ submission.get_reviews|length }}</td>
-          <td>{{ submission.get_average_score }}</td>
-          <td>{{ submission.get_total_score }}</td>
+          <td>{{ submission.get_average_score|default_if_none:0 }}</td>
+          <td>{{ submission.submitted_on|date:'Y-m-d' }}</td>
         </tr>{% else %}<tr>
           <td><a href='{% url 'submission' submission.uuid %}'>{{ submission.title }}</a></td>
-          <td>{{ submission.submitted_on|date:'Y-m-d' }}</td>
           <td>{{ submission.get_reviews|length }}</td>
           <td>{{ submission.get_average_score }}</td>
-          <td>{{ submission.get_total_score }}</td>
+          <td>{{ submission.submitted_on|date:'Y-m-d' }}</td>
         </tr>{% endif %}{% empty %}
         <tr>
           <td colspan='3'>No sumbissions yet!</td>
