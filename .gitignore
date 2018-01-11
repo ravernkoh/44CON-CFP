@@ -1,8 +1,8 @@
 *.pyc
-*.sqlite3
+__pycache__/
 gambit/migrations/
 gambit/static/admin/
-gambit/media/uploads/
+gambit/media/
 bandit
 vulture
 prospector
