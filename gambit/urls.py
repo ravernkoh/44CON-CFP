@@ -14,7 +14,7 @@ urlpatterns = [
     url(r"^$", views.Home.as_view(), name="home"),
     url(r"^profile/$", views.Profile.as_view(), name="profile"),
     url(r"^submission/(?P<uuid>[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[89aAbB][a-fA-F0-9]{3}-[a-fA-F0-9]{12})/$",
-        views.CreateSubmission.as_view(), name="submission"),
+        views.ViewSubmission.as_view(), name="submission"),
     url(r"^submit/$", views.submit_form_upload, name="submit"),
     url(r"^update_submission/(?P<pk>[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[89aAbB][a-fA-F0-9]{3}-[a-fA-F0-9]{12})/$",
         views.UpdateSubmission.as_view(), name="update_submission"),

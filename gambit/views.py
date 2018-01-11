@@ -53,14 +53,14 @@ class Profile(mixins.LoginRequiredMixin, generic.TemplateView):
         return context
 
 
-class CreateSubmission(mixins.LoginRequiredMixin, generic.TemplateView):
-    template_name = "gambit/submission_create.html"
+class ViewSubmission(mixins.LoginRequiredMixin, generic.TemplateView):
+    template_name = "gambit/submission_view.html"
     login_url = "login"
     model = Submission
 
     def get_context_data(self, **kwargs):
         """Return submission data"""
-        context = super(CreateSubmission, self).get_context_data(**kwargs)
+        context = super(ViewSubmission, self).get_context_data(**kwargs)
         context["submission"] = get_object_or_404(Submission, uuid=self.kwargs["uuid"])
         if context["submission"].file:
             _, tail = os.path.split(context["submission"].file.name)  # Discarding path prefix

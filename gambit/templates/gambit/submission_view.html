@@ -17,9 +17,9 @@
   </div>
   {% load has_group %}{% if user.is_superuser or user|has_group:'Programme Committee' %}<table class='table table-striped table-responsive'>
     <thead>
-      <th class='col-md-3'>Reviewer</th>
-      <th class='col-md-2'>Expertise</th>
-      <th class='col-md-2'>Score</th>
+      <th class='col-md-4'>Reviewer</th>
+      <th class='col-md-3'>Expertise</th>
+      <th class='col-md-3'>Score</th>
     </thead>
     <tbody>
       {% if user == submission.user %}<tr>
@@ -36,6 +36,16 @@
       <tr>
         <td colspan='3'>No reviews submitted yet!</td>
       </tr>{% endfor %}
+      <thead>
+        <th class='col-md-4'>Average Score</th>
+        <th class='col-md-3'>Total Score</th>
+        <th class='col-md-3'>Total Votes</th>
+      </thead>
+      <tr>
+        <td><strong>{{ submission.get_average_score }}</strong></td>
+        <td>{{ submission.get_total_score }}</td>
+        <td>{{ submission.get_reviews|length }}</td>
+      </tr>
     </tbody>
   </table>{% endif %}{% endif %}
 </div>
