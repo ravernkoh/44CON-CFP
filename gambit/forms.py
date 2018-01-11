@@ -58,7 +58,7 @@ class SubmitForm(forms.ModelForm):
         # This may happen when the user tries to change the uploaded file but a ValidationError occurs.
         # If the user then chooses not to select a different file but clicks submit to update the submission, clean_file() will attempt to process the
         # file which is actually a FieldFile causing the error described before.
-        if file and isinstance(file, FieldFile):
+        if file and not isinstance(file, FieldFile):
             content_type = file.content_type
             if content_type in settings.CONTENT_TYPES:
                 if file.size > settings.MAX_UPLOAD_SIZE:
