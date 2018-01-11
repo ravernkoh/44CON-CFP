@@ -46,10 +46,6 @@ class SubmitForm(forms.ModelForm):
         abstract = cleaned_data.get("abstract")
         file = cleaned_data.get("file")
 
-        # Submission must include either an abstract or a file
-        if not abstract and not file:
-            raise forms.ValidationError(_("Must include an abstract or upload a document."))
-
     def clean_file(self):
         # Reject file if it's not a valid content type or if it's too large
         file = self.cleaned_data["file"]
