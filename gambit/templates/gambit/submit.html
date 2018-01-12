@@ -1,14 +1,19 @@
 {% extends 'gambit/base.html' %}
 {% block title %}New Submission - {% endblock %}
 {% block content %}
-{% if deadline_passed %}<h1>The deadline to submit talks and workshops has passed.</h1>
-<a href='{% url 'home' %}'>&laquo; Return home</a>
+{% if deadline_passed %}<div class='container'>
+  <div class='row'>
+    <div class='col-md-offset-1 col-md-10'>
+      <h1>The deadline to submit talks and workshops has passed.</h1>
+      <a href='{% url 'home' %}'>&laquo; Return home</a>
+    </div>
+  </div>
+</div>
 {% else %}
-<h1>Create a new submission<br><small>Fields marked with asterisks are required</small></h1>
-
 <div class='container'>
   <div class='row'>
-    <div class='col-md-12'>
+    <div class='col-md-offset-1 col-md-10'>
+      <h1>Create a new submission<br><small>Fields marked with asterisks are required</small></h1>
       <form method='post' enctype='multipart/form-data'>
         {% csrf_token %}
         {{ form.non_field_errors }}
