@@ -77,21 +77,23 @@ class SubmitForm(forms.ModelForm):
             'user',
         ]
         exclude = ['user',]
+        abstract_placeholder = "Can be a brief outline (supported by an uploaded document) or detailed overview of your submission"
+        conflicts_placeholder = "If you have any conflicts of interest with the panel - i.e. you are aware of having worked with, co-authored, or co-presented with panel members, please list their names here. It helps us ensure a fair process is followed."
         help_texts = {
-            'title': 'Required - Can be a working title',
-            'abstract': 'Optional but preferred - Can be a brief outline (supported by an uploaded document) or detailed overview of your submission',
-            'authors': 'Optional - Names of additional authors',
-            'contact_email': 'Required - Email address that 44CON Speaker Ops should use for contact',
-            'conflicts': 'Optional - If you have any conflicts of interest with the panel - i.e. you are aware of having worked with, co-authored, or \
-            co-presented with panel members, please list their names here. It helps us ensure a fair process is followed.',
             'file': 'If you have any specific requirements, constraints, supporting content, or just pictures of your cat then please upload them using \
-            this form.<br />If you have multiple files to upload, the form will accept a zip file.<br />File size limit: 50MiB. Permitted data \
-            types: pdf, doc/x, ppt/s, zip',
+            this form.<br>If you have multiple files to upload, the form will accept a zip file.<br>File size limit: 50MiB. Permitted data types: \
+            pdf, doc/x, ppt/s, zip',
         }
         widgets = {
-            'abstract': forms.Textarea(attrs={'rows': 8, 'cols': 60}),
-            'authors': forms.Textarea(attrs={'rows': 4, 'cols': 60}),
-            'conflicts': forms.Textarea(attrs={'rows': 4, 'cols': 60}),
+            'title': forms.TextInput(attrs={'type': 'text', 'class': 'form-control', 'placeholder': 'Can be a working title'}),
+            'abstract': forms.Textarea(attrs={'type': 'text', 'class': 'form-control', 'placeholder': abstract_placeholder}),
+            'authors': forms.Textarea(attrs={'type': 'text', 'class': 'form-control', 'placeholder': 'Names of additional authors'}),
+            'contact_email': forms.EmailInput(attrs={'type': 'email', 'class': 'form-control', 'placeholder': 'Primary email address that 44CON Speaker Ops should use for contact'}),
+            'conflicts': forms.Textarea(attrs={'type': 'text', 'class': 'form-control', 'placeholder': conflicts_placeholder}),
+        }
+        labels = {
+            'title': 'Title *',
+            'contact_email': 'Contact Email *',
         }
 
 
@@ -116,7 +118,7 @@ class SubmissionReviewForm(forms.ModelForm):
             distinctly possible that someone could ask for a copy of the review comments on their submission(s). Just bear that in mind when commenting.',
         }
         widgets = {
-            'expertise_score': forms.NumberInput(attrs={'class': 'review_score', 'min': 1, 'max': 5}),
-            'submission_score': forms.NumberInput(attrs={'class': 'review_score', 'min': 1, 'max': 5}),
-            'comments': forms.Textarea(attrs={'rows': 8, 'cols': 60}),
+            'expertise_score': forms.NumberInput(attrs={'type': 'number', 'class': 'form-control', 'min': 1, 'max': 5}),
+            'submission_score': forms.NumberInput(attrs={'type': 'number', 'class': 'form-control', 'min': 1, 'max': 5}),
+            'comments': forms.Textarea(attrs={'type': 'text', 'class': 'form-control'}),
         }
