@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.db.models.fields.files import FieldFile
 from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm, SetPasswordForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm, SetPasswordForm, PasswordChangeForm
 
 from .models import Submission, SubmissionReview, Profile
 
@@ -13,6 +13,15 @@ class LoginForm(AuthenticationForm):
     username = forms.CharField(label="Username", max_length=254,
                                 widget=forms.TextInput(attrs={'type': 'text', 'class': 'form-control', 'name': 'username', 'autofocus': 'autofocus'}))
     password = forms.CharField(label="Password", widget=forms.PasswordInput(attrs={'type': 'password', 'class': 'form-control', 'name': 'password',}))
+
+
+class ChangeUserPasswordForm(PasswordChangeForm):
+    old_password = forms.CharField(label="Old password",
+                                widget=forms.PasswordInput(attrs={'type': 'password', 'class': 'form-control', 'name': 'old_password', 'autofocus': 'autofocus'}))
+    new_password1 = forms.CharField(label="New password",
+                                widget=forms.PasswordInput(attrs={'type': 'password', 'class': 'form-control', 'name': 'password1',}))
+    new_password2 = forms.CharField(label="New password confirmation",
+                                widget=forms.PasswordInput(attrs={'type': 'password', 'class': 'form-control', 'name': 'password2',}))
 
 
 class ResetUserPasswordForm(PasswordResetForm):

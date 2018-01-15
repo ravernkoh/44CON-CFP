@@ -6,7 +6,7 @@ from django.contrib.auth import views as auth_views
 
 
 from . import views
-from .forms import LoginForm, ResetUserPasswordForm, SetUserPasswordForm
+from .forms import LoginForm, ResetUserPasswordForm, SetUserPasswordForm, ChangeUserPasswordForm
 
 
 app_name = "gambit"
@@ -15,7 +15,7 @@ urlpatterns = [
     url(r"^admin/", admin.site.urls),
     url(r"^$", views.Home.as_view(), name="home"),
     url(r"^profile/$", views.ViewProfile.as_view(), name="profile"),
-    url(r"^password_change/$", auth_views.password_change, {"template_name": "gambit/password_change.html"},
+    url(r"^password_change/$", auth_views.password_change, {"template_name": "gambit/password_change.html", 'password_change_form': ChangeUserPasswordForm},
         name="password_change"),
     url(r"^password_change_done/$", auth_views.password_change_done, {"template_name": "gambit/password_change_done.html"},
         name="password_change_done"),
