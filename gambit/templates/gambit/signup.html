@@ -16,6 +16,7 @@
       <p><small><strong>Fields marked in bold are required</strong></small></p>
       <div class='login-form'>
         <form method='post'>
+          {% csrf_token %}
           {{ form.non_field_errors }}
           {% for field in form %}<div class='form-group'>
             {{ field.errors }}
