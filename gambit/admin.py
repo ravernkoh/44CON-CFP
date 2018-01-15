@@ -5,6 +5,7 @@ from django.contrib import admin
 from django.http import HttpResponse
 from django.template import defaultfilters
 from django.contrib.auth.models import User
+from django.utils.safestring import mark_safe
 from django.contrib.sessions.models import Session
 
 from .models import Profile, Submission, SubmissionReview, FrontPage, HelpPageItem
@@ -16,8 +17,7 @@ class ProfileAdmin(admin.ModelAdmin):
     # Renders the related username as a link to the edit page for the actual user object
     def _username(self, obj):
         link_to_user_object = reverse('admin:auth_user_change', args=(obj.user.id,))
-        return f"<a href='{link_to_user_object}'>{obj.user.username}</a>"
-    _username.allow_tags = True  # Allow HTML tags in the field
+        return mark_safe(f"<a href='{link_to_user_object}'>{obj.user.username}</a>")
     _username.short_description = 'User'
 
 
@@ -36,8 +36,7 @@ class SubmissionAdmin(admin.ModelAdmin):
     # Renders the related username as a link to the edit page for the actual user object
     def _username(self, obj):
         link_to_user_object = reverse('admin:auth_user_change', args=(obj.user.id,))
-        return f"<a href='{link_to_user_object}'>{obj.user.username}</a>"
-    _username.allow_tags = True  # Allow HTML tags in the field
+        return mark_safe(f"<a href='{link_to_user_object}'>{obj.user.username}</a>")
     _username.short_description = 'User'
 
     # ISO 8601 date formatting or GTFO
