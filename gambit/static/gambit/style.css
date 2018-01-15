@@ -36,3 +36,12 @@ body{
 ul.errorlist > li {
   color: #c9302c;
 }
+
+.frontpage-login-form {
+  margin: 1px;
+}
+
+.frontpage-alert {
+  margin-bottom: 0;
+  padding: 5px;
+}

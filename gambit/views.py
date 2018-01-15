@@ -5,22 +5,18 @@ import coloredlogs
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
-from django.contrib.auth import login
-from django.contrib.auth import mixins
 from django.contrib.auth.models import User
-from django.utils.encoding import force_text
-from django.utils.encoding import force_bytes
-from django.utils.http import urlsafe_base64_encode
-from django.utils.http import urlsafe_base64_decode
 from django.template.loader import render_to_string
+from django.utils.encoding import force_text, force_bytes
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.contrib.auth import login, mixins, REDIRECT_FIELD_NAME
 
-
-from .forms import SignUpForm, SubmitForm, SubmissionReviewForm
-from .models import Submission, SubmissionReview, FrontPage, HelpPageItem
 from .tokens import account_activation_token
+from .models import Submission, SubmissionReview, FrontPage, HelpPageItem
+from .forms import SignUpForm, SubmitForm, SubmissionReviewForm, LoginForm
 
 
 # ['CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG']
@@ -32,8 +28,33 @@ logger = logging.getLogger(__name__)
 coloredlogs.install(level="DEBUG")
 
 
-class Home(generic.TemplateView):
+class Home(generic.edit.FormMixin, generic.TemplateView):
     template_name = "gambit/home.html"
+    form_class = LoginForm
+    redirect_field_name = REDIRECT_FIELD_NAME
+
+    def dispatch(self, request, *args, **kwargs):
+        request.session.set_test_cookie()
+        return super(Home, self).dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        login(self.request, form.get_user())
+        if self.request.session.test_cookie_worked():
+            self.request.session.delete_test_cookie()
+        return super(Home, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('home')
+
+    def get(self, request, *args, **kwargs):
+        return super(Home, self).get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form(self.form_class)
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
 
     def get_context_data(self, **kwargs):
         """Return front page content"""

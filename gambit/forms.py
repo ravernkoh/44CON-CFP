@@ -4,15 +4,43 @@ from django.contrib.auth.models import User
 from django.db.models.fields.files import FieldFile
 from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm, SetPasswordForm
 
 from .models import Submission, SubmissionReview
 
 
+class LoginForm(AuthenticationForm):
+    username = forms.CharField(label="Username", max_length=254,
+                                widget=forms.TextInput(attrs={'type': 'text', 'class': 'form-control', 'name': 'username', 'autofocus': 'autofocus'}))
+    password = forms.CharField(label="Password", widget=forms.PasswordInput(attrs={'type': 'password', 'class': 'form-control', 'name': 'password',}))
+
+
+class ResetUserPasswordForm(PasswordResetForm):
+    email = forms.EmailField(label="Email Address", max_length=254,
+                                widget=forms.EmailInput(attrs={'type': 'email', 'class': 'form-control', 'name': 'email', 'autofocus': 'autofocus'}))
+
+
+class SetUserPasswordForm(SetPasswordForm):
+    new_password1 = forms.CharField(label="New password",
+                                widget=forms.PasswordInput(attrs={'type': 'password', 'class': 'form-control', 'name': 'password1', 'autofocus': 'autofocus'}))
+    new_password2 = forms.CharField(label="New password confirmation",
+                                widget=forms.PasswordInput(attrs={'type': 'password', 'class': 'form-control', 'name': 'password2',}))
+
+
 class SignUpForm(UserCreationForm):
-    email = forms.EmailField(max_length=254, help_text="Required - Input a valid email address.")
-    name = forms.CharField(max_length=128, required=True, help_text="Required - Preferably your full name.")
-    country = forms.CharField(max_length=48, required=True, help_text="Required - Your country of residence.")
-    affiliation = forms.CharField(max_length=32, required=False, help_text="Optional - Your employer or place of study.")
+    username = forms.CharField(label="<strong>Username</strong>", max_length=254,
+                                widget=forms.TextInput(attrs={'type': 'text', 'class': 'form-control', 'name': 'username', 'placeholder': '150 characters or fewer. Alphanumeric characters and @/./+/-/_ only', 'autofocus': 'autofocus'}))
+    password1 = forms.CharField(label="<strong>Password</strong>",
+                                widget=forms.PasswordInput(attrs={'type': 'password', 'class': 'form-control', 'name': 'password1', 'placeholder': 'Password must contain at least 12 characters',}))
+    password2 = forms.CharField(label="<strong>Password Confirmation</strong>", widget=forms.PasswordInput(attrs={'type': 'password', 'class': 'form-control', 'name': 'password2', 'placeholder': 'Enter the same password as before for verification',}))
+    email = forms.EmailField(label="<strong>Email</strong>", max_length=254,
+                                widget=forms.TextInput(attrs={'type': 'email', 'class': 'form-control', 'placeholder': 'A valid email address',}))
+    name = forms.CharField(label="<strong>Name</strong>", max_length=128, required=True,
+                            widget=forms.TextInput(attrs={'type': 'text', 'class': 'form-control', 'placeholder': 'Preferably your full name',}))
+    country = forms.CharField(label="<strong>Country</strong>", max_length=48, required=True,
+                            widget=forms.TextInput(attrs={'type': 'text', 'class': 'form-control', 'placeholder': 'Your country of residence',}))
+    affiliation = forms.CharField(label="Affiliation", max_length=32, required=False,
+                            widget=forms.TextInput(attrs={'type': 'text', 'class': 'form-control', 'placeholder': 'Your employer or place of study',}))
 
     def clean(self):
         email = self.cleaned_data["email"]
@@ -81,19 +109,19 @@ class SubmitForm(forms.ModelForm):
         conflicts_placeholder = "If you have any conflicts of interest with the panel - i.e. you are aware of having worked with, co-authored, or co-presented with panel members, please list their names here. It helps us ensure a fair process is followed."
         help_texts = {
             'file': 'If you have any specific requirements, constraints, supporting content, or just pictures of your cat then please upload them using \
-            this form.<br>If you have multiple files to upload, the form will accept a zip file.<br>File size limit: 50MiB. Permitted data types: \
+            this form.<br>If you have multiple files to upload, the form will accept a zip file.<br>File size limit: <span class=\'text-danger\'>50MiB</span>. Permitted data types: \
             pdf, doc/x, ppt/s, zip',
         }
         widgets = {
-            'title': forms.TextInput(attrs={'type': 'text', 'class': 'form-control', 'placeholder': 'Can be a working title'}),
-            'abstract': forms.Textarea(attrs={'type': 'text', 'class': 'form-control', 'placeholder': abstract_placeholder}),
-            'authors': forms.Textarea(attrs={'type': 'text', 'class': 'form-control', 'placeholder': 'Names of additional authors'}),
-            'contact_email': forms.EmailInput(attrs={'type': 'email', 'class': 'form-control', 'placeholder': 'Primary email address that 44CON Speaker Ops should use for contact'}),
-            'conflicts': forms.Textarea(attrs={'type': 'text', 'class': 'form-control', 'placeholder': conflicts_placeholder}),
+            'title': forms.TextInput(attrs={'type': 'text', 'class': 'form-control', 'placeholder': 'Can be a working title', 'autofocus': 'autofocus'}),
+            'abstract': forms.Textarea(attrs={'type': 'text', 'class': 'form-control', 'placeholder': abstract_placeholder,}),
+            'authors': forms.Textarea(attrs={'type': 'text', 'class': 'form-control', 'placeholder': 'Names of additional authors',}),
+            'contact_email': forms.EmailInput(attrs={'type': 'email', 'class': 'form-control', 'placeholder': 'Primary email address that 44CON Speaker Ops should use for contact',}),
+            'conflicts': forms.Textarea(attrs={'type': 'text', 'class': 'form-control', 'placeholder': conflicts_placeholder,}),
         }
         labels = {
-            'title': 'Title *',
-            'contact_email': 'Contact Email *',
+            'title': '<strong>Title</strong>',
+            'contact_email': '<strong>Contact Email</strong>',
         }
 
 
@@ -118,7 +146,7 @@ class SubmissionReviewForm(forms.ModelForm):
             distinctly possible that someone could ask for a copy of the review comments on their submission(s). Just bear that in mind when commenting.',
         }
         widgets = {
-            'expertise_score': forms.NumberInput(attrs={'type': 'number', 'class': 'form-control', 'min': 1, 'max': 5}),
-            'submission_score': forms.NumberInput(attrs={'type': 'number', 'class': 'form-control', 'min': 1, 'max': 5}),
-            'comments': forms.Textarea(attrs={'type': 'text', 'class': 'form-control'}),
+            'expertise_score': forms.NumberInput(attrs={'type': 'number', 'class': 'form-control', 'min': 1, 'max': 5, 'autofocus': 'autofocus'}),
+            'submission_score': forms.NumberInput(attrs={'type': 'number', 'class': 'form-control', 'min': 1, 'max': 5,}),
+            'comments': forms.Textarea(attrs={'type': 'text', 'class': 'form-control',}),
         }
