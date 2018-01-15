@@ -26,7 +26,7 @@
     <title>{% block title %}{% endblock %}44CON CFP {{ CONFERENCE_YEAR }}</title>
 
     <link rel='stylesheet' type='text/css' href='{% static 'gambit/flat-ui/css/vendor/bootstrap/css/bootstrap.min.css' %}'>
-    <link rel='stylesheet' type='text/css' href='{% static 'gambit/flat-ui/css/flat-ui.css' %}'>
+    <link rel='stylesheet' type='text/css' href='{% static 'gambit/flat-ui/css/flat-ui.min.css' %}'>
     {% block styleinject %}{% endblock %}
 
     <link rel='stylesheet' type='text/css' href='{% static 'gambit/style.css' %}' />
@@ -62,6 +62,7 @@
     </div>
 
     <script type='text/javascript' charset='utf-8' src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js' integrity='sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ' crossorigin='anonymous'></script>
+    <script type='text/javascript' charset='utf-8' src='{% static 'gambit/flat-ui/js/flat-ui.min.js' %}'></script>
     <script type='text/javascript' charset='utf-8' src='{% static 'gambit/loader.js' %}'></script>
 
     {% block scriptinject %}{% endblock %}
