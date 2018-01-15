@@ -4,18 +4,39 @@
   <div class='row'>
     <div class='col-md-12'>
       <div class='panel panel-default'>
-        <div class='panel-heading'>
-          <h3 class='panel-title'><strong>{{ submission.title }}</strong></h3>
-        </div>
-        <div class='panel-body'>
-          <p><strong>Submission date:</strong> <span title='{{ submission.submitted_on|date:'H:i O' }}'>{{ submission.submitted_on|date:'Y-m-d' }}</span></p>
-          <p><strong>Abstract:</strong> {% if submission.abstract %}{{ submission.abstract }}{% else %}No abstract included{% endif %}</p>
-          {% if submission.authors %}<p><strong>Authors:</strong> {{ submission.authors }}</p>{% endif %}
-          <p><strong>Contact Email:</strong> {{ submission.contact_email }}</p>
-          {% if submission.file %}<p><strong>Submission:</strong> <a href='{{ submission.file.url }}'>{{ submission_file_name }} <span class='glyphicon glyphicon-download' aria-hidden='true'></span></a> ({{ submission.file.size|filesizeformat }})</p>{% endif %}
-          {% if submission.conflicts %}<p><strong class='text-danger'>Conflicts:</strong> {{ submission.conflicts }}</p>{% endif %}
-          <a href='{% url 'submission' submission.uuid %}'>&laquo; Return to the submission</a>
-        </div>
+        <h3 class='submission-title'><strong>{{ submission.title }}</strong></h3>
+        <table class='table table-borderless table-responsive is_breakable'>
+          <thead>
+            <th class='col-md-2'></th>
+            <th class='col-md-10'></th>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Submission date:</strong></td>
+              <td><span title='{{ submission.submitted_on|date:'H:i O' }}'>{{ submission.submitted_on|date:'Y-m-d' }}</span></td>
+            </tr>
+            {% if submission.abstract %}<tr>
+              <td><strong>Abstract:</strong></td>
+              <td>{{ submission.abstract|linebreaks }}</td>
+            </tr>{% endif %}
+            {% if submission.authors %}<tr>
+              <td><strong>Author(s):</strong></td>
+              <td>{{ submission.authors|linebreaks }}</td>
+            </tr>{% endif %}
+            <tr>
+              <td><strong>Contact Email:</strong></td>
+              <td><a href='mailto:{{ submission.contact_email }}'>{{ submission.contact_email }}</a></td>
+            </tr>
+            {% if submission.file %}<tr>
+              <td><strong>Submission:</strong></td>
+              <td><a href='{{ submission.file.url }}'>{{ submission_file_name }} <span class='glyphicon glyphicon-download' aria-hidden='true'></span></a> ({{ submission.file.size|filesizeformat }})</td>
+            </tr>{% endif %}
+            {% if submission.conflicts %}<tr>
+              <td><strong class='text-danger'>Conflicts:</strong></td>
+              <td>{{ submission.conflicts|linebreaks }}</td>
+            </tr>{% endif %}
+          </tbody>
+        </table>
       </div>
       <div class='container'>
         <div class='row'>

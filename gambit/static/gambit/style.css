@@ -45,3 +45,22 @@ ul.errorlist > li {
   margin-bottom: 0;
   padding: 5px;
 }
+
+.table-borderless > tbody > tr > td,
+.table-borderless > tbody > tr > th,
+.table-borderless > tfoot > tr > td,
+.table-borderless > tfoot > tr > th,
+.table-borderless > thead > tr > td,
+.table-borderless > thead > tr > th {
+    border: none;
+}
+
+.is_breakable {
+  table-layout: fixed;
+  word-wrap: break-word;
+}
+
+.submission-title {
+  margin-top: 10px;
+  margin-left: 8px;
+}
