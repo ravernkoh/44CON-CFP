@@ -16,7 +16,7 @@ from django.contrib.auth import login, mixins, REDIRECT_FIELD_NAME
 
 from .tokens import account_activation_token
 from .models import Submission, SubmissionReview, FrontPage, HelpPageItem, Profile
-from .forms import SignUpForm, SubmitForm, SubmissionReviewForm, LoginForm, UpdateProfile
+from .forms import SignUpForm, SubmitForm, SubmissionReviewForm, LoginForm, UpdateProfileForm
 
 
 # ['CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG']
@@ -73,7 +73,7 @@ class ViewProfile(mixins.LoginRequiredMixin, generic.TemplateView):
 
 class UpdateProfile(mixins.LoginRequiredMixin, generic.edit.UpdateView):
     model = Profile
-    form_class = UpdateProfile
+    form_class = UpdateProfileForm
     template_name_suffix = "_update"
     login_required = "login"
 
@@ -95,7 +95,7 @@ class UpdateProfile(mixins.LoginRequiredMixin, generic.edit.UpdateView):
         user.save()
         return super(UpdateProfile, self).form_valid(form)
 
-    def get_object(self, *args, **kwargs):
+    def get_object(self):
         user = get_object_or_404(User, id=self.request.user.id)
         return user.profile
 
