@@ -15,8 +15,8 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.auth import login, mixins, REDIRECT_FIELD_NAME
 
 from .tokens import account_activation_token
-from .models import Submission, SubmissionReview, FrontPage, HelpPageItem
-from .forms import SignUpForm, SubmitForm, SubmissionReviewForm, LoginForm
+from .models import Submission, SubmissionReview, FrontPage, HelpPageItem, Profile
+from .forms import SignUpForm, SubmitForm, SubmissionReviewForm, LoginForm, UpdateProfile
 
 
 # ['CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG']
@@ -44,10 +44,7 @@ class Home(generic.edit.FormMixin, generic.TemplateView):
         return super(Home, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('home')
-
-    def get(self, request, *args, **kwargs):
-        return super(Home, self).get(request, *args, **kwargs)
+        return reverse("home")
 
     def post(self, request, *args, **kwargs):
         form = self.get_form(self.form_class)
@@ -63,15 +60,47 @@ class Home(generic.edit.FormMixin, generic.TemplateView):
         return context
 
 
-class Profile(mixins.LoginRequiredMixin, generic.TemplateView):
-    template_name = "gambit/profile.html"
+class ViewProfile(mixins.LoginRequiredMixin, generic.TemplateView):
+    template_name = "gambit/profile_view.html"
     login_url = "login"
 
     def get_context_data(self, **kwargs):
         """Return submissions"""
-        context = super(Profile, self).get_context_data(**kwargs)
+        context = super(ViewProfile, self).get_context_data(**kwargs)
         context["submissions"] = Submission.objects.filter(user=self.request.user).order_by("submitted_on")
         return context
+
+
+class UpdateProfile(mixins.LoginRequiredMixin, generic.edit.UpdateView):
+    model = Profile
+    form_class = UpdateProfile
+    template_name_suffix = "_update"
+    login_required = "login"
+
+    def get_context_data(self, **kwargs):
+        context = super(UpdateProfile, self).get_context_data(**kwargs)
+        user = get_object_or_404(User, id=self.request.user.id)
+        data = {
+            'name': user.profile.name,
+            'country': user.profile.country,
+            'affiliation': user.profile.affiliation,
+            'email': user.email,
+        }
+        context['form'] = self.form_class(initial=data)
+        return context
+
+    def form_valid(self, form):
+        user = get_object_or_404(User, id=self.request.user.id)
+        user.email = form.cleaned_data['email']
+        user.save()
+        return super(UpdateProfile, self).form_valid(form)
+
+    def get_object(self, *args, **kwargs):
+        user = get_object_or_404(User, id=self.request.user.id)
+        return user.profile
+
+    def get_success_url(self):
+        return reverse("profile")
 
 
 class ViewSubmission(mixins.LoginRequiredMixin, generic.TemplateView):
@@ -105,7 +134,7 @@ class UpdateSubmission(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, ge
         return Submission.objects.get(uuid=self.kwargs.get('pk')).user.id == self.request.user.id
 
     def get_success_url(self):
-        return reverse('submission', args=[self.object.uuid])
+        return reverse("submission", args=[self.object.uuid])
 
 
 class ListSubmission(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, generic.TemplateView):
@@ -151,7 +180,7 @@ class CreateReview(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, generi
         return super(CreateReview, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('submission', args=[self.kwargs["uuid"]])
+        return reverse("submission", args=[self.kwargs["uuid"]])
 
 
 class UpdateReview(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, generic.edit.UpdateView):
@@ -177,7 +206,7 @@ class UpdateReview(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, generi
         return context
 
     def get_success_url(self):
-        return reverse('submission', args=[self.object.submission.uuid])
+        return reverse("submission", args=[self.object.submission.uuid])
 
 
 class Help(mixins.LoginRequiredMixin, generic.TemplateView):

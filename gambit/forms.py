@@ -6,7 +6,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm, SetPasswordForm
 
-from .models import Submission, SubmissionReview
+from .models import Submission, SubmissionReview, Profile
 
 
 class LoginForm(AuthenticationForm):
@@ -65,6 +65,34 @@ class SignUpForm(UserCreationForm):
             'password1',
             'password2',
         ]
+
+
+class UpdateProfile(forms.ModelForm):
+    email = forms.EmailField(max_length=254,
+                                widget=forms.TextInput(attrs={'type': 'email', 'class': 'form-control'}))
+
+    def clean(self):
+        cleaned_data = super(UpdateProfile, self).clean()
+        name = cleaned_data.get("name")
+        country = cleaned_data.get("country")
+        affiliation = cleaned_data.get("affiliation")
+        email = cleaned_data.get("email")
+
+
+    class Meta:
+        """Define object, fields, and styling"""
+        model = Profile
+        fields = [
+            'name',
+            'country',
+            'affiliation',
+            'email',
+        ]
+        widgets = {
+            'name': forms.TextInput(attrs={'type': 'text', 'class': 'form-control', 'autofocus': 'autofocus'}),
+            'country': forms.TextInput(attrs={'type': 'text', 'class': 'form-control'}),
+            'affiliation': forms.TextInput(attrs={'type': 'text', 'class': 'form-control'}),
+        }
 
 
 class SubmitForm(forms.ModelForm):

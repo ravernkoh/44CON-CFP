@@ -1,0 +1,23 @@
+{% extends 'gambit/base.html' %}
+{% block title %}Update Profile - {% endblock %}
+{% block content %}<div class='container'>
+  <div class='row'>
+    <div class='col-md-12'>
+      <h2>Update your profile</h2>
+      <p><small><strong>Fields marked in bold are required</strong></small></p>
+      <div class='login-form'>
+        <form method='post'>
+          {% csrf_token %}
+          {{ form.non_field_errors }}
+          {% for field in form %}<div class='form-group'>
+            {{ field.errors }}
+            <label for='{{ field.id_for_label }}'>{{ field.label|safe }}</label>
+            {{ field }}
+            {% if field.help_text %}<p class='help-block'>{{ field.help_text|safe }}</p>{% endif %}
+          </div>{% endfor %}
+          <button class='btn btn-primary btn-wide' type='submit'>Update profile</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>{% endblock %}

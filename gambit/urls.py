@@ -14,7 +14,12 @@ app_name = "gambit"
 urlpatterns = [
     url(r"^admin/", admin.site.urls),
     url(r"^$", views.Home.as_view(), name="home"),
-    url(r"^profile/$", views.Profile.as_view(), name="profile"),
+    url(r"^profile/$", views.ViewProfile.as_view(), name="profile"),
+    url(r"^password_change/$", auth_views.password_change, {"template_name": "gambit/password_change.html"},
+        name="password_change"),
+    url(r"^password_change_done/$", auth_views.password_change_done, {"template_name": "gambit/password_change_done.html"},
+        name="password_change_done"),
+    url(r"^update_profile/$", views.UpdateProfile.as_view(), name="update_profile"),
     url(r"^submission/(?P<uuid>[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[89aAbB][a-fA-F0-9]{3}-[a-fA-F0-9]{12})/$",
         views.ViewSubmission.as_view(), name="submission"),
     url(r"^submit/$", views.submit_form_upload, name="submit"),
