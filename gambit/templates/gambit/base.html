@@ -44,7 +44,7 @@
       <div class='collapse navbar-collapse' id='navbar-collapse-01'>
         <ul class='nav navbar-nav'>
           <li{% if request.resolver_match.view_name == 'home' %} class='active'{% endif %}><a href='{% url 'home' %}' title='Home'><span class='fui-home' aria-hidden='true'></span></a></li>
-          <li{% if request.resolver_match.view_name == 'ViewProfile' %} class='active'{% endif %}><a href='{% url 'profile' %}' title='Profile'><span class='fui-user' aria-hidden='true'></span></a></li>
+          <li{% if request.resolver_match.view_name == 'profile' %} class='active'{% endif %}><a href='{% url 'profile' %}' title='Profile'><span class='fui-user' aria-hidden='true'></span></a></li>
           <li{% if request.resolver_match.view_name == 'submit' %} class='active'{% endif %}><a href='{% url 'submit' %}' title='Submit'><span class='fui-plus' aria-hidden='true'></span></a></li>
           {% load has_group %}{% if user.is_superuser or user|has_group:'Programme Committee' %}<li{% if request.resolver_match.view_name == 'list_submissions' %} class='active'{% endif %}><a href='{% url 'list_submissions' %}' title='All Submissions'><span class='fui-list-numbered' aria-hidden='true'></span></a></li>{% endif %}
           {% if user.is_superuser %}<li><a href='{% url 'admin:index' %}' title='Administration Panel'><span class='fui-gear' aria-hidden='true'></span></a></li>{% endif %}

@@ -1,10 +1,10 @@
 import csv
 
+from django.urls import reverse
 from django.contrib import admin
 from django.http import HttpResponse
 from django.template import defaultfilters
 from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse
 from django.contrib.sessions.models import Session
 
 from .models import Profile, Submission, SubmissionReview, FrontPage, HelpPageItem

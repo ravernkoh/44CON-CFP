@@ -63,7 +63,7 @@ WSGI_APPLICATION = "gambit.wsgi.application"
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'gambit',
         'USER': 'gambit',
         'PASSWORD': 'gambit',
