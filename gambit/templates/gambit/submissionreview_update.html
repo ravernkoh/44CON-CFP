@@ -1,35 +1,39 @@
 {% extends 'gambit/base.html' %}
 {% block title %}{{ submission.title }} - Review Submission - {% endblock %}
-{% block content %}
-<div class='panel panel-default'>
-  <div class='panel-heading'>
-    <h3 class='panel-title'><strong>{{ submission.title }}</strong></h3>
-  </div>
-  <div class='panel-body'>
-    <p><strong>Submission date:</strong> <span title='{{ submission.submitted_on|date:'H:i O' }}'>{{ submission.submitted_on|date:'Y-m-d' }}</span></p>
-    <p><strong>Abstract:</strong> {% if submission.abstract %}{{ submission.abstract }}{% else %}No abstract included{% endif %}</p>
-    {% if submission.authors %}<p><strong>Authors:</strong> {{ submission.authors }}</p>{% endif %}
-    <p><strong>Contact Email:</strong> {{ submission.contact_email }}</p>
-    {% if submission.file %}<p><strong>Submission:</strong> <a href='{{ submission.file.url }}'>{{ submission_file_name }} <span class='glyphicon glyphicon-download' aria-hidden='true'></span></a> ({{ submission.file.size|filesizeformat }})</p>{% endif %}
-    {% if submission.conflicts %}<p><strong class='text-danger'>Conflicts:</strong> {{ submission.conflicts }}</p>{% endif %}
-    <a href='{% url 'submission' submission.uuid %}'>&laquo; Return to the submission</a>
-  </div>
-</div>
-<div class='container'>
+{% block content %}<div class='container'>
   <div class='row'>
-    <div class='col-md-offset-1 col-md-10'>
-      <form method='post' enctype='multipart/form-data'>
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        {% for field in form %}<div class='form-group'>
-          {{ field.errors }}
-          <label for='{{ field.id_for_label }}'>{{ field.label }}</label>
-          {{ field }}
-          {% if field.help_text %}<p class='help-block'>{{ field.help_text|safe }}</p>{% endif %}
-        </div>{% endfor %}
-        <button type='submit' class='btn btn-default'>Update review</button>
-      </form>
+    <div class='col-md-12'>
+      <div class='panel panel-default'>
+        <div class='panel-heading'>
+          <h3 class='panel-title'><strong>{{ submission.title }}</strong></h3>
+        </div>
+        <div class='panel-body'>
+          <p><strong>Submission date:</strong> <span title='{{ submission.submitted_on|date:'H:i O' }}'>{{ submission.submitted_on|date:'Y-m-d' }}</span></p>
+          <p><strong>Abstract:</strong> {% if submission.abstract %}{{ submission.abstract }}{% else %}No abstract included{% endif %}</p>
+          {% if submission.authors %}<p><strong>Authors:</strong> {{ submission.authors }}</p>{% endif %}
+          <p><strong>Contact Email:</strong> {{ submission.contact_email }}</p>
+          {% if submission.file %}<p><strong>Submission:</strong> <a href='{{ submission.file.url }}'>{{ submission_file_name }} <span class='glyphicon glyphicon-download' aria-hidden='true'></span></a> ({{ submission.file.size|filesizeformat }})</p>{% endif %}
+          {% if submission.conflicts %}<p><strong class='text-danger'>Conflicts:</strong> {{ submission.conflicts }}</p>{% endif %}
+          <a href='{% url 'submission' submission.uuid %}'>&laquo; Return to the submission</a>
+        </div>
+      </div>
+      <div class='container'>
+        <div class='row'>
+          <div class='col-md-offset-1 col-md-10'>
+            <form method='post' enctype='multipart/form-data'>
+              {% csrf_token %}
+              {{ form.non_field_errors }}
+              {% for field in form %}<div class='form-group'>
+                {{ field.errors }}
+                <label for='{{ field.id_for_label }}'>{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}<p class='help-block'>{{ field.help_text|safe }}</p>{% endif %}
+              </div>{% endfor %}
+              <button type='submit' class='btn btn-primary'>Update review</button>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
-{% endblock %}
+</div>{% endblock %}

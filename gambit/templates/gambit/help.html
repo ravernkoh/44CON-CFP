@@ -1,17 +1,17 @@
 {% extends 'gambit/base.html' %}
 {% block title %}Help - {% endblock %}
-{% block content %}
-<h1>Help!</h1>
-<div class='row'>
-  <div class='col-md-12'>
-    {{ help_page_lead.content|safe }}
+{% block content %}<div class='container'>
+  <div class='row'>
+    <div class='col-md-12'>
+      <h2>Help!</h2>
+      {{ help_page_lead.content|safe }}
+    </div>
   </div>
-</div>
-<div class='row'>
-  <div class='col-md-12'>
-    <ul class='list-group'>
-      {% for item in help_page_items %}<li class='list-group-item'>{{ item.content|safe }}</li>{% endfor %}
-    </ul>
+  <div class='row'>
+    <div class='col-md-12'>
+      <ul class='list-group'>
+        {% for item in help_page_items %}<li class='list-group-item'>{{ item.content|safe }}</li>{% endfor %}
+      </ul>
+    </div>
   </div>
-</div>
-{% endblock %}
+</div>{% endblock %}
