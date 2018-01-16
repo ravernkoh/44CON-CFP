@@ -99,7 +99,7 @@ try:
         "MAILGUN_SENDER_DOMAIN": "mg.44con.com",
     }
 except KeyError as e:
-    logger.debug(f"\nEnvironment variable not set! {e!r}\n")
+    print(f"\nEnvironment variable not set! {e!r}\n")
     raise SystemExit(1)
 
 EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
