@@ -10,5 +10,5 @@ def global_settings(request):
         'APPLICATION_VERSION': settings.APPLICATION_VERSION,
         'APPLICATION_NAME': settings.APPLICATION_NAME,
         'CONFERENCE_YEAR': settings.CONFERENCE_YEAR,
-        'SUBMISSION_DEADLINE': FrontPage.objects.filter(id=1)[0].submission_deadline,
+        'SUBMISSION_DEADLINE': FrontPage.objects.get(id=1).submission_deadline,
     }

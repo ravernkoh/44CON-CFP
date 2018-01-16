@@ -194,9 +194,9 @@ class SubmitForm(forms.ModelForm):
             content_type = file.content_type
             if content_type in settings.CONTENT_TYPES:
                 if file.size > settings.MAX_UPLOAD_SIZE:
-                    raise forms.ValidationError(_("Submitted file is too large. Please limit uploads to 5MiB."))
+                    raise forms.ValidationError(_("Submitted file is too large. Please limit uploads to 50MiB."))
             else:
-                raise forms.ValidationError(_("File type is not allowed (Allowed types: pdf, doc/x)."))
+                raise forms.ValidationError(_("File type is not allowed (Allowed types: pdf, doc/x, ppt/s, zip)."))
             return file
 
 
