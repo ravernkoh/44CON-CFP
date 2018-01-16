@@ -4,7 +4,7 @@ cffi==1.11.2
 chardet==3.0.4
 colorama==0.3.9
 coloredlogs==8.0
-Django==1.11.7
+Django==2.0.1
 django-anymail==1.2
 humanfriendly==4.6
 idna==2.6
