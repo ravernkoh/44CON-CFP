@@ -1,16 +1,7 @@
 import os
 import logging
 
-import coloredlogs
-
-
-# ['CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG']
-# Invoke with logger.<error_level>(<message>)
-# e.g. logger.debug("This is a test message.")
-# Messages which are LESS severe than the current level will be ignored
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
-coloredlogs.install(level="DEBUG")
+import colorlog
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -69,6 +60,36 @@ DATABASES = {
         'PASSWORD': 'gambit',
         'HOST': 'localhost',
         'PORT': '5433',
+    },
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'coloured_verbose': {
+            '()': 'colorlog.ColoredFormatter',
+            'format': "%(log_color)s%(levelname)s %(bold_white)s[%(process)d] %(bold_blue)s%(message)s",
+        },
+    },
+    'handlers': {
+        'coloured_console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'coloured_verbose',
+        },
+    },
+    'loggers': {
+        'django': {
+            'level': 'INFO',
+            'handlers': ['coloured_console'],
+        },
+        'gunicorn.access': {
+            'handlers': ['coloured_console'],
+        },
+        'gunicorn.error': {
+            'handlers': ['coloured_console'],
+        },
     },
 }
 

@@ -1,7 +1,5 @@
 import os
-import logging
 
-import coloredlogs
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
@@ -17,15 +15,6 @@ from django.contrib.auth import login, mixins, REDIRECT_FIELD_NAME
 from .tokens import account_activation_token
 from .models import Submission, SubmissionReview, FrontPage, HelpPageItem, Profile
 from .forms import SignUpForm, SubmitForm, SubmissionReviewForm, LoginForm, UpdateProfileForm
-
-
-# ['CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG']
-# Invoke with logger.<error_level>(<message>)
-# e.g. logger.debug("This is a test message.")
-# Messages which are LESS severe than the current level will be ignored
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
-coloredlogs.install(level="DEBUG")
 
 
 class Home(generic.edit.FormMixin, generic.TemplateView):
