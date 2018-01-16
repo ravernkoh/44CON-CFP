@@ -16,7 +16,7 @@
             {{ field }}
             {% if field.help_text %}<p class='help-block'>{{ field.help_text|safe }}</p>{% endif %}
           </div>{% endfor %}
-          <button type='submit' class='btn btn-primary frontpage-login-form'>Login</button> <a class='btn btn-inverse frontpage-login-form' href='{% url 'signup' %}'>Create an account</a> <a class='btn btn-inverse frontpage-login-form' href='{% url 'password_reset' %}'>Forgot your password?</a>
+          <button type='submit' class='btn btn-primary group-button-spacing'>Login</button> <a class='btn btn-inverse group-button-spacing' href='{% url 'signup' %}'>Create an account</a> <a class='btn btn-inverse group-button-spacing' href='{% url 'password_reset' %}'>Forgot your password?</a>
         </form>
       </div>
     </div>{% endif %}

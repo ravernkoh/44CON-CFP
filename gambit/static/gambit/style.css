@@ -1,31 +1,10 @@
-/** Bootstrap fix **/
-html{
-  position: relative;
-  min-height: 100%;
-}
+html{ position: relative; min-height: 100%; }
+body{ padding-bottom: 20px; }
 
-body{
-  padding-bottom: 30px;
-  margin-bottom: 60px;  /* Margin bottom by footer height */
-}
-/** End bootstrap fix **/
+.submissions-table { padding: 0.75em; }
 
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 60px;  /* Set the fixed height of the footer here */
-  line-height: 60px;  /* Vertically center the text there */
-  background-color: #f5f5f5;
-}
-
-.submissions-table {
-  padding: 0.75em;
-}
-
-.dt-buttons {
-  margin: 1em;
-}
+/* DataTable styles */
+.dt-buttons { margin: 1em; }
 
 .dataTables_length, .dataTables_filter {
   display: inline;
@@ -33,19 +12,15 @@ body{
   float: right;
 }
 
-ul.errorlist > li {
-  color: #c9302c;
-}
+/* Form errors */
+ul.errorlist > li { color: #c9302c; }
 
-.frontpage-login-form {
-  margin: 1px;
-}
+/* Maintain spacing for inline buttons when page width reduces */
+.group-button-spacing { margin: 1px; }
 
-.frontpage-alert {
-  margin-bottom: 0;
-  padding: 5px;
-}
+.banner-alert { margin-bottom: 0; padding: 5px; }
 
+/* Borderless table */
 .table-borderless > tbody > tr > td,
 .table-borderless > tbody > tr > th,
 .table-borderless > tfoot > tr > td,
@@ -55,12 +30,6 @@ ul.errorlist > li {
     border: none;
 }
 
-.is_breakable {
-  table-layout: fixed;
-  word-wrap: break-word;
-}
+.is_breakable { table-layout: fixed; word-wrap: break-word; }
 
-.submission-title {
-  margin-top: 10px;
-  margin-left: 8px;
-}
+.submission-title { margin-top: 10px; margin-left: 8px; }
