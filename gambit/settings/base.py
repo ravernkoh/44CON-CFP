@@ -8,7 +8,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 try:
     configuration = yaml.safe_load(open(os.path.join(BASE_DIR, "config.yaml")))
 except FileNotFoundError:
-    raise SystemExit("\nConfiguration file cannot be found. config.yaml should be present in <project root>/gambit/\n")
+    raise SystemExit(f"\nConfiguration file cannot be found. config.yaml should be present in {BASE_DIR!s}\n")
 
 try:
     SECRET_KEY = configuration['core']['secret_key']
