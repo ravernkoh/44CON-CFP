@@ -1,0 +1,14 @@
+---
+core:
+  secret_key: 'MTJlMjMzMDJiZGE3ODkyODg1ZDYzNmQ3ZjI3MzU5M2ZhYThlNjhhNmM0OWU4YTQy'
+
+anymail:
+  mailgun:
+    api_key: 'key-dae8281e39dae88f6cc6ac0b2ef6164b'
+    sender_domain: 'mg.example.com'
+  from_email: 'cfp@example.org'
+
+postgresql:
+  user: 'gambit'
+  password: 'gambit'
+  port: 5433

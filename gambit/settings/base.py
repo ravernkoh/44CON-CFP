@@ -1,11 +1,19 @@
 import os
-import logging
 
-import colorlog
+import yaml
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SECRET_KEY = "aMRdU5mkpfT1lX9FGg4X^X$@gK#94@uGI4&19H*uUQy&D05qxj3vlY72R$M665Ko"  # Fake secret for development env
+
+try:
+    configuration = yaml.safe_load(open(os.path.join(BASE_DIR, "config.yaml")))
+except FileNotFoundError:
+    raise SystemExit("\nConfiguration file cannot be found. config.yaml should be present in <project root>/gambit/\n")
+
+try:
+    SECRET_KEY = configuration['core']['secret_key']
+except TypeError:
+    raise SystemExit("\nSecret key has not been set. Please review config.yaml\n")
 
 ALLOWED_HOSTS = "*"
 DEBUG = False
@@ -52,16 +60,19 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "gambit.wsgi.application"
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'gambit',
-        'USER': 'gambit',
-        'PASSWORD': 'gambit',
-        'HOST': 'localhost',
-        'PORT': '5433',
-    },
-}
+try:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'gambit',
+            'USER': configuration['postgresql']['user'],
+            'PASSWORD': configuration['postgresql']['password'],
+            'HOST': 'localhost',
+            'PORT': configuration['postgresql']['port'],
+        },
+    }
+except KeyError as e:
+    raise SystemExit(f"\nPostgresql {e!s} has not been set. Please review config.yaml\n")
 
 LOGGING = {
     'version': 1,
@@ -95,25 +106,24 @@ LOGGING = {
 
 try:
     ANYMAIL = {
-        "MAILGUN_API_KEY": os.environ["MAILGUN_API_KEY"],
-        "MAILGUN_SENDER_DOMAIN": "mg.44con.com",
+        "MAILGUN_API_KEY": configuration['anymail']['mailgun']['api_key'],
+        "MAILGUN_SENDER_DOMAIN": configuration['anymail']['mailgun']['sender_domain'],
     }
 except KeyError as e:
     print(f"\nEnvironment variable not set! {e!r}\n")
     raise SystemExit(1)
 
 EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
-DEFAULT_FROM_EMAIL = "cfp@44con.com"
+try:
+    DEFAULT_FROM_EMAIL = configuration['anymail']['from_email']
+except TypeError:
+    raise SystemExit("\nDefault 'from' email has not been set. Please review config.yaml\n")
 
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
     },
 }
-
-CACHE_MIDDLEWARE_ALIAS = "default"
-CACHE_MIDDLEWARE_SECONDS = 360  # type: integer - reminder because it will throw obscure TypeError and I won't remember why
-CACHE_MIDDLEWARE_KEY_PREFIX = ""  # https://docs.djangoproject.com/en/2.0/topics/cache/#the-per-site-cache
 
 PASSWORD_HASHERS = [
     'gambit.hashers.ParanoidBCryptSHA256PasswordHasher',
