@@ -10,7 +10,7 @@
   <div class='row'>
     <div class='col-md-12'>
       <ul class='list-group'>
-        {% for item in help_page_items %}<li class='list-group-item'><strong>{{ item.title }}</strong> {{ item.content|safe }}</li>{% empty %}<li class='list-group-item'>No help items have been added!</li>{% endfor %}
+        {% for item in help_page_items %}<li class='list-group-item'><strong>{{ item.title }}</strong><br>{{ item.content|safe }}</li>{% empty %}<li class='list-group-item'>No help items have been added!</li>{% endfor %}
       </ul>
     </div>
   </div>
