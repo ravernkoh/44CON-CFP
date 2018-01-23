@@ -3,7 +3,7 @@
   <div class='row'>
     <h1 class='text-center'>44CON {{ CONFERENCE_YEAR }} Call For Papers</h1>
     <div {% if not user.is_authenticated %}class='col-md-7'{% else %}class='col-md-12'{% endif %}>
-      {{ front_page.lead_paragraph|safe|default:"No lead paragraph has been set!" }}
+      {{ front_page.leading_paragraph|safe|default:"No lead paragraph has been set!" }}
     </div>
     {% if not user.is_authenticated %}<div class='col-md-5'>
       <div class='login-form'>
@@ -24,6 +24,6 @@
   <div class='row'>
     <div class='col-md-12'>
       <h2>Submission Guidance</h2>
-      {{ front_page.submission_guidance|safe|default:"No submission guidance has been set!" }}
+      {{ front_page.submission_paragraph|safe|default:"No submission guidance has been set!" }}
     </div>
 </div>{% endblock %}
