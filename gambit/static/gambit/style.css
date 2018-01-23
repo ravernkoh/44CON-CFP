@@ -33,3 +33,14 @@ ul.errorlist > li { color: #c9302c; }
 .is_breakable { table-layout: fixed; word-wrap: break-word; }
 
 .submission-title { margin-top: 10px; margin-left: 8px; }
+
+/* Mousover for file hash */
+td#file-hash span#abbreviated-hash { display: inline; }
+
+td#file-hash:hover span#abbreviated-hash { display: none; }
+
+td#file-hash span#full-hash { display: none; }
+
+td#file-hash:hover span#full-hash { display: inline; }
+
+.smaller { font-size: 65%; }

@@ -1,4 +1,6 @@
 import uuid
+import hashlib
+
 from django.db import models
 from django.utils import timezone
 from django.dispatch import receiver
@@ -41,6 +43,14 @@ class Submission(models.Model):
     abstract = models.TextField(blank=True)
     conflicts = models.TextField(blank=True)
     file = models.FileField(upload_to="uploads/submissions/%Y/%m/%d/", blank=True)
+    file_hash = models.CharField(max_length=128, blank=True)
+
+    def save(self, *args, **kwargs):
+        sha512 = hashlib.sha512()
+        for chunk in self.file.chunks():
+            sha512.update(chunk)
+        self.file_hash = sha512.hexdigest()
+        super(Submission, self).save(*args, **kwargs)
 
     def __str__(self):
         return '{0!s}'.format(self.title)

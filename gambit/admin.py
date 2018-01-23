@@ -27,6 +27,7 @@ admin.site.register(Profile, ProfileAdmin)
 class SubmissionAdmin(admin.ModelAdmin):
     list_display = ('title', '_username', '_timestamp', '_score',)
     list_filter = ('user__username', 'submitted_on',)
+    readonly_fields = ('file_hash',)
     actions = ['_export_to_csv']
 
     # Adds button in top right which will open the submission on the live site
