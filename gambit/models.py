@@ -1,5 +1,6 @@
 import uuid
 from django.db import models
+from django.utils import timezone
 from django.dispatch import receiver
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
@@ -66,8 +67,26 @@ class FrontPage(models.Model):
     submission_guidance = models.TextField(blank=True)
     submission_deadline = models.DateTimeField()
 
+
+class ManagedContent(models.Model):
+    name = models.CharField(max_length=64)
+
     def __str__(self):
-        return "Seriously, don't edit this unless you have explicit permission"
+        return self.name
+
+
+class SubmissionDeadline(ManagedContent):
+    date = models.DateTimeField(default=timezone.now)
+
+
+    class Meta:
+        verbose_name = "Submission Deadline"
+        verbose_name_plural = "Submission Deadline"
+
+
+class FrontPage(ManagedContent):
+    leading_paragraph = models.TextField()
+    submission_paragraph = models.TextField()
 
 
     class Meta:
@@ -75,10 +94,9 @@ class FrontPage(models.Model):
         verbose_name_plural = "Front Page"
 
 
-class HelpPageItem(models.Model):
-    short_description = models.CharField(max_length=32)
-    content = models.TextField(blank=True)
-    lead = models.BooleanField(default=False)
+class HelpPageItem(ManagedContent):
+    title = models.CharField(max_length=64)
+    content = models.TextField()
 
 
     class Meta:

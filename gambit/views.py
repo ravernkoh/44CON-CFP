@@ -45,7 +45,10 @@ class Home(generic.edit.FormMixin, generic.TemplateView):
     def get_context_data(self, **kwargs):
         """Return front page content"""
         context = super(Home, self).get_context_data(**kwargs)
-        context["front_page_content"] = get_object_or_404(FrontPage, id=1)
+        try:
+            context["front_page"] = FrontPage.objects.first()
+        except FrontPage.DoesNotExist:
+            context["front_page"] = None
         return context
 
 
@@ -205,8 +208,7 @@ class Help(mixins.LoginRequiredMixin, generic.TemplateView):
     def get_context_data(self, **kwargs):
         """Return help page content"""
         context = super(Help, self).get_context_data(**kwargs)
-        context["help_page_lead"] = HelpPageItem.objects.filter(lead=True)[0]
-        context["help_page_items"] = HelpPageItem.objects.exclude(lead=True).order_by("id")
+        context["help_page_items"] = HelpPageItem.objects.order_by("id")
         return context
 
 
@@ -257,7 +259,11 @@ def account_activation_sent(request):
 @login_required(login_url="login")
 def submit_form_upload(request):
     # Prevent submissions after deadline has passed
-    if timezone.now() <= FrontPage.objects.get(id=1).submission_deadline:
+    try:
+        SubmissionDeadline.objects.first().date
+    except AttributeError as e:
+        raise SystemExit(f"No submission deadline has been added!\n{e!s}")
+    if timezone.now() <= SubmissionDeadline.objects.first().date:
         if request.method == "POST":
             form = SubmitForm(request.POST, request.FILES)
             if form.is_valid():

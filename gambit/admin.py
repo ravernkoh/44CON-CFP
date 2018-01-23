@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.utils.safestring import mark_safe
 from django.contrib.sessions.models import Session
 
-from .models import Profile, Submission, SubmissionReview, FrontPage, HelpPageItem
+from .models import Profile, Submission, SubmissionReview, FrontPage, SubmissionDeadline, HelpPageItem
 
 
 class ProfileAdmin(admin.ModelAdmin):
@@ -106,22 +106,29 @@ admin.site.register(SubmissionReview, SubmissionReviewAdmin)
 class FrontPageAdmin(admin.ModelAdmin):
     # This model is naively used to control the content display on the front page of the website
     # In later versions, this will be superceded by a content management system accessed through the website
-    list_display = ('__str__', 'id',)
+    list_display = ('name',)
 
-    def has_add_permission(self, request):
-        return False
-
-    def has_delete_permission(self, request, obj=FrontPage):
-        return False
+    def has_add_permission(self, *args, **kwargs):
+        return not FrontPage.objects.exists()
 
 
 admin.site.register(FrontPage, FrontPageAdmin)
 
 
+class SubmissionDeadlineAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+
+    def has_add_permission(self, *args, **kwargs):
+        return not SubmissionDeadline.objects.exists()
+
+
+admin.site.register(SubmissionDeadline, SubmissionDeadlineAdmin)
+
+
 class HelpPageItemAdmin(admin.ModelAdmin):
     # This model is naively used to control the content display on the help page of the website
     # In later versions, this will be superceded by a content management system accessed through the website
-    list_display = ('short_description', 'id',)
+    list_display = ('name', 'id',)
 
 
 admin.site.register(HelpPageItem, HelpPageItemAdmin)
