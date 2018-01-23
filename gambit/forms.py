@@ -15,13 +15,22 @@ class LoginForm(AuthenticationForm):
                                     'type': 'text',
                                     'class': 'form-control',
                                     'name': 'username',
-                                    'autofocus': 'autofocus'
+                                    'autofocus': 'autofocus',
                                 }))
     password = forms.CharField(label="Password",
                                 widget=forms.PasswordInput(attrs={
                                     'type': 'password',
                                     'class': 'form-control',
                                     'name': 'password',
+                                }))
+
+
+class FrontPageLoginForm(LoginForm):
+    username = forms.CharField(label="Username", max_length=254,
+                                widget=forms.TextInput(attrs={
+                                    'type': 'text',
+                                    'class': 'form-control',
+                                    'name': 'username',
                                 }))
 
 
@@ -214,7 +223,10 @@ class SubmitForm(forms.ModelForm):
         ]
         exclude = ['user',]
         abstract_placeholder = "Can be a brief outline (supported by an uploaded document) or detailed overview of your submission"
-        conflicts_placeholder = "If you have any conflicts of interest with the panel - i.e. you are aware of having worked with, co-authored, or co-presented with panel members, please list their names here. It helps us ensure a fair process is followed."
+        conflicts_placeholder = (
+            'If you have any conflicts of interest with the panel - i.e. you are aware of having worked with, co-authored, or co-presented with panel'
+            'members, please list their names here. It helps us ensure a fair process is followed.'
+        )
         help_texts = {
             'file': (
                 'If you have any specific requirements, constraints, supporting content, or just pictures of your cat then please upload them using '
