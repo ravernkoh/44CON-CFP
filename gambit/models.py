@@ -11,11 +11,17 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=128)
     country = models.CharField(max_length=48)
-    affiliation = models.CharField(max_length=32)
+    affiliation = models.CharField(max_length=32, blank=True)
     email_confirmed = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user.username
+
+
+    class Meta:
+        verbose_name = "User Profile"
+        verbose_name_plural = "User Profiles"
+
 
 # During user signup, a linked profile object is tied to the generated user object
 @receiver(post_save, sender=User)
@@ -62,10 +68,9 @@ class SubmissionReview(models.Model):
         return '{0!s}'.format(self.uuid)
 
 
-class FrontPage(models.Model):
-    lead_paragraph = models.TextField(blank=True)
-    submission_guidance = models.TextField(blank=True)
-    submission_deadline = models.DateTimeField()
+    class Meta:
+        verbose_name = "Review"
+        verbose_name_plural = "Reviews"
 
 
 class ManagedContent(models.Model):

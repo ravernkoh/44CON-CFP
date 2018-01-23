@@ -13,13 +13,13 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.auth import login, mixins, REDIRECT_FIELD_NAME
 
 from .tokens import account_activation_token
-from .models import Submission, SubmissionReview, FrontPage, HelpPageItem, Profile
-from .forms import SignUpForm, SubmitForm, SubmissionReviewForm, LoginForm, UpdateProfileForm
+from .models import Submission, SubmissionReview, FrontPage, SubmissionDeadline, HelpPageItem, Profile
+from .forms import SignUpForm, SubmitForm, SubmissionReviewForm, FrontPageLoginForm, UpdateProfileForm
 
 
 class Home(generic.edit.FormMixin, generic.TemplateView):
     template_name = "gambit/home.html"
-    form_class = LoginForm
+    form_class = FrontPageLoginForm
     redirect_field_name = REDIRECT_FIELD_NAME
 
     def dispatch(self, request, *args, **kwargs):
