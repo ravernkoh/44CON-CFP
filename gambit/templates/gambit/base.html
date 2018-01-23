@@ -25,8 +25,8 @@
 
     <title>{% block title %}{% endblock %}44CON CFP {{ CONFERENCE_YEAR }}</title>
 
-    <link rel='stylesheet' type='text/css' href='{% static 'gambit/flat-ui/css/vendor/bootstrap/css/bootstrap.min.css' %}'>
-    <link rel='stylesheet' type='text/css' href='{% static 'gambit/flat-ui/css/flat-ui.min.css' %}'>
+    <link rel='stylesheet' type='text/css' href='{% static 'flat-ui/dist/css/vendor/bootstrap/css/bootstrap.min.css' %}'>
+    <link rel='stylesheet' type='text/css' href='{% static 'flat-ui/dist/css/flat-ui.min.css' %}'>
     {% block styleinject %}{% endblock %}
 
     <link rel='stylesheet' type='text/css' href='{% static 'gambit/style.css' %}' />
@@ -61,8 +61,8 @@
       {% block content %}{% endblock %}
     </div>
 
-    <script type='text/javascript' charset='utf-8' src='{% static 'gambit/jquery.min.js' %}'></script>
-    <script type='text/javascript' charset='utf-8' src='{% static 'gambit/flat-ui/js/flat-ui.min.js' %}'></script>
+    <script type='text/javascript' charset='utf-8' src='{% static 'jquery/dist/jquery.min.js' %}'></script>
+    <script type='text/javascript' charset='utf-8' src='{% static 'flat-ui/dist/js/flat-ui.min.js' %}'></script>
 
     {% block scriptinject %}{% endblock %}
   </body>

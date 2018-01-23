@@ -1,8 +1,9 @@
-*.pyc
-__pycache__/
+bower_components/
+gambit/media/
 gambit/migrations/
 gambit/static/admin/
-gambit/media/
+*.pyc
+__pycache__/
 bandit
-vulture
 prospector
+vulture
