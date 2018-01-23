@@ -1,7 +1,7 @@
 bower_components/
 gambit/media/
 gambit/migrations/
-gambit/static/admin/
+gambit/static/
 *.pyc
 __pycache__/
 bandit
