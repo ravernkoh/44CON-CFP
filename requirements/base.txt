@@ -3,4 +3,5 @@ colorlog>=3.1.0
 Django==2.0.1
 django-anymail==1.2
 psycopg2>=2.7.3.2
+PyYAML>=3.12
 requests>=2.18.4
