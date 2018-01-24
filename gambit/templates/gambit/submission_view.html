@@ -34,9 +34,9 @@
               <td><strong>Submission:</strong></td>
               <td><a href='{{ submission.file.url }}'>{{ submission_file_name }} <span class='glyphicon glyphicon-download' aria-hidden='true'></span></a> ({{ submission.file.size|filesizeformat }})</td>
             </tr>
-            <tr>
-              <td><span class='small smaller'><strong>File Hash:</strong></span></td>
-              <td id='file-hash' data-toggle="tooltip" data-placement="bottom" title="SHA-512 checksum"><span class='small smaller' id='abbreviated-hash'>{{ submission.file_hash|truncatechars:9 }}</span><span class='small smaller' id='full-hash'>{{ submission.file_hash }}</span></td>
+            <tr >
+              <td><strong>File Hash:</strong></td>
+              <td id='file-hash' data-toggle="tooltip" data-placement="bottom" title="SHA-512 checksum"><code id='abbreviated-hash' class='smaller'>{{ submission.file_hash|truncatechars:9 }}</code><code id='full-hash' class='smaller'>{{ submission.file_hash }}</code></td>
             </tr>{% endif %}
             {% if submission.conflicts %}<tr>
               <td><strong class='text-danger'>Conflicts:</strong></td>
