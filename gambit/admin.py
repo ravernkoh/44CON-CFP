@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from django.template import defaultfilters
 from django.contrib.auth.models import User
 from django.utils.safestring import mark_safe
-from django.contrib.sessions.models import Session
+#from django.contrib.sessions.models import Session
 
 from .models import Profile, Submission, SubmissionReview, FrontPage, SubmissionDeadline, HelpPageItem
 
@@ -135,26 +135,26 @@ class HelpPageItemAdmin(admin.ModelAdmin):
 admin.site.register(HelpPageItem, HelpPageItemAdmin)
 
 
-class SessionAdmin(admin.ModelAdmin):
-    # This model is exposed for debugging and troubleshooting purposes
-    # Can be removed in production environment
-    list_display = ('session_key', '_username', '_session_data', 'expire_date',)
-    exclude = ('session_data',)
-    readonly_fields = ('session_key', '_session_data',)
-
-    # Unpickle the dictionary value containing the session data
-    def _session_data(self, obj):
-        return obj.get_decoded()
-    _session_data.short_description = 'Session Data'
-
-    def _username(self, obj):
-        user_id = obj.get_decoded()['_auth_user_id']
-        return User.objects.get(id=user_id)
-    _username.short_description = 'Username'
-
-    # Explicitly restrict manual session creation
-    def has_add_permission(self, request):
-        return False
-
-
-admin.site.register(Session, SessionAdmin)
+# class SessionAdmin(admin.ModelAdmin):
+#     # This model is exposed for debugging and troubleshooting purposes
+#     # Can be removed in production environment
+#     list_display = ('session_key', '_username', '_session_data', 'expire_date',)
+#     exclude = ('session_data',)
+#     readonly_fields = ('session_key', '_session_data',)
+#
+#     # Unpickle the dictionary value containing the session data
+#     def _session_data(self, obj):
+#         return obj.get_decoded()
+#     _session_data.short_description = 'Session Data'
+#
+#     def _username(self, obj):
+#         user_id = obj.get_decoded()['_auth_user_id']
+#         return User.objects.get(id=user_id)
+#     _username.short_description = 'Username'
+#
+#     # Explicitly restrict manual session creation
+#     def has_add_permission(self, request):
+#         return False
+#
+#
+# admin.site.register(Session, SessionAdmin)
