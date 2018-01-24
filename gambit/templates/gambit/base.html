@@ -33,7 +33,7 @@
   </head>
 
   <body>
-    {% if user.is_authenticated %}<div class="alert alert-danger text-center banner-alert" role="alert">All talks and workshops <strong>must</strong> be submitted before <strong>{{ SUBMISSION_DEADLINE }}</strong> <small>({{ SUBMISSION_DEADLINE|date:'Y-m-d H:i' }})</small>.</div>{% endif %}
+    <div class="alert alert-danger text-center banner-alert" role="alert">All talks and workshops <strong>must</strong> be submitted before <strong>{{ SUBMISSION_DEADLINE|date:'Y-m-d H:i T' }}</strong>.</div>
     <nav class='navbar navbar-inverse navbar-embossed navbar-static-top' role='navigation'>
       <div class='navbar-header'>
         <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='#navbar-collapse-01'>

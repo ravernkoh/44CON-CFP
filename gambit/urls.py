@@ -55,6 +55,5 @@ handler403 = views.PermissionDenied.as_view()
 handler404 = views.PageNotFound.as_view()
 handler500 = views.ServerError.as_view()
 
-# Handle requests for styles if developing locally without a web server proxy
 if not settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
