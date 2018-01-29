@@ -4,4 +4,5 @@ Django==2.0.1
 django-anymail==1.2
 psycopg2>=2.7.3.2
 PyYAML>=3.12
+raven>=6.5.0
 requests>=2.18.4
