@@ -44,3 +44,6 @@ td#file-hash code#full-hash { display: none; }
 td#file-hash:hover code#full-hash { display: inline; }
 
 .smaller { font-size: 65%; }
+
+/* Navbar auth buttons */
+p.auth-buttons { margin-bottom:0; }

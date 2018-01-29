@@ -50,9 +50,9 @@
           {% if user.is_superuser %}<li><a href='{% url 'admin:index' %}' title='Administration Panel'><span class='fui-gear' aria-hidden='true'></span></a></li>{% endif %}
           <li{% if request.resolver_match.view_name == 'help' %} class='active'{% endif %}><a href='{% url 'help' %}' title='Help'><span class='fui-question-circle' aria-hidden='true'></span></a></li>
         </ul>
-        {% if user.is_authenticated %}<p class='navbar-right navbar-text'><!--buffer--></p><p class='navbar-right' style='margin-bottom:0'><a class='btn btn-primary navbar-btn btn-wide' href='{% url 'logout' %}?next={{request.path}}' title='Logout'>Logout</a></p>
+        {% if user.is_authenticated %}<p class='navbar-right navbar-text'><!--buffer--></p><p class='navbar-right auth-buttons'><a class='btn btn-primary navbar-btn btn-wide' href='{% url 'logout' %}?next={{request.path}}' title='Logout'>Logout</a></p>
         {% else %}
-        <p class='navbar-right navbar-text'><!--buffer--></p><p class='navbar-right' style='margin-bottom:0'><a class='btn btn-primary navbar-btn btn-wide' href='{% url 'login' %}?next={{request.path}}' title='Login'>Login</a></p>
+        <p class='navbar-right navbar-text'><!--buffer--></p><p class='navbar-right auth-buttons'><a class='btn btn-primary navbar-btn btn-wide' href='{% url 'login' %}?next={{request.path}}' title='Login'>Login</a></p>
         {% endif %}
       </div>
     </nav>
@@ -64,13 +64,7 @@
     <script type='text/javascript' charset='utf-8' src='{% static 'jquery/dist/jquery.min.js' %}'></script>
     <script type='text/javascript' charset='utf-8' src='{% static 'flat-ui/dist/js/flat-ui.min.js' %}'></script>
     <script type='text/javascript' charset='utf-8' src='{% static 'raven-js/dist/raven.min.js' %}'></script>
-    {% load raven %}
-    <script>Raven.config('{% sentry_public_dsn 'https' %}', {
-      release: '{{ RELEASE_HASH }}'
-    }).install()
-    Raven.setUserContext({
-      username: '{{ user.username }}',
-    });</script>
+    {% load raven %}<script type='text/javascript' charset='utf-8' src='{% static 'gambit/raven-init.js' %}'></script>
 
     {% block scriptinject %}{% endblock %}
   </body>
