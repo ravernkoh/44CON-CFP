@@ -13,7 +13,36 @@
     <script type='text/javascript' charset='utf-8' src='{% static 'datatables.net-responsive/js/dataTables.responsive.min.js' %}'></script>
     <script type='text/javascript' charset='utf-8' src='{% static 'datatables.net-responsive-bs/js/responsive.bootstrap.min.js' %}'></script>
     <script type='text/javascript' charset='utf-8' src='{% static 'jzip/jzip.js' %}'></script>
-    <script type='text/javascript' charset='utf-8' src='{% static 'gambit/dt-init.js' %}'></script>{% endblock %}
+    <script>var editor;
+      $(document).ready(function(){
+          $('#submissions').DataTable({
+          dom: 'Blfrtip',
+          colReorder: true,
+          fixedHeader: true,
+          pageLength: 10,
+          select: true,
+          responsive: true,
+          buttons: [
+            {
+              text: 'This Years Submissions',
+              action: function(e, dt, node, config) {
+                dt.search('{% now "Y" %}').draw();
+              },
+              className: 'btn btn-primary'
+            },
+            {
+              extend: 'collection',
+              text: 'Export...',
+              buttons: [
+                'excel',
+                'csv'
+              ],
+              className: 'btn btn-primary'
+            }
+          ]
+        });
+      });
+    </script>{% endblock %}
 {% block content %}<div class='container'>
   <div class='row'>
     <div class='col-md-12'>
