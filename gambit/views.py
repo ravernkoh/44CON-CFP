@@ -13,7 +13,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.auth import login, mixins, REDIRECT_FIELD_NAME
 
 from .tokens import account_activation_token
-from .models import Submission, SubmissionReview, FrontPage, SubmissionDeadline, HelpPageItem, Profile
+from .models import Submission, SubmissionReview, FrontPage, SubmissionDeadline, RegistrationStatus, HelpPageItem, Profile
 from .forms import SignUpForm, SubmitForm, SubmissionReviewForm, FrontPageLoginForm, UpdateProfileForm
 
 
@@ -213,29 +213,37 @@ class Help(mixins.LoginRequiredMixin, generic.TemplateView):
 
 
 def signup(request):
-    if request.method == "POST":
-        form = SignUpForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            user.refresh_from_db()
-            user.profile.name = form.cleaned_data.get("name")
-            user.profile.country = form.cleaned_data.get("country")
-            user.profile.affiliation = form.cleaned_data.get("affiliation")
-            user.is_active = False
-            user.save()
-            current_site = get_current_site(request)
-            subject = "[44CON] Activate your 44CON CFP account"
-            message = render_to_string("gambit/account_activation_email.html", {
-                "user": user,
-                "domain": current_site.domain,
-                "uid": urlsafe_base64_encode(force_bytes(user.pk)).decode(),
-                "token": account_activation_token.make_token(user),
-            })
-            user.email_user(subject, message)
-            return redirect("account_activation_sent")
+    registration_status = RegistrationStatus.objects.first()
+    if not registration_status.disabled:
+        if request.method == "POST":
+            form = SignUpForm(request.POST)
+            if form.is_valid():
+                user = form.save()
+                user.refresh_from_db()
+                user.profile.name = form.cleaned_data.get("name")
+                user.profile.country = form.cleaned_data.get("country")
+                user.profile.affiliation = form.cleaned_data.get("affiliation")
+                user.is_active = False
+                user.save()
+                current_site = get_current_site(request)
+                subject = "[44CON] Activate your 44CON CFP account"
+                message = render_to_string("gambit/account_activation_email.html", {
+                    "user": user,
+                    "domain": current_site.domain,
+                    "uid": urlsafe_base64_encode(force_bytes(user.pk)).decode(),
+                    "token": account_activation_token.make_token(user),
+                })
+                user.email_user(subject, message)
+                return redirect("account_activation_sent")
+        else:
+            form = SignUpForm()
+        return render(request, "gambit/signup.html", {
+            "form": form,
+        })
     else:
-        form = SignUpForm()
-    return render(request, "gambit/signup.html", {"form": form})
+        return render(request, "gambit/signup.html", {
+            "registration_disabled": True,
+        })
 
 def activate(request, uidb64, token):
     try:
@@ -277,11 +285,11 @@ def submit_form_upload(request):
         else:
             form = SubmitForm()
         return render(request, "gambit/submit.html", {
-            "form": form
+            "form": form,
         })
     else:
         return render(request, "gambit/submit.html", {
-            "deadline_passed": True
+            "deadline_passed": True,
         })
 
 

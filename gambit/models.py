@@ -99,6 +99,15 @@ class SubmissionDeadline(ManagedContent):
         verbose_name_plural = "Submission Deadline"
 
 
+class RegistrationStatus(ManagedContent):
+    disabled = models.BooleanField(default=True)
+
+
+    class Meta:
+        verbose_name = "Registration Status"
+        verbose_name_plural = "Registration Status"
+
+
 class FrontPage(ManagedContent):
     leading_paragraph = models.TextField()
     submission_paragraph = models.TextField()

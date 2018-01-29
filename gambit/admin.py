@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.utils.safestring import mark_safe
 #from django.contrib.sessions.models import Session
 
-from .models import Profile, Submission, SubmissionReview, FrontPage, SubmissionDeadline, HelpPageItem
+from .models import Profile, Submission, SubmissionReview, FrontPage, SubmissionDeadline, RegistrationStatus, HelpPageItem
 
 
 class ProfileAdmin(admin.ModelAdmin):
@@ -124,6 +124,16 @@ class SubmissionDeadlineAdmin(admin.ModelAdmin):
 
 
 admin.site.register(SubmissionDeadline, SubmissionDeadlineAdmin)
+
+
+class RegistrationStatusAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+
+    def has_add_permission(self, *args, **kwargs):
+        return not RegistrationStatus.objects.exists()
+
+
+admin.site.register(RegistrationStatus, RegistrationStatusAdmin)
 
 
 class HelpPageItemAdmin(admin.ModelAdmin):
