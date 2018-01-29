@@ -164,7 +164,9 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
 ]
 
-
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+CSRF_USE_SESSIONS = True
 ROOT_URLCONF = "gambit.urls"
 WSGI_APPLICATION = "gambit.wsgi.application"
 LANGUAGE_CODE = "en-gb"
