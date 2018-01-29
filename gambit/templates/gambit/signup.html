@@ -1,13 +1,6 @@
 {% extends 'gambit/base.html' %}
 {% block title %}Signup - {% endblock %}
-{% block content %}{% if registration_disabled %}<div class='container'>
-  <div class='row'>
-    <div class='col-md-12'>
-      <h2>Registration is currently disabled.</h2>
-      <a href='{% url 'home' %}'>&laquo; Return home</a>
-    </div>
-  </div>
-</div>{% else %}{% if user.is_authenticated %}<div class='container'>
+{% block content %}{% if user.is_authenticated %}<div class='container'>
   <div class='row'>
     <div class='col-md-12'>
       <h2>Already logged in!</h2>
@@ -15,7 +8,14 @@
     </div>
   </div>
 </div>
-{% else %}<div class='container'>
+{% else %}{% if registration_disabled %}<div class='container'>
+  <div class='row'>
+    <div class='col-md-12'>
+      <h2>Registration is currently disabled.</h2>
+      <a href='{% url 'home' %}'>&laquo; Return home</a>
+    </div>
+  </div>
+</div>{% else %}<div class='container'>
   <div class='row'>
     <div class='col-md-12'>
       <h2>Sign up for 44CON CFP</h2>
