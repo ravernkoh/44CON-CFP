@@ -1,22 +1,42 @@
 import os
 
 import yaml
+import raven
 
 
+# Capture the application directory root i.e. <project_root>/<application_root>/
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Allow any host and disable debugging by default
+# These should remain static and be overrriden from environment-specific settings
+ALLOWED_HOSTS = "*"
+DEBUG = False
+
+# Load YAML configuration. If no configuration can be found, exit gracefully as this is required.
 try:
     configuration = yaml.safe_load(open(os.path.join(BASE_DIR, "config.yaml")))
 except FileNotFoundError:
     raise SystemExit(f"\nConfiguration file cannot be found. config.yaml should be present in {BASE_DIR!s}\n")
 
+# Load various required elements from YAML config file
 try:
     SECRET_KEY = configuration['core']['secret_key']
 except TypeError:
     raise SystemExit("\nSecret key has not been set. Please review config.yaml\n")
 
-ALLOWED_HOSTS = "*"
-DEBUG = False
+try:
+    ANYMAIL = {
+        "MAILGUN_API_KEY": configuration['anymail']['mailgun']['api_key'],
+        "MAILGUN_SENDER_DOMAIN": configuration['anymail']['mailgun']['sender_domain'],
+    }
+except KeyError as e:
+    print(f"\nEnvironment variable not set! {e!r}\n")
+    raise SystemExit(1)
+
+try:
+    DEFAULT_FROM_EMAIL = configuration['anymail']['from_email']
+except TypeError:
+    raise SystemExit("\nDefault 'from' email has not been set. Please review config.yaml\n")
 
 INSTALLED_APPS = [
     'gambit.apps.GambitConfig',
@@ -26,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'raven.contrib.django.raven_compat',
     'anymail',
 ]
 
@@ -39,8 +60,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = "gambit.urls"
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -52,13 +71,11 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
-                'gambit.context_processors.global_settings',
+                'gambit.context_processors.global_settings',  # Custom context processors found in context_processors.py
             ],
         },
     },
 ]
-
-WSGI_APPLICATION = "gambit.wsgi.application"
 
 try:
     DATABASES = {
@@ -77,7 +94,15 @@ except KeyError as e:
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
+    'root': {
+        'level': 'WARNING',
+        'handlers': ['sentry'],
+    },
     'formatters': {
+        'verbose': {
+            'format':   '%(levelname)s %(asctime)s %(module)s '
+                        '%(process)d %(thread)d %(message)s',
+        },
         'coloured_verbose': {
             '()': 'colorlog.ColoredFormatter',
             'format': "%(log_color)s%(levelname)s %(bold_white)s[%(process)d] %(bold_blue)s%(message)s",
@@ -88,6 +113,10 @@ LOGGING = {
             'level': 'INFO',
             'class': 'logging.StreamHandler',
             'formatter': 'coloured_verbose',
+        },
+        'sentry': {
+            'level': 'ERROR',
+            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
         },
     },
     'loggers': {
@@ -101,23 +130,18 @@ LOGGING = {
         'gunicorn.error': {
             'handlers': ['coloured_console'],
         },
+        'raven': {
+            'level': 'DEBUG',
+            'handlers': ['coloured_console'],
+            'propagate': False,
+        },
+        'sentry.errors': {
+            'level': 'DEBUG',
+            'handlers': ['coloured_console'],
+            'propagate': False,
+        },
     },
 }
-
-try:
-    ANYMAIL = {
-        "MAILGUN_API_KEY": configuration['anymail']['mailgun']['api_key'],
-        "MAILGUN_SENDER_DOMAIN": configuration['anymail']['mailgun']['sender_domain'],
-    }
-except KeyError as e:
-    print(f"\nEnvironment variable not set! {e!r}\n")
-    raise SystemExit(1)
-
-EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
-try:
-    DEFAULT_FROM_EMAIL = configuration['anymail']['from_email']
-except TypeError:
-    raise SystemExit("\nDefault 'from' email has not been set. Please review config.yaml\n")
 
 CACHES = {
     'default': {
@@ -140,6 +164,9 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
 ]
 
+
+ROOT_URLCONF = "gambit.urls"
+WSGI_APPLICATION = "gambit.wsgi.application"
 LANGUAGE_CODE = "en-gb"
 TIME_ZONE = 'Europe/London'
 USE_I18N = True
@@ -155,6 +182,12 @@ STATICFILES_DIRS = [
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 LOGIN_REDIRECT_URL = "home"
+
+EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
+RAVEN_CONFIG = {
+    'dsn': configuration['sentry']['dsn'],
+    'release': raven.fetch_git_sha(os.path.join(BASE_DIR, '../')),
+}
 
 # Custom global variables
 # These require matching declarations in context_processors.py

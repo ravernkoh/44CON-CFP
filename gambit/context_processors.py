@@ -12,5 +12,6 @@ def global_settings(request):
         'APPLICATION_VERSION': settings.APPLICATION_VERSION,
         'APPLICATION_NAME': settings.APPLICATION_NAME,
         'CONFERENCE_YEAR': settings.CONFERENCE_YEAR,
+        'RELEASE_HASH': settings.RAVEN_CONFIG['release'],
         'SUBMISSION_DEADLINE': deadline.date if deadline else None,
     }

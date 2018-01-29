@@ -12,3 +12,6 @@ postgresql:
   user: 'gambit'
   password: 'gambit'
   port: 5433
+
+sentry:
+  dsn: 'https://x:x@sentry.io/x'
