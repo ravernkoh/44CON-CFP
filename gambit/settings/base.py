@@ -58,6 +58,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'htmlmin.middleware.HtmlMinifyMiddleware',
+    'htmlmin.middleware.MarkRequestMiddleware',
 ]
 
 TEMPLATES = [
@@ -167,6 +169,7 @@ AUTH_PASSWORD_VALIDATORS = [
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 CSRF_USE_SESSIONS = True
+HTML_MINIFY = True
 ROOT_URLCONF = "gambit.urls"
 WSGI_APPLICATION = "gambit.wsgi.application"
 LANGUAGE_CODE = "en-gb"
