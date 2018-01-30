@@ -65,7 +65,7 @@
     <script type='text/javascript' charset='utf-8' src='{% static 'flat-ui/dist/js/flat-ui.min.js' %}'></script>
     <script type='text/javascript' charset='utf-8' src='{% static 'raven-js/dist/raven.min.js' %}'></script>
     {% load raven %}
-    <script>Raven.config('{% sentry_public_dsn 'https' %}', { release: '{{ RELEASE_HASH }}' }).install();Raven.setUserContext({ username: '{{ user.username }}' });</script>
+    <script type='text/javascript'>Raven.config('{% sentry_public_dsn 'https' %}', { release: '{{ RELEASE_HASH }}' }).install();Raven.setUserContext({ username: '{{ user.username }}' });</script>
 
     {% block scriptinject %}{% endblock %}
   </body>

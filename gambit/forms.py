@@ -7,6 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm, SetPasswordForm, PasswordChangeForm
 
 from .models import Submission, SubmissionReview, Profile
+from .blacklist import reserved_usernames
 
 
 class LoginForm(AuthenticationForm):
@@ -139,6 +140,9 @@ class SignUpForm(UserCreationForm):
 
         if username and User.objects.filter(username=username).exists():
             raise forms.ValidationError(_("Username already exists."))
+
+        if username in reserved_usernames:
+            raise forms.ValidationError(_("This username is restricted or otherwise unavailable. Please pick another."))
 
 
     class Meta:
