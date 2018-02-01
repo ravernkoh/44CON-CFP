@@ -9,14 +9,15 @@ readonly LESS_SRC="$PROJECT_ROOT/bower_components/flat-ui/less/flat-ui.less"
 readonly CSS_DEST="$PROJECT_ROOT/bower_components/flat-ui/dist/css/flat-ui-44con.min.css"
 
 main() {
-  echo 'installing bower assets'
+  echo '[+] Installing bower assets from bower.json'
   bower install --save --production || { echo 'bower asset collection failed'; exit 1; }
-  echo 'copying variables file'
+  echo '[>>] Copying less variables into flat-ui'
   cp variables.less bower_components/flat-ui/less || { echo 'could not copy variables file to less directory'; exit 1; }
-  echo 'generating css and source map'
+  echo '[+] Generating minifed CSS and source map for flat-ui'
   lessc --clean-css --source-map="$SOURCE_MAP_DEST" "$LESS_SRC" "$CSS_DEST" || { echo 'could not generate css or map'; exit 1; }
-  echo 'collecting static files to static dir'
+  echo '[>>] Collecting bower assets to Django static directory'
   python manage.py collectstatic --clear || { echo 'could not collect static files'; exit 1; }
+  echo '[=)] Finished preparing style assets for project'
 }
 
 main
