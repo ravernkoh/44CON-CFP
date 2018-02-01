@@ -2,12 +2,11 @@ from django.conf import settings
 
 from .models import SubmissionDeadline
 
-deadline = SubmissionDeadline.objects.first()
-
 
 # Globally-accessible custom variables
 # These all require matching declarations in settings.py
 def global_settings(request):
+    deadline = SubmissionDeadline.objects.first()
     return {
         'APPLICATION_VERSION': settings.APPLICATION_VERSION,
         'APPLICATION_NAME': settings.APPLICATION_NAME,
