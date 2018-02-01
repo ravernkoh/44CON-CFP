@@ -18,3 +18,5 @@ main() {
   echo 'collecting static files to static dir'
   python manage.py collectstatic --clear || { echo 'could not collect static files'; exit 1; }
 }
+
+main
