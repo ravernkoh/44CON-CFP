@@ -12,4 +12,7 @@
 5. `python manage.py migrate`
 6. `bower install --save --production`
 7. `cp variables.less bower_components/flat-ui/less`
-8. `lessc --source-map=.\bower_components\flat-ui\dist\css\flat-ui-44con.css.map --clean-css bower_components/flat-ui/less/flat-ui.less bower_components/flat-ui/dist/css/flat-ui-44con.min.css`
+8. `lessc --source-map=bower_components/flat-ui/dist/css/flat-ui-44con.css.map --clean-css bower_components/flat-ui/less/flat-ui.less bower_components/flat-ui/dist/css/flat-ui-44con.min.css`
+9. `python manage.py collectstatic --clear`
+
+Steps 6 to 9 can be achieved with prepare_assets.sh
