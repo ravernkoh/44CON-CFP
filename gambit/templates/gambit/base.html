@@ -29,6 +29,8 @@
     <link rel='stylesheet' type='text/css' href='{% static 'flat-ui/dist/css/flat-ui-44con.min.css' %}'>
     {% block styleinject %}{% endblock %}
 
+    <script type='text/javascript' charset='utf-8' src='{% static 'jquery/dist/jquery.min.js' %}'></script>
+
     <link rel='stylesheet' type='text/css' href='{% static 'gambit/style.css' %}' />
   </head>
 
@@ -61,7 +63,6 @@
       {% block content %}{% endblock %}
     </div>
 
-    <script type='text/javascript' charset='utf-8' src='{% static 'jquery/dist/jquery.min.js' %}'></script>
     <script type='text/javascript' charset='utf-8' src='{% static 'flat-ui/dist/js/flat-ui.min.js' %}'></script>
     <script type='text/javascript' charset='utf-8' src='{% static 'raven-js/dist/raven.min.js' %}'></script>
     {% load raven %}
