@@ -1,5 +1,8 @@
 {% extends 'gambit/base.html' %}
 {% block title %}{{ submission.title }} - Review Submission - {% endblock %}
+{% block scriptinject %}<script>$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})</script>{% endblock %}
 {% block content %}<div class='container'>
   <div class='row'>
     <div class='col-md-12'>
@@ -33,7 +36,7 @@
             </tr>
             <tr>
               <td><span class='small smaller'><strong>File Hash:</strong></span></td>
-              <td id='file-hash' data-toggle="tooltip" data-placement="bottom" title="SHA-512 checksum"><span class='small smaller' id='abbreviated-hash'>{{ submission.file_hash|truncatechars:9 }}</span><span class='small smaller' id='full-hash'>{{ submission.file_hash }}</span></td>
+              <td id='file-hash' data-toggle="tooltip" data-placement="bottom" title="SHA-512 checksum"><code id='abbreviated-hash' class='smaller'>{{ submission.file_hash|truncatechars:9 }}</code><code id='full-hash' class='smaller'>{{ submission.file_hash }}</code></td>
             </tr>{% endif %}
             {% if submission.conflicts %}<tr>
               <td><strong class='text-danger'>Conflicts:</strong></td>
