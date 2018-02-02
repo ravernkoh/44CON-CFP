@@ -11,9 +11,9 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=128)
-    country = models.CharField(max_length=48)
-    affiliation = models.CharField(max_length=32, blank=True)
+    name = models.CharField(max_length=255)
+    country = models.CharField(max_length=255)
+    affiliation = models.CharField(max_length=255, blank=True)
     email_confirmed = models.BooleanField(default=False)
 
     def __str__(self):
@@ -37,7 +37,7 @@ class Submission(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True)
     submitted_on = models.DateTimeField(auto_now_add=True)
-    title = models.CharField(max_length=128)
+    title = models.CharField(max_length=255)
     authors = models.TextField(blank=True)
     contact_email = models.EmailField()
     abstract = models.TextField(blank=True)
@@ -84,7 +84,7 @@ class SubmissionReview(models.Model):
 
 
 class ManagedContent(models.Model):
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=255)
 
     def __str__(self):
         return self.name
@@ -119,7 +119,7 @@ class FrontPage(ManagedContent):
 
 
 class HelpPageItem(ManagedContent):
-    title = models.CharField(max_length=64)
+    title = models.CharField(max_length=255)
     content = models.TextField()
 
 
