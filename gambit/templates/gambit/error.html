@@ -9,6 +9,5 @@
   <div class='panel-body'>
     <h4>Oops!</h4>
     <p>Something went wrong when requesting '{{ request.path }}'. If this issue persists, please email aidan@44con.com.</p>
-    {% if request.sentry.id %}<p>You may reference this error as <strong>{{ request.sentry.id }}</strong>.</p>{% endif %}
   </div>
 </div>{% endblock %}
