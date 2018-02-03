@@ -6,7 +6,6 @@ from django.http import HttpResponse
 from django.template import defaultfilters
 from django.contrib.auth.models import User
 from django.utils.safestring import mark_safe
-#from django.contrib.sessions.models import Session
 
 from .models import Profile, Submission, SubmissionReview, FrontPage, SubmissionDeadline, RegistrationStatus, HelpPageItem
 
@@ -19,11 +18,11 @@ class ProfileAdmin(admin.ModelAdmin):
     def _username(self, obj):
         link_to_user_object = reverse('admin:auth_user_change', args=(obj.user.id,))
         return mark_safe(f"<a href='{link_to_user_object}'>{obj.user.username}</a>")
-    _username.short_description = 'User'
+    _username.short_description = "User"
 
     def _last_login(self, obj):
         return obj.user.last_login
-    _last_login.short_description = 'Last login'
+    _last_login.short_description = "Last login"
 
 
 admin.site.register(Profile, ProfileAdmin)
@@ -37,17 +36,17 @@ class SubmissionAdmin(admin.ModelAdmin):
 
     # Adds button in top right which will open the submission on the live site
     def view_on_site(self, obj):
-        return reverse('submission', args=(obj.uuid,))
+        return reverse("submission", args=(obj.uuid,))
 
     # Renders the related username as a link to the edit page for the actual user object
     def _username(self, obj):
-        link_to_user_object = reverse('admin:auth_user_change', args=(obj.user.id,))
+        link_to_user_object = reverse("admin:auth_user_change", args=(obj.user.id,))
         return mark_safe(f"<a href='{link_to_user_object}'>{obj.user.username}</a>")
-    _username.short_description = 'User'
+    _username.short_description = "User"
 
     # ISO 8601 date formatting or GTFO
     def _timestamp(self, obj):
-        return defaultfilters.date(obj.submitted_on, 'Y-m-d H:i')
+        return defaultfilters.date(obj.submitted_on, "Y-m-d H:i")
 
     def _score(self, obj):
         return obj.get_average_score()
@@ -79,7 +78,7 @@ class SubmissionReviewAdmin(admin.ModelAdmin):
 
     # Adds button in top right which will open the related submission on the live site
     def view_on_site(self, obj):
-        return reverse('submission', args=(obj.submission.uuid,))
+        return reverse("submission", args=(obj.submission.uuid,))
 
     def _submission(self, obj):
         return obj.submission.title
@@ -92,7 +91,7 @@ class SubmissionReviewAdmin(admin.ModelAdmin):
     # Can be removed completely in production environment
     def _uuid_snip(self, obj):
         return obj.uuid.hex
-    _uuid_snip.short_description = 'UUID'
+    _uuid_snip.short_description = "UUID"
 
     def _export_to_csv(self, request, queryset):
         response = HttpResponse(content_type="text/csv")
@@ -148,28 +147,3 @@ class HelpPageItemAdmin(admin.ModelAdmin):
 
 
 admin.site.register(HelpPageItem, HelpPageItemAdmin)
-
-
-# class SessionAdmin(admin.ModelAdmin):
-#     # This model is exposed for debugging and troubleshooting purposes
-#     # Can be removed in production environment
-#     list_display = ('session_key', '_username', '_session_data', 'expire_date',)
-#     exclude = ('session_data',)
-#     readonly_fields = ('session_key', '_session_data',)
-#
-#     # Unpickle the dictionary value containing the session data
-#     def _session_data(self, obj):
-#         return obj.get_decoded()
-#     _session_data.short_description = 'Session Data'
-#
-#     def _username(self, obj):
-#         user_id = obj.get_decoded()['_auth_user_id']
-#         return User.objects.get(id=user_id)
-#     _username.short_description = 'Username'
-#
-#     # Explicitly restrict manual session creation
-#     def has_add_permission(self, request):
-#         return False
-#
-#
-# admin.site.register(Session, SessionAdmin)

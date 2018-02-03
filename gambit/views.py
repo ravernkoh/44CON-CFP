@@ -30,6 +30,8 @@ class Home(generic.edit.FormMixin, generic.TemplateView):
         login(self.request, form.get_user())
         if self.request.session.test_cookie_worked():
             self.request.session.delete_test_cookie()
+        else:
+            self.request.session.delete_test_cookie()
         return super(Home, self).form_valid(form)
 
     def get_success_url(self):
