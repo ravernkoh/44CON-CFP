@@ -46,10 +46,11 @@ class Submission(models.Model):
     file_hash = models.CharField(max_length=128, blank=True)
 
     def save(self, *args, **kwargs):
-        sha512 = hashlib.sha512()
-        for chunk in self.file.chunks():
-            sha512.update(chunk)
-        self.file_hash = sha512.hexdigest()
+        if self.file:
+            sha512 = hashlib.sha512()
+            for chunk in self.file.chunks():
+                sha512.update(chunk)
+            self.file_hash = sha512.hexdigest()
         super(Submission, self).save(*args, **kwargs)
 
     def __str__(self):
