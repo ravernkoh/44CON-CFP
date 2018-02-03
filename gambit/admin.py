@@ -12,13 +12,18 @@ from .models import Profile, Submission, SubmissionReview, FrontPage, Submission
 
 
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('name', '_username',)
+    list_display = ('name', '_username', '_last_login',)
+    search_fields = ['name', 'user__username',]
 
     # Renders the related username as a link to the edit page for the actual user object
     def _username(self, obj):
         link_to_user_object = reverse('admin:auth_user_change', args=(obj.user.id,))
         return mark_safe(f"<a href='{link_to_user_object}'>{obj.user.username}</a>")
     _username.short_description = 'User'
+
+    def _last_login(self, obj):
+        return obj.user.last_login
+    _last_login.short_description = 'Last login'
 
 
 admin.site.register(Profile, ProfileAdmin)
