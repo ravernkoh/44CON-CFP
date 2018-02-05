@@ -1,5 +1,7 @@
 # 44CON-CFP
 
+[![Requirements Status](https://requires.io/github/rawhex/44CON-CFP/requirements.svg?branch=master)](https://requires.io/github/rawhex/44CON-CFP/requirements/?branch=master)
+
 **Author**: Aidan Mitchell <aidan@44con.com>
 
 **Version**: 0.1.0
