@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
 from django.contrib.auth.models import User
+from django.shortcuts import render_to_response
 from django.template.loader import render_to_string
 from django.utils.encoding import force_text, force_bytes
 from django.contrib.auth.decorators import login_required
@@ -336,3 +337,8 @@ class ServerError(GenericError):
     def __init__(self):
         self.error_value = 500
         self.error_type = "Server Error"
+
+
+def csrf_failure(request, reason="CSRF Failure"):
+    current_site = get_current_site(request)
+    return render_to_response("gambit/csrf_error.html", {'error_value': 403, 'error_type': 'CSRF Failure', 'domain': current_site.domain})
