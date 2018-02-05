@@ -4,7 +4,7 @@ core:
 
 anymail:
   mailgun:
-    api_key: 'key-dae8281e39dae88f6cc6ac0b2ef6164b'
+    api_key: 'yourmailgunkey'
     sender_domain: 'mg.example.com'
   from_email: 'cfp@example.org'
 
