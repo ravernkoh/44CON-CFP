@@ -197,7 +197,7 @@ RAVEN_CONFIG = {
 
 # Custom global variables
 # These require matching declarations in context_processors.py
-APPLICATION_VERSION = "0.0.1-beta"
+APPLICATION_VERSION = "0.1.0"
 APPLICATION_NAME = "44CON CFP"
 CONFERENCE_YEAR = "2018"
 
