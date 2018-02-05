@@ -170,6 +170,7 @@ AUTH_PASSWORD_VALIDATORS = [
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 CSRF_USE_SESSIONS = True
+CSRF_FAILURE_VIEW = "gambit.views.csrf_failure"
 HTML_MINIFY = True
 ROOT_URLCONF = "gambit.urls"
 WSGI_APPLICATION = "gambit.wsgi.application"
