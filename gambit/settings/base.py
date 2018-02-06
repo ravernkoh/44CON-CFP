@@ -89,6 +89,9 @@ try:
             'PASSWORD': configuration['postgresql']['password'],
             'HOST': 'localhost',
             'PORT': configuration['postgresql']['port'],
+            'TEST': {
+                'NAME': 'test_gambit'
+            }
         },
     }
 except KeyError as e:
