@@ -1,11 +1,24 @@
+dist: trusty
 language: python
 python:
   - "3.6"
+services: postgresql
+before_script:
+  - psql -c "create database gambit;" -U postgres
+  - psql -c "CREATE USER gambit WITH PASSWORD 'gambit';" -U postgres
+  - psql -c "ALTER USER gambit CREATEDB;" -U postgres
 install:
   - pip install -r requirements/base.txt
   - pip install coveralls
+  - npm install -g bower
 script:
   - export DJANGO_SETTINGS_MODULE="gambit.settings.development"
+  - python manage.py migrate
+  - python manage.py makemigrations gambit
+  - python manage.py migrate
+  - npm intall -g bower
+  - bower install --save --production
+  - python manage.py collectstatic --clear
   - coverage run --source='.' manage.py test gambit
 after_success:
   - coveralls

@@ -11,7 +11,7 @@ anymail:
 postgresql:
   user: 'gambit'
   password: 'gambit'
-  port: 5433
+  port: 5432
 
 sentry:
   dsn: 'https://x:x@sentry.io/x'
