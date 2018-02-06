@@ -2,8 +2,9 @@ bower_components/
 gambit/media/
 gambit/migrations/
 gambit/static/
-*.pyc
 __pycache__/
+*.pyc
+.coverage
 bandit
 prospector
 vulture
