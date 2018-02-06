@@ -1,6 +1,6 @@
 # 44CON-CFP
 
-[![Requirements Status](https://requires.io/github/rawhex/44CON-CFP/requirements.svg?branch=master)](https://requires.io/github/rawhex/44CON-CFP/requirements/?branch=master)
+[![Requirements Status](https://requires.io/github/rawhex/44CON-CFP/requirements.svg?branch=master)](https://requires.io/github/rawhex/44CON-CFP/requirements/?branch=master) [![Coverage Status](https://coveralls.io/repos/github/rawhex/44CON-CFP/badge.svg?branch=master)](https://coveralls.io/github/rawhex/44CON-CFP?branch=master) [![Build Status](https://travis-ci.org/rawhex/44CON-CFP.svg?branch=master)](https://travis-ci.org/rawhex/44CON-CFP)
 
 **Author**: Aidan Mitchell <aidan@44con.com>
 

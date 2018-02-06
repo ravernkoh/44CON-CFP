@@ -5,6 +5,7 @@ install:
   - pip install -r requirements/base.txt
   - pip install coveralls
 script:
+  - export DJANGO_SETTINGS_MODULE="gambit.settings.development"
   - coverage run --source='.' manage.py test gambit
 after_success:
   - coveralls
