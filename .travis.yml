@@ -4,7 +4,7 @@ python:
   - "3.6"
 services: postgresql
 before_install:
-  - python -c "import fcntl; fcntl.fcntl(1, fcntl.F_SETFL, 0)"
+  - python -c 'import os,sys,fcntl; flags = fcntl.fcntl(sys.stdout, fcntl.F_GETFL); fcntl.fcntl(sys.stdout, fcntl.F_SETFL, flags&~os.O_NONBLOCK);'
 install:
   - pip install -r requirements/base.txt
   - pip install coveralls
@@ -18,9 +18,8 @@ script:
   - python manage.py migrate
   - python manage.py makemigrations gambit
   - python manage.py migrate
-  - npm intall -g bower
   - bower install --save --production
-  - python manage.py collectstatic
+  - python manage.py collectstatic --noinput --clear --verbosity 0
   - coverage run --source='.' manage.py test gambit
 after_success:
   - coveralls
