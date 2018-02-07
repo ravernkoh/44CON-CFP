@@ -15,8 +15,8 @@ These are extremely rudimentary instructions to build the development environmen
 3. Add the core database tables: `python manage.py migrate`
 4. Prepare the project-specific tables: `python manage.py makemigrations gambit`
 5. Commit to database: `python manage.py migrate`
-6. Collect CSS and JavaScript assets: `bower install --save --production`
-7. *Optional* Modify the variables.less file to change the site colour scheme: `cp variables.less bower_components/flat-ui/less`
+6. Collect CSS and JavaScript assets: `bower install --save --production misc/bower.json`
+7. *Optional* Modify the variables.less file to change the site colour scheme: `cp misc/variables.less bower_components/flat-ui/less`
 8. *Optional (dependent on 7)* Generate minified CSS and source map: `lessc --source-map=bower_components/flat-ui/dist/css/flat-ui-44con.css.map --clean-css bower_components/flat-ui/less/flat-ui.less bower_components/flat-ui/dist/css/flat-ui-44con.min.css`
 9. Copy bower assets and project assets to static directory: `python manage.py collectstatic --clear`
 
