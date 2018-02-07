@@ -19,7 +19,7 @@ script:
   - python manage.py migrate
   - python manage.py makemigrations gambit
   - python manage.py migrate
-  - bower install --save --production
+  - bower install --save --production misc/bower.json
   - python manage.py collectstatic --noinput --clear --verbosity 0
   - coverage run --source='.' manage.py test gambit
 after_success:
