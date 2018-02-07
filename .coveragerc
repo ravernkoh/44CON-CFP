@@ -1,0 +1,5 @@
+[run]
+omit =
+  manage.py
+  gambit/wsgi.py
+  gambit/migrations/*
