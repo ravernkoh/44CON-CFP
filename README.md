@@ -9,7 +9,7 @@ This application was designed to replace the CFP system we used for 44CON 2016 a
 These are extremely rudimentary instructions to build the development environment - some of which will be relevant for preparing a production environment. Previous experience with a Django project is probably necessary to troubleshoot through setup.
 
 1. Get dependencies for Django: `pip install -r requirements/base.txt`
-2. Update `gambit/config.yaml` with your own secret key, anymail settings, postgresql details, and sentry DSN. If you've got your own mail setup, alternative database deployment, or use a different error tracking solution, you will need to make the relevant changes in settings/base.py or override them in settings/YOUR-OWN-SETTINGS-FILE.py
+2. Copy `gambit/config.example.yaml` to `gambit/config.yaml` and update it with your own secret key, anymail settings, postgresql details, and sentry DSN. If you've got your own mail setup, alternative database deployment, or use a different error tracking solution, you will need to make the relevant changes in settings/base.py or override them in settings/YOUR-OWN-SETTINGS-FILE.py
 3. Add the core database tables: `python manage.py migrate`
 4. Prepare the project-specific tables: `python manage.py makemigrations gambit`
 5. Commit to database: `python manage.py migrate`
