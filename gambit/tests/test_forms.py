@@ -27,7 +27,7 @@ class SignupFormCorrect(SignupFormBase):
             'country': self.country,
             'affiliation': self.affiliation,
         })
-        self.failUnless(form.is_valid())
+        self.assertTrue(form.is_valid())
 
 
 class SignupFormIncorrect(SignupFormBase):
@@ -41,7 +41,7 @@ class SignupFormIncorrect(SignupFormBase):
             'country': self.country,
             'affiliation': self.affiliation,
         })
-        self.failIf(form.is_valid())
+        self.assertFalse(form.is_valid())
         self.assertEqual(form.non_field_errors()[0], "This username is restricted or otherwise unavailable. Please pick another.")
 
     def test_signup_form_existing_username(self):
@@ -55,7 +55,7 @@ class SignupFormIncorrect(SignupFormBase):
             'country': self.country,
             'affiliation': self.affiliation,
         })
-        self.failIf(form.is_valid())
+        self.assertFalse(form.is_valid())
         self.assertEqual(form.non_field_errors()[0], "Username already exists.")
 
     def test_signup_form_existing_email_address(self):
@@ -69,7 +69,7 @@ class SignupFormIncorrect(SignupFormBase):
             'country': self.country,
             'affiliation': self.affiliation,
         })
-        self.failIf(form.is_valid())
+        self.assertFalse(form.is_valid())
         self.assertEqual(form.non_field_errors()[0], "Email address has already been used.")
 
     def test_signup_form_password1_mismatch(self):
@@ -82,7 +82,7 @@ class SignupFormIncorrect(SignupFormBase):
             'country': self.country,
             'affiliation': self.affiliation,
         })
-        self.failIf(form.is_valid())
+        self.assertFalse(form.is_valid())
         self.assertEqual(form.errors['password2'], ["The two password fields didn't match."])
 
     def test_signup_form_password2_mismatch(self):
@@ -95,7 +95,7 @@ class SignupFormIncorrect(SignupFormBase):
             'country': self.country,
             'affiliation': self.affiliation,
         })
-        self.failIf(form.is_valid())
+        self.assertFalse(form.is_valid())
         self.assertEqual(form.errors['password2'], ["The two password fields didn't match."])
 
 
