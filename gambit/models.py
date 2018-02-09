@@ -1,3 +1,4 @@
+import os
 import uuid
 import hashlib
 
@@ -18,6 +19,12 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
+
+    def get_submissions(self):
+        return Submission.objects.filter(user=self.user).order_by("submitted_on")
+
+    def get_reviews(self):
+        return SubmissionReview.objects.filter(user=self.user).order_by("submitted_on")
 
 
     class Meta:
@@ -64,6 +71,11 @@ class Submission(models.Model):
 
     def get_total_score(self):
         return SubmissionReview.objects.filter(submission=self).aggregate(models.Sum("submission_score"))["submission_score__sum"]
+
+    def get_file_name(self):
+        if self.file:
+            _, tail = os.path.split(self.file.name)  # Discarding path prefix
+            return tail
 
 
 class SubmissionReview(models.Model):

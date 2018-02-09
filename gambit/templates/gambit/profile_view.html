@@ -44,6 +44,26 @@
             </tr>{% endfor %}
           </tbody>
         </table>
+        <hr>
+        {% load has_group %}{% if user|has_group:'Programme Committee' %}<table class='table table-striped table-responsive'>
+          <thead>
+            <th class='col-md-3'>My Reviews</th>
+            <th class='col-md-3'>Submission Score</th>
+            <th class='col-md-3'>Expertise Score</th>
+            <th class='col-md-3'>Review Date</th>
+          </thead>
+          <tbody>
+            {% for review in reviews %}<tr>
+              <td><a href='{% url 'submission' review.submission.uuid %}'>{{ review.submission.title }}</a></td>
+              <td>{{ review.submission_score }}</td>
+              <td>{{ review.expertise_score }}</td>
+              <td>{{ review.submitted_on|date:'Y-m-d' }}</td>
+            </tr>{% empty %}
+            <tr>
+              <td colspan='2'>You haven't reviewed anything yet!</td>
+            </tr>{% endfor %}
+          </tbody>
+        </table>{% endif %}
       </div>
     </div>
   </div>

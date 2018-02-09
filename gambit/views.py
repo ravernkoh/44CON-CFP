@@ -1,5 +1,3 @@
-import os
-
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
@@ -62,7 +60,9 @@ class ViewProfile(mixins.LoginRequiredMixin, generic.TemplateView):
     def get_context_data(self, **kwargs):
         """Return submissions"""
         context = super(ViewProfile, self).get_context_data(**kwargs)
-        context["submissions"] = Submission.objects.filter(user=self.request.user).order_by("submitted_on")
+        context["submissions"] = self.request.user.profile.get_submissions()
+        if self.request.user.groups.filter(name="Programme Committee").exists():
+            context["reviews"] = self.request.user.profile.get_reviews()
         return context
 
 
@@ -107,9 +107,7 @@ class ViewSubmission(mixins.LoginRequiredMixin, generic.TemplateView):
         """Return submission data"""
         context = super(ViewSubmission, self).get_context_data(**kwargs)
         context["submission"] = get_object_or_404(Submission, uuid=self.kwargs["uuid"])
-        if context["submission"].file:
-            _, tail = os.path.split(context["submission"].file.name)  # Discarding path prefix
-            context["submission_file_name"] = tail
+        context["submission_file_name"] = context["submission"].get_file_name()
         context["reviews"] = context["submission"].get_reviews()
         context["has_reviewed"] = True if SubmissionReview.objects.filter(submission=context["submission"], user=self.request.user) else False
         if context["has_reviewed"]:
@@ -151,7 +149,7 @@ class ListSubmission(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, gene
 class CreateReview(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, generic.edit.CreateView):
     model = SubmissionReview
     form_class = SubmissionReviewForm
-    template_name_suffix = "_create"
+    template_name_suffix = "_create_or_update"
     login_url = "login"
     redirect_field_name = "home"
 
@@ -163,9 +161,7 @@ class CreateReview(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, generi
         """Return submission data"""
         context = super(CreateReview, self).get_context_data(**kwargs)
         context["submission"] = get_object_or_404(Submission, uuid=self.kwargs["uuid"])
-        if context["submission"].file:
-            _, tail = os.path.split(context["submission"].file.name)  # Discarding path prefix
-            context["submission_file_name"] = tail
+        context["submission_file_name"] = context["submission"].get_file_name()
         return context
 
     def form_valid(self, form):
@@ -181,7 +177,7 @@ class CreateReview(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, generi
 class UpdateReview(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, generic.edit.UpdateView):
     model = SubmissionReview
     form_class = SubmissionReviewForm
-    template_name_suffix = "_update"
+    template_name_suffix = "_create_or_update"
     login_url = "login"
     redirect_field_name = "home"
 
@@ -195,9 +191,7 @@ class UpdateReview(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, generi
         """Return submission data"""
         context = super(UpdateReview, self).get_context_data(**kwargs)
         context["submission"] = get_object_or_404(Submission, uuid=self.object.submission.uuid)
-        if context["submission"].file:
-            _, tail = os.path.split(context["submission"].file.name)  # Discarding path prefix
-            context["submission_file_name"] = tail
+        context["submission_file_name"] = context["submission"].get_file_name()
         return context
 
     def get_success_url(self):
@@ -341,4 +335,8 @@ class ServerError(GenericError):
 
 def csrf_failure(request, reason="CSRF Failure"):
     current_site = get_current_site(request)
-    return render_to_response("gambit/csrf_error.html", {'error_value': 403, 'error_type': 'CSRF Failure', 'domain': current_site.domain})
+    return render_to_response("gambit/csrf_error.html", {
+        'error_value': 403,
+        'error_type': 'CSRF Failure',
+        'domain': current_site.domain
+    })
