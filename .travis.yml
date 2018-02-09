@@ -14,11 +14,12 @@ before_script:
   - psql -c "CREATE USER gambit WITH PASSWORD 'gambit';" -U postgres
   - psql -c "ALTER USER gambit CREATEDB;" -U postgres
 script:
+  - cp gambit/config.example.yaml gambit/config.yaml
   - export DJANGO_SETTINGS_MODULE="gambit.settings.development"
   - python manage.py migrate
   - python manage.py makemigrations gambit
   - python manage.py migrate
-  - bower install --save --production
+  - bower install --save --production ./misc/bower.json
   - python manage.py collectstatic --noinput --clear --verbosity 0
   - coverage run --source='.' manage.py test gambit
 after_success:

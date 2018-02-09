@@ -2,6 +2,7 @@ bower_components/
 gambit/media/
 gambit/migrations/
 gambit/static/
+gambit/config.yaml
 __pycache__/
 *.pyc
 .coverage
