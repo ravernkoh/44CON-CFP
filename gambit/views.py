@@ -335,4 +335,8 @@ class ServerError(GenericError):
 
 def csrf_failure(request, reason="CSRF Failure"):
     current_site = get_current_site(request)
-    return render_to_response("gambit/csrf_error.html", {'error_value': 403, 'error_type': 'CSRF Failure', 'domain': current_site.domain})
+    return render_to_response("gambit/csrf_error.html", {
+        'error_value': 403,
+        'error_type': 'CSRF Failure',
+        'domain': current_site.domain
+    })
