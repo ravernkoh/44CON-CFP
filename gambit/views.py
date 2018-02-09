@@ -61,6 +61,8 @@ class ViewProfile(mixins.LoginRequiredMixin, generic.TemplateView):
         """Return submissions"""
         context = super(ViewProfile, self).get_context_data(**kwargs)
         context["submissions"] = self.request.user.profile.get_submissions()
+        if self.request.user.groups.filter(name="Programme Committee").exists():
+            context["reviews"] = self.request.user.profile.get_reviews()
         return context
 
 

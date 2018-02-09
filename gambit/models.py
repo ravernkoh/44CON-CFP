@@ -23,6 +23,9 @@ class Profile(models.Model):
     def get_submissions(self):
         return Submission.objects.filter(user=self.user).order_by("submitted_on")
 
+    def get_reviews(self):
+        return SubmissionReview.objects.filter(user=self.user).order_by("submitted_on")
+
 
     class Meta:
         verbose_name = "User Profile"
