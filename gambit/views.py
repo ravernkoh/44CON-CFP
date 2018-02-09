@@ -149,7 +149,7 @@ class ListSubmission(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, gene
 class CreateReview(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, generic.edit.CreateView):
     model = SubmissionReview
     form_class = SubmissionReviewForm
-    template_name_suffix = "_create"
+    template_name_suffix = "_create_or_update"
     login_url = "login"
     redirect_field_name = "home"
 
@@ -177,7 +177,7 @@ class CreateReview(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, generi
 class UpdateReview(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, generic.edit.UpdateView):
     model = SubmissionReview
     form_class = SubmissionReviewForm
-    template_name_suffix = "_update"
+    template_name_suffix = "_create_or_update"
     login_url = "login"
     redirect_field_name = "home"
 
