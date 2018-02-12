@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.contrib import admin
 from django.urls import reverse_lazy
 from django.conf.urls.static import static
@@ -15,6 +15,7 @@ app_name = "gambit"
 urlpatterns = [
     url(r"^$", views.Home.as_view(), name="home",),
     url(r"^admin/", admin.site.urls,),
+    url(r'^hijack/', include('hijack.urls', namespace='hijack')),
     url(r"^profile/$", views.ViewProfile.as_view(), name="profile",),
     url(r"^update_profile/$", views.UpdateProfile.as_view(), name="update_profile",),
     url(r"^signup/$", views.signup, name="signup",),

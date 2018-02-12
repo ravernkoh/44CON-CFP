@@ -1,10 +1,10 @@
 {% extends 'gambit/base.html' %}
 {% block title %}Submission List - {% endblock %}
-{% block styleinject %}{% load static %}<link rel='stylesheet' type='text/css' href='{% static 'datatables.net-bs/css/dataTables.bootstrap.min.css' %}'>
-    <link rel='stylesheet' type='text/css' href='{% static 'datatables.net-buttons-bs/css/buttons.bootstrap.min.css' %}'>
-    <link rel='stylesheet' type='text/css' href='{% static 'datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css' %}'>
-    <link rel='stylesheet' type='text/css' href='{% static 'datatables.net-responsive-bs/css/responsive.bootstrap.min.css' %}'>{% endblock %}
-{% block scriptinject %}<script type='text/javascript' charset='utf-8' src='{% static 'datatables.net/js/jquery.dataTables.min.js' %}'></script>
+{% block styleinject %}{% load static %}{% load compress %}{% compress css file %}<link rel='stylesheet' type='text/css' href='{% static 'datatables.net-bs/css/dataTables.bootstrap.min.css' %}' charset="utf-8">
+    <link rel='stylesheet' type='text/css' href='{% static 'datatables.net-buttons-bs/css/buttons.bootstrap.min.css' %}' charset="utf-8">
+    <link rel='stylesheet' type='text/css' href='{% static 'datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css' %}' charset="utf-8">
+    <link rel='stylesheet' type='text/css' href='{% static 'datatables.net-responsive-bs/css/responsive.bootstrap.min.css' %}' charset="utf-8">{% endcompress %}{% endblock %}
+{% block scriptinject %}{% compress js file %}<script type='text/javascript' charset='utf-8' src='{% static 'datatables.net/js/jquery.dataTables.min.js' %}'></script>
     <script type='text/javascript' charset='utf-8' src='{% static 'datatables.net-bs/js/dataTables.bootstrap.min.js' %}'></script>
     <script type='text/javascript' charset='utf-8' src='{% static 'datatables.net-buttons/js/dataTables.buttons.min.js' %}'></script>
     <script type='text/javascript' charset='utf-8' src='{% static 'datatables.net-buttons/js/buttons.html5.min.js' %}'></script>
@@ -42,7 +42,7 @@
           ]
         });
       });
-    </script>{% endblock %}
+    </script>{% endcompress %}{% endblock %}
 {% block content %}<div class='container'>
   <div class='row'>
     <div class='col-md-12'>

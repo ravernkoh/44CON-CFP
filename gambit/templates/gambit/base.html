@@ -25,16 +25,17 @@
 
     <title>{% block title %}{% endblock %}44CON CFP {{ CONFERENCE_YEAR }}</title>
 
-    <link rel='stylesheet' type='text/css' href='{% static 'flat-ui/dist/css/vendor/bootstrap/css/bootstrap.min.css' %}'>
+    {% load compress %}{% compress css file %}<link rel='stylesheet' type='text/css' href='{% static 'flat-ui/dist/css/vendor/bootstrap/css/bootstrap.min.css' %}'>
     <link rel='stylesheet' type='text/css' href='{% static 'flat-ui/dist/css/flat-ui-44con.min.css' %}'>
+    <link rel='stylesheet' type='text/css' href='{% static 'gambit/style.css' %}'>
+    {% load hijack_tags %}<link rel="stylesheet" type="text/css" href="{% static 'hijack/hijack-styles.css' %}">{% endcompress %}
     {% block styleinject %}{% endblock %}
+    {% compress js file %}<script type='text/javascript' charset='utf-8' src='{% static 'jquery/dist/jquery.min.js' %}'></script>{% endcompress %}
 
-    <script type='text/javascript' charset='utf-8' src='{% static 'jquery/dist/jquery.min.js' %}'></script>
-
-    <link rel='stylesheet' type='text/css' href='{% static 'gambit/style.css' %}' />
   </head>
 
   <body>
+    {% hijack_notification %}
     <div class="alert alert-danger text-center banner-alert" role="alert">All talks and workshops <strong>must</strong> be submitted before <strong>{{ SUBMISSION_DEADLINE|date:'Y-m-d H:i T' }}</strong>.</div>
     <nav class='navbar navbar-inverse navbar-embossed navbar-static-top' role='navigation'>
       <div class='navbar-header'>
@@ -63,10 +64,7 @@
       {% block content %}{% endblock %}
     </div>
 
-    <script type='text/javascript' charset='utf-8' src='{% static 'flat-ui/dist/js/flat-ui.min.js' %}'></script>
-    <script type='text/javascript' charset='utf-8' src='{% static 'raven-js/dist/raven.min.js' %}'></script>
-    {% load raven %}
-    <script type='text/javascript'>Raven.config('{% sentry_public_dsn 'https' %}', { release: '{{ RELEASE_HASH }}' }).install();Raven.setUserContext({ username: '{{ user.username }}' });</script>
+    {% compress js file %}<script type='text/javascript' charset='utf-8' src='{% static 'flat-ui/dist/js/flat-ui.min.js' %}'></script>{% endcompress %}
 
     {% block scriptinject %}{% endblock %}
   </body>

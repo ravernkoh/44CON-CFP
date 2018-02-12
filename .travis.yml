@@ -6,9 +6,8 @@ services: postgresql
 before_install:
   - python -c 'import os,sys,fcntl; flags = fcntl.fcntl(sys.stdout, fcntl.F_GETFL); fcntl.fcntl(sys.stdout, fcntl.F_SETFL, flags&~os.O_NONBLOCK);'
 install:
-  - pip install -r requirements/base.txt
-  - pip install coveralls
-  - npm install -g bower
+  - pip install coveralls -r requirements/base.txt
+  - npm install -g bower less@2.7.2 less-plugin-clean-css
 before_script:
   - psql -c "create database gambit;" -U postgres
   - psql -c "CREATE USER gambit WITH PASSWORD 'gambit';" -U postgres
@@ -20,7 +19,9 @@ script:
   - python manage.py makemigrations gambit
   - python manage.py migrate
   - bower install --save --production ./misc/bower.json
+  - lessc --source-map-less-inline --source-map-map-inline --clean-css bower_components/flat-ui/less/flat-ui.less bower_components/flat-ui/dist/css/flat-ui-44con.min.css
   - python manage.py collectstatic --noinput --clear --verbosity 0
+  - python manage.py compress --force --verbosity 0
   - coverage run --source='.' manage.py test gambit
 after_success:
   - coveralls
