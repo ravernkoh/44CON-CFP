@@ -48,8 +48,8 @@
           {% if not user == submission.user %}{% if has_reviewed %}<a class='btn btn-primary' href='{% url 'update_review' review_uuid %}'>Edit your review</a>{% else %}<a class='btn btn-primary' href='{% url 'new_review' submission.uuid %}'>Submit a review</a>{% endif %}{% endif %}
           {% if user == submission.user %}<a class='btn btn-primary' href='{% url 'update_submission' submission.uuid %}'>Edit your submission</a>{% endif %}
         </div>
-        <hr>
-        {% load has_group %}{% if user.is_superuser or user|has_group:'Programme Committee' %}<table class='table table-striped table-responsive'>
+        {% load has_group %}{% if user.is_superuser or user|has_group:'Programme Committee' %}<hr>
+        <table class='table table-striped table-responsive'>
           <thead>
             <th class='col-md-4'>Reviewer</th>
             <th class='col-md-3'>Expertise</th>
