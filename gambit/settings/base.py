@@ -48,6 +48,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'raven.contrib.django.raven_compat',
     'anymail',
+    'hijack',
+    'hijack_admin',
+    'compat',
+    'compressor',
 ]
 
 MIDDLEWARE = [
@@ -189,10 +193,21 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, '../bower_components'),
     os.path.join(BASE_DIR, 'assets')
 ]
+STATICFILES_FINDERS = [
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    "compressor.finders.CompressorFinder",
+]
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "home"
+HIJACK_LOGIN_REDIRECT_URL = "/profile/"
+HIJACK_LOGOUT_REDIRECT_URL = "/admin/auth/user/"
+HIJACK_USE_BOOTSTRAP = True
+HIJACK_ALLOW_GET_REQUESTS = True
+COMPRESS_OUTPUT_DIR = "cache"
+COMPRESS_OFFLINE = True
 
 EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
 RAVEN_CONFIG = {

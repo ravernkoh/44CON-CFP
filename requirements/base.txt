@@ -1,11 +1,16 @@
 bcrypt==3.1.4
+beautifulsoup4==4.6.0
 colorlog==3.1.2
 coverage==4.5
 Django==2.0.2
 django-anymail==1.4
+django_compressor==2.2
+django-hijack==2.1.6
+django-hijack-admin==2.1.6
 django-htmlmin==0.10.0
 django-webtest==1.9.2
 factory-boy==2.10.0
+html5lib==1.0.1
 psycopg2==2.7.4
 PyYAML==3.12
 raven==6.5.0
