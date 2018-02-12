@@ -6,9 +6,8 @@ services: postgresql
 before_install:
   - python -c 'import os,sys,fcntl; flags = fcntl.fcntl(sys.stdout, fcntl.F_GETFL); fcntl.fcntl(sys.stdout, fcntl.F_SETFL, flags&~os.O_NONBLOCK);'
 install:
-  - pip install -r requirements/base.txt
-  - pip install coveralls
-  - npm install -g bower
+  - pip install coveralls -r requirements/base.txt
+  - npm install -g bower less less-plugin-clean-css
 before_script:
   - psql -c "create database gambit;" -U postgres
   - psql -c "CREATE USER gambit WITH PASSWORD 'gambit';" -U postgres
