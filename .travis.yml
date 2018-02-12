@@ -1,5 +1,9 @@
+os: linux
 dist: trusty
 language: python
+cache: pip
+before_cache:
+  - rm -f $HOME/.cache/pip/log/debug.log
 python:
   - "3.6"
 services: postgresql
