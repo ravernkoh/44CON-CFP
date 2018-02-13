@@ -59,19 +59,13 @@
               <th class='col-md-3'>Submission Date</th>
             </thead>
             <tbody>
-              {% for submission in submissions %}{% if user == submission.user %}<tr class='info'>
+              {% for submission in submissions %}<tr{% if user.id == submission.user_id %} class='info'{% endif %}>
                 <td><a href='{% url 'submission' submission.uuid %}'>{{ submission.title }}</a></td>
-                <td>{{ submission.get_reviews|length }}</td>
+                <td>{{ submission.get_reviews.count }}</td>
                 <td>{{ submission.get_average_score|default_if_none:0 }}</td>
                 <td>{{ submission.submitted_on|date:'Y-m-d' }}</td>
-              </tr>{% else %}<tr>
-                <td><a href='{% url 'submission' submission.uuid %}'>{{ submission.title }}</a></td>
-                <td>{{ submission.get_reviews|length }}</td>
-                <td>{{ submission.get_average_score }}</td>
-                <td>{{ submission.submitted_on|date:'Y-m-d' }}</td>
-              </tr>{% endif %}{% empty %}
-              <tr>
-                <td colspan='3'>No sumbissions yet!</td>
+              </tr>{% empty %}<tr>
+                <td colspan='3'>No submissions yet!</td>
               </tr>{% endfor %}
             </tbody>
           </table>

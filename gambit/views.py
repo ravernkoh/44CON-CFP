@@ -74,25 +74,23 @@ class UpdateProfile(mixins.LoginRequiredMixin, generic.edit.UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(UpdateProfile, self).get_context_data(**kwargs)
-        user = get_object_or_404(User, id=self.request.user.id)
         data = {
-            'name': user.profile.name,
-            'country': user.profile.country,
-            'affiliation': user.profile.affiliation,
-            'email': user.email,
+            'name': self.object.name,
+            'country': self.object.country,
+            'affiliation': self.object.affiliation,
+            'email': self.object.user.email,
         }
         context['form'] = self.form_class(initial=data)
         return context
 
     def form_valid(self, form):
-        user = get_object_or_404(User, id=self.request.user.id)
+        user = self.object.user
         user.email = form.cleaned_data['email']
         user.save()
         return super(UpdateProfile, self).form_valid(form)
 
     def get_object(self):
-        user = get_object_or_404(User, id=self.request.user.id)
-        return user.profile
+        return self.request.user.profile
 
     def get_success_url(self):
         return reverse("profile")
@@ -142,7 +140,7 @@ class ListSubmission(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, gene
     def get_context_data(self, **kwargs):
         """Return all submissions"""
         context = super(ListSubmission, self).get_context_data(**kwargs)
-        context["submissions"] = Submission.objects.all().order_by("submitted_on")
+        context["submissions"] = Submission.objects.all()
         return context
 
 
@@ -185,12 +183,12 @@ class UpdateReview(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, generi
     def test_func(self):
         return (self.request.user.is_superuser or \
                 self.request.user.groups.filter(name="Programme Committee").exists()) and \
-                SubmissionReview.objects.get(uuid=self.kwargs.get('pk')).user.id == self.request.user.id
+                SubmissionReview.objects.get(uuid=self.kwargs.get('pk')).user_id == self.request.user.id
 
     def get_context_data(self, **kwargs):
         """Return submission data"""
         context = super(UpdateReview, self).get_context_data(**kwargs)
-        context["submission"] = get_object_or_404(Submission, uuid=self.object.submission.uuid)
+        context["submission"] = get_object_or_404(Submission, uuid=self.object.submission_id)
         context["submission_file_name"] = context["submission"].get_file_name()
         return context
 
@@ -205,7 +203,7 @@ class Help(mixins.LoginRequiredMixin, generic.TemplateView):
     def get_context_data(self, **kwargs):
         """Return help page content"""
         context = super(Help, self).get_context_data(**kwargs)
-        context["help_page_items"] = HelpPageItem.objects.order_by("id")
+        context["help_page_items"] = HelpPageItem.objects
         return context
 
 
@@ -265,10 +263,10 @@ def account_activation_sent(request):
 def submit_form_upload(request):
     # Prevent submissions after deadline has passed
     try:
-        SubmissionDeadline.objects.first().date
+        deadline = SubmissionDeadline.objects.first().date
     except AttributeError as e:
         raise SystemExit(f"No submission deadline has been added!\n{e!s}")
-    if timezone.now() <= SubmissionDeadline.objects.first().date:
+    if timezone.now() <= deadline:
         if request.method == "POST":
             form = SubmitForm(request.POST, request.FILES)
             if form.is_valid():

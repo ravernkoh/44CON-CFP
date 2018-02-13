@@ -21,10 +21,10 @@ class Profile(models.Model):
         return self.user.username
 
     def get_submissions(self):
-        return Submission.objects.filter(user=self.user).order_by("submitted_on")
+        return Submission.objects.filter(user=self.user)
 
     def get_reviews(self):
-        return SubmissionReview.objects.filter(user=self.user).order_by("submitted_on")
+        return SubmissionReview.objects.filter(user=self.user)
 
 
     class Meta:
@@ -43,7 +43,7 @@ def update_user_profile(sender, instance, created, **kwargs):
 class Submission(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True)
-    submitted_on = models.DateTimeField(auto_now_add=True)
+    submitted_on = models.DateTimeField(db_index=True, auto_now_add=True)
     title = models.CharField(max_length=255)
     authors = models.TextField(blank=True)
     contact_email = models.EmailField()
@@ -64,13 +64,13 @@ class Submission(models.Model):
         return '{0!s}'.format(self.title)
 
     def get_reviews(self):
-        return SubmissionReview.objects.filter(submission=self).order_by("submitted_on")
+        return SubmissionReview.objects.filter(submission=self)
 
     def get_average_score(self):
-        return SubmissionReview.objects.filter(submission=self).aggregate(models.Avg("submission_score"))["submission_score__avg"]
+        return self.get_reviews().aggregate(models.Avg("submission_score"))["submission_score__avg"]
 
     def get_total_score(self):
-        return SubmissionReview.objects.filter(submission=self).aggregate(models.Sum("submission_score"))["submission_score__sum"]
+        return self.get_reviews().aggregate(models.Sum("submission_score"))["submission_score__sum"]
 
     def get_file_name(self):
         if self.file:
@@ -78,11 +78,15 @@ class Submission(models.Model):
             return tail
 
 
+    class Meta:
+        ordering = ["submitted_on"]
+
+
 class SubmissionReview(models.Model):
     submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True)
-    submitted_on = models.DateTimeField(auto_now_add=True)
+    submitted_on = models.DateTimeField(db_index=True, auto_now_add=True)
     expertise_score = models.IntegerField(default=1, validators=[MaxValueValidator(5), MinValueValidator(1)])
     submission_score = models.IntegerField(default=1, validators=[MaxValueValidator(5), MinValueValidator(1)])
     comments = models.TextField(blank=True)
@@ -90,8 +94,12 @@ class SubmissionReview(models.Model):
     def __str__(self):
         return '{0!s}'.format(self.uuid)
 
+    def get_reviewer_name(self):
+        return Profile.objects.filter(user_id=self.user_id).first().name
+
 
     class Meta:
+        ordering = ["submitted_on"]
         verbose_name = "Review"
         verbose_name_plural = "Reviews"
 
