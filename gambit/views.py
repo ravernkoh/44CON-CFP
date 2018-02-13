@@ -203,7 +203,7 @@ class Help(mixins.LoginRequiredMixin, generic.TemplateView):
     def get_context_data(self, **kwargs):
         """Return help page content"""
         context = super(Help, self).get_context_data(**kwargs)
-        context["help_page_items"] = HelpPageItem.objects
+        context["help_page_items"] = HelpPageItem.objects.all()
         return context
 
 
