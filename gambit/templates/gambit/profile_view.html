@@ -6,18 +6,19 @@
       <div class='panel panel-default'>
         <table class='table table-borderless table-responsive is_breakable'>
           <tbody>
+            {% with profile=user.profile %}
             <tr>
               <td class='col-md-2 profile_key'><strong>Name:</strong></td>
-              <td class='col-md-10'>{{ user.profile.name }}</td>
+              <td class='col-md-10'>{{ profile.name }}</td>
             </tr>
             <tr>
               <td><strong>Country:</strong></td>
-              <td>{{ user.profile.country }}</td>
+              <td>{{ profile.country }}</td>
             </tr>
-            {% if user.profile.affiliation %}<tr>
+            {% if profile.affiliation %}<tr>
               <td><strong>Affiliation:</strong></td>
-              <td>{{ user.profile.affiliation }}</td>
-            </tr>{% endif %}
+              <td>{{ profile.affiliation }}</td>
+            </tr>{% endif %}{% endwith %}
             <tr>
               <td><strong>Contact Email:</strong></td>
               <td><a href='mailto:{{ user.email }}'>{{ user.email }}</a></td>

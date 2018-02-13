@@ -45,8 +45,8 @@
           </tbody>
         </table>
         <div class='panel-body'>
-          {% if not user == submission.user %}{% if has_reviewed %}<a class='btn btn-primary' href='{% url 'update_review' review_uuid %}'>Edit your review</a>{% else %}<a class='btn btn-primary' href='{% url 'new_review' submission.uuid %}'>Submit a review</a>{% endif %}{% endif %}
-          {% if user == submission.user %}<a class='btn btn-primary' href='{% url 'update_submission' submission.uuid %}'>Edit your submission</a>{% endif %}
+          {% with sub_user=submission.user_id %}{% if not user.id == sub_user %}{% if has_reviewed %}<a class='btn btn-primary' href='{% url 'update_review' review_uuid %}'>Edit your review</a>{% else %}<a class='btn btn-primary' href='{% url 'new_review' submission.uuid %}'>Submit a review</a>{% endif %}{% endif %}
+          {% if user.id == sub_user %}<a class='btn btn-primary' href='{% url 'update_submission' submission.uuid %}'>Edit your submission</a>{% endif %}{% endwith %}
         </div>
         {% load has_group %}{% if user.is_superuser or user|has_group:'Programme Committee' %}<hr>
         <table class='table table-striped table-responsive'>
@@ -56,11 +56,11 @@
             <th class='col-md-3'>Score</th>
           </thead>
           <tbody>
-            {% if user == submission.user %}<tr>
+            {% if user.id == submission.user_id %}<tr>
               <td colspan='3'>Reviews for your own submission have been hidden for the sake of impartiality.</td>
             </tr>{% else %}
             {% for review in reviews %}<tr>
-              <td><strong>{% if review.user.profile.name %}{{ review.user.profile.name }}{% else %}{{ review.user.username }}{% endif %}</strong></a></td>
+              <td><strong>{{ review.get_reviewer_name }}</strong></a></td>
               <td>{{ review.expertise_score }}</td>
               <td>{{ review.submission_score }}</td>
             </tr>
@@ -78,7 +78,7 @@
             <tr>
               <td><strong>{{ submission.get_average_score }}</strong></td>
               <td>{{ submission.get_total_score }}</td>
-              <td>{{ submission.get_reviews|length }}</td>
+              <td>{{ submission.get_reviews.count }}</td>
             </tr>
           </tbody>
         </table>{% endif %}{% endif %}
