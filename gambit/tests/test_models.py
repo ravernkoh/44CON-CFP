@@ -34,7 +34,7 @@ class SubmissionModel(TestCase):
         self.assertEqual(self.submission.__str__(), self.submission.title)
 
     def test_submission_get_reviews(self):
-        qs = SubmissionReview.objects.filter(submission=self.submission).order_by("submitted_on")
+        qs = SubmissionReview.objects.filter(submission=self.submission)
         self.assertQuerysetEqual(self.submission.get_reviews(), map(repr, qs))
 
     def test_submission_get_average_score(self):
