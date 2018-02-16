@@ -3,8 +3,8 @@
 set -eu
 set -o pipefail
 
-readonly BUILD_SRC="$(pwd)"
-readonly PROJECT_ROOT=$(dirname "$BUILD_SRC")  # Parent of build directory
+readonly PROJECT_ROOT="$(pwd)"
+readonly BUILD_SRC="$PROJECT_ROOT/build"
 readonly LESS_SRC="$PROJECT_ROOT/bower_components/flat-ui/less/flat-ui.less"
 readonly CSS_DEST="$PROJECT_ROOT/bower_components/flat-ui/dist/css/flat-ui-44con.min.css"
 export DJANGO_SETTINGS_MODULE="gambit.settings.development"
@@ -22,11 +22,12 @@ prepare_assets() {
 }
 
 run_tests() {
-  coverage run --source='.' manage.py test gambit
+  coverage run --source="$PROJECT_ROOT" manage.py test gambit
 }
 
 main() {
-  cp gambit/config.example.yaml gambit/config.yaml
+  cd "$PROJECT_ROOT"
+  cp "$PROJECT_ROOT/gambit/config.example.yaml" "$PROJECT_ROOT/gambit/config.yaml"
   prepare_db
   prepare_assets
   run_tests
