@@ -11,7 +11,7 @@ export DJANGO_SETTINGS_MODULE="gambit.settings.development"
 
 prepare_db() {
   python manage.py migrate
-  python manage.py makemigrations
+  python manage.py makemigrations gambit
   python manage.py migrate
 }
 
