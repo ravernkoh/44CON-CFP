@@ -14,8 +14,8 @@ install:
   - npm install -g bower less@2.7.2 less-plugin-clean-css
 before_script:
   - psql -c "create database gambit;" -U postgres
-  - psql -c "CREATE USER gambit WITH PASSWORD 'gambit';" -U postgres
-  - psql -c "ALTER USER gambit CREATEDB;" -U postgres
+  - psql -c "CREATE USER username WITH PASSWORD 'password';" -U postgres
+  - psql -c "ALTER USER username CREATEDB;" -U postgres
 script:
   - cp gambit/config.example.yaml gambit/config.yaml
   - export DJANGO_SETTINGS_MODULE="gambit.settings.development"
