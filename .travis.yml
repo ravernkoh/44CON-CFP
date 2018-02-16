@@ -14,19 +14,10 @@ install:
   - npm install -g bower less@2.7.2 less-plugin-clean-css
 before_script:
   - psql -c "create database gambit;" -U postgres
-  - psql -c "CREATE USER gambit WITH PASSWORD 'gambit';" -U postgres
-  - psql -c "ALTER USER gambit CREATEDB;" -U postgres
-script:
-  - cp gambit/config.example.yaml gambit/config.yaml
-  - export DJANGO_SETTINGS_MODULE="gambit.settings.development"
-  - python manage.py migrate
-  - python manage.py makemigrations gambit
-  - python manage.py migrate
-  - bower install --save --production ./misc/bower.json
-  - lessc --source-map-less-inline --source-map-map-inline --clean-css bower_components/flat-ui/less/flat-ui.less bower_components/flat-ui/dist/css/flat-ui-44con.min.css
-  - python manage.py collectstatic --noinput --clear --verbosity 0
-  - python manage.py compress --force --verbosity 0
-  - coverage run --source='.' manage.py test gambit
+  - psql -c "CREATE USER username WITH PASSWORD 'password';" -U postgres
+  - psql -c "ALTER USER username CREATEDB;" -U postgres
+  - chmod +x build/build.sh
+script: bash build/build.sh
 after_success:
   - coveralls
 notifications:

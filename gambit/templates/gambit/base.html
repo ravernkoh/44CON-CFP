@@ -23,7 +23,7 @@
     <meta name='msapplication-TileImage' content='{% static 'gambit/favicon/ms-icon-144x144.png' %}'>
     <meta name='theme-color' content='#ffffff'>
 
-    <title>{% block title %}{% endblock %}44CON CFP {{ CONFERENCE_YEAR }}</title>
+    <title>{% block title %}{% endblock %}{{ CONFERENCE_NAME}} {{ CONFERENCE_YEAR }}</title>
 
     {% load compress %}{% compress css file %}<link rel='stylesheet' type='text/css' href='{% static 'flat-ui/dist/css/vendor/bootstrap/css/bootstrap.min.css' %}'>
     <link rel='stylesheet' type='text/css' href='{% static 'flat-ui/dist/css/flat-ui-44con.min.css' %}'>

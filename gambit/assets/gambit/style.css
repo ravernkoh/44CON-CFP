@@ -1,8 +1,6 @@
 html{ position: relative; min-height: 100%; }
 body{ padding-bottom: 20px; }
 
-.submissions-table { padding: 0.75em; }
-
 /* DataTable styles */
 .dt-buttons { margin: 1em; }
 
@@ -11,6 +9,10 @@ body{ padding-bottom: 20px; }
   margin: 1em;
   float: right;
 }
+
+/* Submission List table */
+.submissions-table { padding: 0.75em; }
+.table-submission-list { width: 100% !important; }
 
 /* Form errors */
 ul.errorlist > li { color: #c9302c; }

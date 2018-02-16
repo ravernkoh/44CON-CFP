@@ -1,17 +1,57 @@
 ---
+conference:
+  name: 'Conference Name'
+  year: 2018
+
 core:
-  secret_key: 'MTJlMjMzMDJiZGE3ODkyODg1ZDYzNmQ3ZjI3MzU5M2ZhYThlNjhhNmM0OWU4YTQy'
+  debug: False
+  allowed_hosts:
+    - '127.0.0.1'
+  secret_key: 'HKAZSJ4fg9zPwXnuWdBiqhHkfxeTb8ExRzwXZtneZouSvpX1VSETiLzRfbWlAZ8y'
+  cache: 'local'
+  minimum_password_length: 12
+  max_upload_size: 52428000 #50MiB
+
+minification:
+  enabled: True
+  compress_output_dir: 'cache'
+  compress_offline: True
+  compress_in_debug: True
+
+django_hijack:
+  enabled: True
+  use_bootstrap: True
+
+django_debug_toolbar:
+  enabled: False
+  internal_ips:
+    - '127.0.0.1'
+
+sentry:
+  enabled: False
+  dsn: 'https://x:x@sentry.io/x'
+
+security:
+  secure_cookies: True
+  csrf_in_session: True
+
+whitelist_content_types:
+  - 'application/pdf'
+  - 'application/msword'
+  - 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+  - 'application/vnd.ms-powerpoint'
+  - 'application/zip'
+  - 'application/x-zip'
+  - 'application/octet-stream'
+  - 'application/x-zip-compressed'
 
 anymail:
+  from_email: 'cfp@example.org'
   mailgun:
     api_key: 'yourmailgunkey'
     sender_domain: 'mg.example.com'
-  from_email: 'cfp@example.org'
 
-postgresql:
-  user: 'gambit'
-  password: 'gambit'
+database:
+  user: 'username'
+  password: 'password'
   port: 5432
-
-sentry:
-  dsn: 'https://x:x@sentry.io/x'
