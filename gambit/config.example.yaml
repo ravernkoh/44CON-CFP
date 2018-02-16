@@ -19,7 +19,7 @@ minification:
   compress_in_debug: True
 
 django_hijack:
-  enabled: False
+  enabled: True
   use_bootstrap: True
 
 django_debug_toolbar:
