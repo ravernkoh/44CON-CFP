@@ -7,10 +7,13 @@ from .models import SubmissionDeadline
 # These all require matching declarations in settings.py
 def global_settings(request):
     deadline = SubmissionDeadline.objects.first()
+    try:
+        release_hash = settings.RAVEN_CONFIG['release']
+    except AttributeError:
+        release_hash = None
     return {
-        'APPLICATION_VERSION': settings.APPLICATION_VERSION,
-        'APPLICATION_NAME': settings.APPLICATION_NAME,
+        'CONFERENCE_NAME': settings.CONFERENCE_NAME,
         'CONFERENCE_YEAR': settings.CONFERENCE_YEAR,
-        'RELEASE_HASH': settings.RAVEN_CONFIG['release'],
+        'RELEASE_HASH': release_hash,
         'SUBMISSION_DEADLINE': deadline.date if deadline else None,
     }
