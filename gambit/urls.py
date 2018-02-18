@@ -11,6 +11,9 @@ from .forms import LoginForm, ResetUserPasswordForm, SetUserPasswordForm, Change
 
 
 app_name = "gambit"
+uuid_regex = "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[89aAbB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}"
+uidb64_regex = "[0-9A-Za-z_\-]+"
+token_regex = "[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20}"
 
 urlpatterns = [
     url(r"^$", views.Home.as_view(), name="home",),
@@ -40,22 +43,22 @@ urlpatterns = [
         name="password_change_done",
     ),
 
-    url(r"^submission/(?P<uuid>[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[89aAbB][a-fA-F0-9]{3}-[a-fA-F0-9]{12})/$",
+    url(fr"^submission/(?P<uuid>{uuid_regex!s})/$",
         views.ViewSubmission.as_view(),
         name="submission",
     ),
 
-    url(r"^update_submission/(?P<pk>[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[89aAbB][a-fA-F0-9]{3}-[a-fA-F0-9]{12})/$",
+    url(fr"^update_submission/(?P<pk>{uuid_regex!s})/$",
         views.UpdateSubmission.as_view(),
         name="update_submission",
     ),
 
-    url(r"^new_review/(?P<uuid>[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[89aAbB][a-fA-F0-9]{3}-[a-fA-F0-9]{12})/$",
+    url(fr"^new_review/(?P<uuid>{uuid_regex!s})/$",
         views.CreateReview.as_view(),
         name="new_review",
     ),
 
-    url(r"^update_review/(?P<pk>[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[89aAbB][a-fA-F0-9]{3}-[a-fA-F0-9]{12})/$",
+    url(fr"^update_review/(?P<pk>{uuid_regex!s})/$",
         views.UpdateReview.as_view(),
         name="update_review",
     ),
@@ -74,7 +77,7 @@ urlpatterns = [
         name ="logout"
     ),
 
-    url(r"^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$",
+    url(fr"^activate/(?P<uidb64>{uidb64_regex!s})/(?P<token>{token_regex!s})/$",
         views.activate,
         name="activate",
     ),
@@ -96,7 +99,7 @@ urlpatterns = [
         name="password_reset_done",
     ),
 
-    url(r"^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$",
+    url(fr"^reset/(?P<uidb64>{uidb64_regex!s})/(?P<token>{token_regex!s})/$",
         auth_views.PasswordResetConfirmView.as_view(
             template_name="gambit/password_reset_confirm.html",
             form_class=SetUserPasswordForm,
