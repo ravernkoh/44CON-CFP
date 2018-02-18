@@ -12,7 +12,8 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.auth import login, mixins, REDIRECT_FIELD_NAME
 
 from .tokens import account_activation_token
-from .models import Submission, SubmissionReview, FrontPage, SubmissionDeadline, RegistrationStatus, HelpPageItem, Profile
+from .models import (Submission, SubmissionReview, FrontPage, SubmissionDeadline, RegistrationStatus, HelpPageItem,
+    Profile)
 from .forms import SignUpForm, SubmitForm, SubmissionReviewForm, FrontPageLoginForm, UpdateProfileForm
 
 
@@ -107,9 +108,14 @@ class ViewSubmission(mixins.LoginRequiredMixin, generic.TemplateView):
         context["submission"] = get_object_or_404(Submission, uuid=self.kwargs["uuid"])
         context["submission_file_name"] = context["submission"].get_file_name()
         context["reviews"] = context["submission"].get_reviews()
-        context["has_reviewed"] = True if SubmissionReview.objects.filter(submission=context["submission"], user=self.request.user) else False
+        context["has_reviewed"] = (
+            True
+            if SubmissionReview.objects.filter(submission=context["submission"], user=self.request.user).exists()
+            else False
+        )
         if context["has_reviewed"]:
-            context["review_uuid"] = SubmissionReview.objects.filter(submission=context["submission"], user=self.request.user)[0].uuid
+            review = SubmissionReview.objects.filter(submission=context["submission"], user=self.request.user).first()
+            context["review_uuid"] = review.uuid
         return context
 
 
@@ -222,23 +228,29 @@ def signup(request):
                 user.save()
                 current_site = get_current_site(request)
                 subject = "[44CON] Activate your 44CON CFP account"
-                message = render_to_string("gambit/account_activation_email.html", {
-                    "user": user,
-                    "domain": current_site.domain,
-                    "uid": urlsafe_base64_encode(force_bytes(user.pk)).decode(),
-                    "token": account_activation_token.make_token(user),
-                })
+                message = render_to_string("gambit/account_activation_email.html",
+                    {
+                        "user": user,
+                        "domain": current_site.domain,
+                        "uid": urlsafe_base64_encode(force_bytes(user.pk)).decode(),
+                        "token": account_activation_token.make_token(user),
+                    }
+                )
                 user.email_user(subject, message)
                 return redirect("account_activation_sent")
         else:
             form = SignUpForm()
-        return render(request, "gambit/signup.html", {
-            "form": form,
-        })
+        return render(request, "gambit/signup.html",
+            {
+                "form": form,
+            }
+        )
     else:
-        return render(request, "gambit/signup.html", {
-            "registration_disabled": True,
-        })
+        return render(request, "gambit/signup.html",
+            {
+                "registration_disabled": True,
+            }
+        )
 
 def activate(request, uidb64, token):
     try:
@@ -270,8 +282,9 @@ def submit_form_upload(request):
         if request.method == "POST":
             form = SubmitForm(request.POST, request.FILES)
             if form.is_valid():
-                # Associates the submission with the logged in user. There may be a more "elegant" way to achieve this but this works and is robust.
-                # Submissions can only be made by logged in users which ensures the presence of the user model in the request.
+                # Associates the submission with the logged in user. There may be a more "elegant" way to achieve this
+                # but this works and is robust. Submissions can only be made by logged in users which ensures the
+                # presence of the user model in the request.
                 f = form.save(commit=False)
                 f.user = request.user
                 f.save()
@@ -279,13 +292,17 @@ def submit_form_upload(request):
                 return redirect(reverse("submission", args=[f.uuid]))
         else:
             form = SubmitForm()
-        return render(request, "gambit/submit.html", {
-            "form": form,
-        })
+        return render(request, "gambit/submit.html",
+            {
+                "form": form,
+            }
+        )
     else:
-        return render(request, "gambit/submit.html", {
-            "deadline_passed": True,
-        })
+        return render(request, "gambit/submit.html",
+            {
+                "deadline_passed": True,
+            }
+        )
 
 
 class GenericError(generic.TemplateView):
@@ -333,8 +350,10 @@ class ServerError(GenericError):
 
 def csrf_failure(request, reason="CSRF Failure"):
     current_site = get_current_site(request)
-    return render_to_response("gambit/csrf_error.html", {
-        'error_value': 403,
-        'error_type': 'CSRF Failure',
-        'domain': current_site.domain
-    })
+    return render_to_response("gambit/csrf_error.html",
+        {
+            'error_value': 403,
+            'error_type': 'CSRF Failure',
+            'domain': current_site.domain
+        }
+    )

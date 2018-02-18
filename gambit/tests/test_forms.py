@@ -42,7 +42,10 @@ class SignupFormIncorrect(SignupFormBase):
             'affiliation': self.affiliation,
         })
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.non_field_errors()[0], "This username is restricted or otherwise unavailable. Please pick another.")
+        self.assertEqual(
+            form.non_field_errors()[0],
+            "This username is restricted or otherwise unavailable. Please pick another."
+        )
 
     def test_signup_form_existing_username(self):
         new_user = factories.UserFactory.create(username="taken")
@@ -122,4 +125,3 @@ class SubmitFormCorrect(SubmitFormBase):
                 'file': f,
             })
             self.failUnless(form.is_valid())
-
