@@ -55,3 +55,4 @@ database:
   user: 'username'
   password: 'password'
   port: 5432
+  host: 'localhost'
