@@ -187,8 +187,8 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, '../bower_components'),
-    os.path.join(BASE_DIR, 'assets'),
+    os.path.join(BASE_DIR, os.path.join(os.pardir, "bower_components")),
+    os.path.join(BASE_DIR, "assets"),
 ]
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
