@@ -32,7 +32,7 @@
             </tr>
             {% if submission.file %}<tr>
               <td><strong>Submission:</strong></td>
-              <td><a target='_blank' href='{{ submission.file.url }}'>{{ submission_file_name }} <span class='glyphicon glyphicon-download' aria-hidden='true'></span></a> ({{ submission.file.size|filesizeformat }})</td>
+              <td><a target='_blank' href='{% url 'download_submission' submission.uuid %}'>{{ submission_file_name }} <span class='glyphicon glyphicon-download' aria-hidden='true'></span></a> ({{ submission.file.size|filesizeformat }})</td>
             </tr>
             <tr>
               <td><strong>File Hash:</strong></td>

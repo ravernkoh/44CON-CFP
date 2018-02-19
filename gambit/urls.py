@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib import admin
 from django.conf.urls import include
+from django.conf.urls.static import static
 from django.urls import reverse_lazy, path, re_path
 from django.contrib.auth import views as auth_views
 
@@ -24,6 +25,11 @@ urlpatterns = [
     path("account_activation_sent/", views.account_activation_sent, name="account_activation_sent",),
     path("submit/", views.submit_form_upload, name="submit",),
     path("submissions/", views.ListSubmission.as_view(), name="list_submissions",),
+
+    path("download/submission/<uuid:pk>/",
+        views.submission_file_view,
+        name="download_submission"
+    ),
 
     path("password_change/",
         auth_views.PasswordChangeView.as_view(
@@ -123,3 +129,4 @@ if settings.DEBUG:
     urlpatterns = [
         path("__debug__/", include(debug_toolbar.urls)),
     ] + urlpatterns
+    urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

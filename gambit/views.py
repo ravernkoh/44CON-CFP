@@ -3,6 +3,7 @@ from django.views import generic
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.shortcuts import render_to_response
+from django_downloadview import ObjectDownloadView
 from django.template.loader import render_to_string
 from django.utils.encoding import force_text, force_bytes
 from django.contrib.auth.decorators import login_required
@@ -15,6 +16,9 @@ from .tokens import account_activation_token
 from .models import (Submission, SubmissionReview, FrontPage, SubmissionDeadline, RegistrationStatus, HelpPageItem,
     Profile)
 from .forms import SignUpForm, SubmitForm, SubmissionReviewForm, FrontPageLoginForm, UpdateProfileForm
+
+
+submission_file_view = login_required(ObjectDownloadView.as_view(model=Submission))
 
 
 class Home(generic.edit.FormMixin, generic.TemplateView):
