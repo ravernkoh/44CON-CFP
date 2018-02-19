@@ -105,7 +105,6 @@ class ViewSubmission(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, gene
     redirect_field_name = "home"
 
     def test_func(self):
-        print(self.kwargs)
         return self.request.user.is_superuser or \
                 self.request.user.groups.filter(name="Programme Committee").exists() or \
                 Submission.objects.get(uuid=self.kwargs.get('uuid')).user.id == self.request.user.id
