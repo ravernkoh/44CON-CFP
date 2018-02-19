@@ -60,7 +60,7 @@
             </thead>
             <tbody>
               {% for submission in submissions %}<tr{% if user.id == submission.user_id %} class='info'{% endif %}>
-                <td><a href='{% url 'submission' submission.uuid %}'>{{ submission.title|truncatechars:32 }}</a></td>
+                <td><a title='{{ submission.title }}' href='{% url 'submission' submission.uuid %}'>{{ submission.title|truncatechars:32 }}</a></td>
                 <td>{{ submission.get_reviews.count }}</td>
                 <td>{{ submission.get_average_score|default_if_none:0 }}</td>
                 <td>{{ submission.submitted_on|date:'Y-m-d' }}</td>
