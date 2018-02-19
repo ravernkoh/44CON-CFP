@@ -75,7 +75,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
-                'gambit.context_processors.global_settings',  # Custom context processors found in context_processors.py
+                'gambit.context_processors.global_settings',
             ],
         },
     },
@@ -87,11 +87,11 @@ DATABASES = {
         'NAME': 'gambit',
         'USER': configuration['database']['user'],
         'PASSWORD': configuration['database']['password'],
-        'HOST': 'localhost',
+        'HOST': configuration['database']['host'],
         'PORT': configuration['database']['port'],
         'TEST': {
             'NAME': 'test_gambit'
-        }
+        },
     },
 }
 
@@ -149,7 +149,11 @@ LOGGING = {
 
 CACHES = {
     'default': {
-        'BACKEND': "django.core.cache.backends.locmem.LocMemCache" if configuration["core"]["cache"] == "local" else "django.core.cache.backends.dummy.DummyCache",
+        'BACKEND': (
+            "django.core.cache.backends.locmem.LocMemCache"
+            if configuration["core"]["cache"] == "local"
+            else "django.core.cache.backends.dummy.DummyCache"
+        ),
     },
 }
 
@@ -165,7 +169,9 @@ AUTH_PASSWORD_VALIDATORS = [
             'min_length': configuration["core"]["minimum_password_length"],
         },
     },
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
 ]
 
 LANGUAGE_CODE = "en-gb"
@@ -181,8 +187,8 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, '../bower_components'),
-    os.path.join(BASE_DIR, 'assets')
+    os.path.join(BASE_DIR, os.path.join(os.pardir, "bower_components")),
+    os.path.join(BASE_DIR, "assets"),
 ]
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
@@ -203,7 +209,7 @@ if configuration["sentry"]["enabled"]:
     MIDDLEWARE.insert(1, "raven.contrib.django.raven_compat.middleware.Sentry404CatchMiddleware")
     RAVEN_CONFIG = {
         'dsn': configuration['sentry']['dsn'],
-        'release': raven.fetch_git_sha(os.path.join(BASE_DIR, '../')),
+        'release': raven.fetch_git_sha(os.path.join(BASE_DIR, os.pardir)),
     }
 
 # Custom global variables

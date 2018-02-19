@@ -7,12 +7,20 @@ from django.template import defaultfilters
 from django.contrib.auth.models import User
 from django.utils.safestring import mark_safe
 
-from .models import Profile, Submission, SubmissionReview, FrontPage, SubmissionDeadline, RegistrationStatus, HelpPageItem
+from .models import (Profile, Submission, SubmissionReview, FrontPage, SubmissionDeadline, RegistrationStatus,
+    HelpPageItem)
 
 
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('name', '_username', '_last_login',)
-    search_fields = ['name', 'user__username',]
+    list_display = (
+        'name',
+        '_username',
+        '_last_login',
+    )
+    search_fields = [
+        'name',
+        'user__username',
+    ]
 
     # Renders the related username as a link to the edit page for the actual user object
     def _username(self, obj):
@@ -29,8 +37,16 @@ admin.site.register(Profile, ProfileAdmin)
 
 
 class SubmissionAdmin(admin.ModelAdmin):
-    list_display = ('title', '_username', '_timestamp', '_score',)
-    list_filter = ('user__username', 'submitted_on',)
+    list_display = (
+        'title',
+        '_username',
+        '_timestamp',
+        '_score',
+    )
+    list_filter = (
+        'user__username',
+        'submitted_on',
+    )
     readonly_fields = ('file_hash',)
     actions = ['_export_to_csv']
 
@@ -72,8 +88,16 @@ admin.site.register(Submission, SubmissionAdmin)
 
 
 class SubmissionReviewAdmin(admin.ModelAdmin):
-    list_display = ('_submission', '_reviewer', 'submitted_on', '_uuid_snip',)
-    list_filter = ('user__username', 'submitted_on',)
+    list_display = (
+        '_submission',
+        '_reviewer',
+        'submitted_on',
+        '_uuid_snip',
+    )
+    list_filter = (
+        'user__username',
+        'submitted_on',
+    )
     actions = ['_export_to_csv']
 
     # Adds button in top right which will open the related submission on the live site
@@ -143,7 +167,10 @@ admin.site.register(RegistrationStatus, RegistrationStatusAdmin)
 class HelpPageItemAdmin(admin.ModelAdmin):
     # This model is naively used to control the content display on the help page of the website
     # In later versions, this will be superceded by a content management system accessed through the website
-    list_display = ('name', 'id',)
+    list_display = (
+        'name',
+        'id',
+    )
 
 
 admin.site.register(HelpPageItem, HelpPageItemAdmin)

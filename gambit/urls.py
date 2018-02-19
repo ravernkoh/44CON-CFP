@@ -1,8 +1,8 @@
 from django.conf import settings
 from django.contrib import admin
-from django.urls import reverse_lazy
-from django.conf.urls import url, include
+from django.conf.urls import include
 from django.conf.urls.static import static
+from django.urls import reverse_lazy, path, re_path
 from django.contrib.auth import views as auth_views
 
 
@@ -11,20 +11,27 @@ from .forms import LoginForm, ResetUserPasswordForm, SetUserPasswordForm, Change
 
 
 app_name = "gambit"
+uidb64_regex = "[0-9A-Za-z_\-]+"
+token_regex = "[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20}"
 
 urlpatterns = [
-    url(r"^$", views.Home.as_view(), name="home",),
-    url(r"^admin/", admin.site.urls,),
-    url(r'^hijack/', include('hijack.urls', namespace='hijack')),
-    url(r"^profile/$", views.ViewProfile.as_view(), name="profile",),
-    url(r"^update_profile/$", views.UpdateProfile.as_view(), name="update_profile",),
-    url(r"^signup/$", views.signup, name="signup",),
-    url(r"^help/$", views.Help.as_view(), name="help",),
-    url(r"^account_activation_sent/$", views.account_activation_sent, name="account_activation_sent",),
-    url(r"^submit/$", views.submit_form_upload, name="submit",),
-    url(r"^submissions/$", views.ListSubmission.as_view(), name="list_submissions",),
+    re_path(r"^$", views.Home.as_view(), name="home",),
+    path("admin/", admin.site.urls,),
+    path("hijack/", include("hijack.urls", namespace="hijack")),
+    path("profile/", views.ViewProfile.as_view(), name="profile",),
+    path("update_profile/", views.UpdateProfile.as_view(), name="update_profile",),
+    path("signup/", views.signup, name="signup",),
+    path("help/", views.Help.as_view(), name="help",),
+    path("account_activation_sent/", views.account_activation_sent, name="account_activation_sent",),
+    path("submit/", views.submit_form_upload, name="submit",),
+    path("submissions/", views.ListSubmission.as_view(), name="list_submissions",),
 
-    url(r"^password_change/$",
+    path("download/submission/<uuid:pk>/",
+        views.submission_file_view,
+        name="download_submission"
+    ),
+
+    path("password_change/",
         auth_views.PasswordChangeView.as_view(
             template_name="gambit/password_change.html",
             form_class=ChangeUserPasswordForm,
@@ -33,34 +40,34 @@ urlpatterns = [
         name="password_change",
     ),
 
-    url(r"^password_change_done/$",
+    path("password_change_done/",
         auth_views.PasswordChangeDoneView.as_view(
             template_name="gambit/password_change_done.html",
         ),
         name="password_change_done",
     ),
 
-    url(r"^submission/(?P<uuid>[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[89aAbB][a-fA-F0-9]{3}-[a-fA-F0-9]{12})/$",
+    path("submission/<uuid:uuid>/",
         views.ViewSubmission.as_view(),
         name="submission",
     ),
 
-    url(r"^update_submission/(?P<pk>[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[89aAbB][a-fA-F0-9]{3}-[a-fA-F0-9]{12})/$",
+    path("update_submission/<uuid:pk>/",
         views.UpdateSubmission.as_view(),
         name="update_submission",
     ),
 
-    url(r"^new_review/(?P<uuid>[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[89aAbB][a-fA-F0-9]{3}-[a-fA-F0-9]{12})/$",
+    path("new_review/<uuid:uuid>/",
         views.CreateReview.as_view(),
         name="new_review",
     ),
 
-    url(r"^update_review/(?P<pk>[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[89aAbB][a-fA-F0-9]{3}-[a-fA-F0-9]{12})/$",
+    path("update_review/<uuid:pk>/",
         views.UpdateReview.as_view(),
         name="update_review",
     ),
 
-    url(r"^login/$",
+    path("login/",
         auth_views.LoginView.as_view(
             template_name="gambit/login.html",
             redirect_authenticated_user=True,
@@ -69,17 +76,17 @@ urlpatterns = [
         name ="login",
     ),
 
-    url(r"^logout/$",
+    path("logout/",
         auth_views.LogoutView.as_view(next_page="home"),
         name ="logout"
     ),
 
-    url(r"^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$",
+    re_path(fr"^activate/(?P<uidb64>{uidb64_regex!s})/(?P<token>{token_regex!s})/$",
         views.activate,
         name="activate",
     ),
 
-    url(r"^password_reset/$",
+    path("password_reset/",
         auth_views.PasswordResetView.as_view(
             form_class=ResetUserPasswordForm,
             template_name="gambit/password_reset_form.html",
@@ -89,14 +96,14 @@ urlpatterns = [
         name="password_reset",
     ),
 
-    url(r"^password_reset/done/$",
+    path("password_reset/done/",
         auth_views.PasswordResetDoneView.as_view(
             template_name="gambit/password_reset_done.html",
         ),
         name="password_reset_done",
     ),
 
-    url(r"^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$",
+    re_path(fr"^reset/(?P<uidb64>{uidb64_regex!s})/(?P<token>{token_regex!s})/$",
         auth_views.PasswordResetConfirmView.as_view(
             template_name="gambit/password_reset_confirm.html",
             form_class=SetUserPasswordForm,
@@ -104,7 +111,7 @@ urlpatterns = [
         name="password_reset_confirm",
     ),
 
-    url(r"^reset/done/$",
+    path("reset/done/",
         auth_views.PasswordResetCompleteView.as_view(
             template_name="gambit/password_reset_complete.html",
         ),
@@ -120,5 +127,6 @@ handler500 = views.ServerError.as_view()
 if settings.DEBUG:
     import debug_toolbar
     urlpatterns = [
-        url(r'^__debug__/', include(debug_toolbar.urls)),
+        path("__debug__/", include(debug_toolbar.urls)),
     ] + urlpatterns
+    urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

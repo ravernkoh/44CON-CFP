@@ -21,7 +21,11 @@ class ProfileModel(TestCase):
 class SubmissionModel(TestCase):
     def setUp(self):
         self.submission = factories.SubmissionFactory.create()
-        generate_reviews = lambda x,y: factories.SubmissionReviewFactory.create(submission=self.submission, expertise_score=x, submission_score=y)
+        generate_reviews = lambda x,y: factories.SubmissionReviewFactory.create(
+            submission=self.submission,
+            expertise_score=x,
+            submission_score=y
+        )
         for i in range(5):
             generate_reviews(random.randint(0,5), random.randint(0,5))
 
@@ -38,11 +42,19 @@ class SubmissionModel(TestCase):
         self.assertQuerysetEqual(self.submission.get_reviews(), map(repr, qs))
 
     def test_submission_get_average_score(self):
-        avg_score = SubmissionReview.objects.filter(submission=self.submission).aggregate(models.Avg("submission_score"))["submission_score__avg"]
+        avg_score = SubmissionReview.objects.filter(
+            submission=self.submission
+        ).aggregate(
+            models.Avg("submission_score")
+        )["submission_score__avg"]
         self.assertEqual(self.submission.get_average_score(), avg_score)
 
     def test_submission_get_total_score(self):
-        total_score = SubmissionReview.objects.filter(submission=self.submission).aggregate(models.Sum("submission_score"))["submission_score__sum"]
+        total_score = SubmissionReview.objects.filter(
+            submission=self.submission
+        ).aggregate(
+            models.Sum("submission_score")
+        )["submission_score__sum"]
         self.assertEqual(self.submission.get_total_score(), total_score)
 
 
