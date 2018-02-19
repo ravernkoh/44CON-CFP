@@ -6,6 +6,7 @@ Django==2.0.2
 django-anymail>=1.4
 django_compressor>=2.2
 django-debug-toolbar>=1.9.1
+django-downloadview>=1.9
 django-hijack>=2.1.6
 django-hijack-admin>=2.1.6
 django-htmlmin>=0.10.0
