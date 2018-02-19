@@ -9,16 +9,13 @@ from django.utils.encoding import force_text, force_bytes
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render, redirect, get_object_or_404
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.auth import login, mixins, REDIRECT_FIELD_NAME
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
 from .tokens import account_activation_token
+from .forms import SignUpForm, SubmitForm, SubmissionReviewForm, FrontPageLoginForm, UpdateProfileForm
 from .models import (Submission, SubmissionReview, FrontPage, SubmissionDeadline, RegistrationStatus, HelpPageItem,
     Profile)
-from .forms import SignUpForm, SubmitForm, SubmissionReviewForm, FrontPageLoginForm, UpdateProfileForm
-
-
-submission_file_view = login_required(ObjectDownloadView.as_view(model=Submission))
 
 
 class Home(generic.edit.FormMixin, generic.TemplateView):
@@ -101,10 +98,17 @@ class UpdateProfile(mixins.LoginRequiredMixin, generic.edit.UpdateView):
         return reverse("profile")
 
 
-class ViewSubmission(mixins.LoginRequiredMixin, generic.TemplateView):
+class ViewSubmission(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, generic.TemplateView):
+    model = Submission
     template_name = "gambit/submission_view.html"
     login_url = "login"
-    model = Submission
+    redirect_field_name = "home"
+
+    def test_func(self):
+        print(self.kwargs)
+        return self.request.user.is_superuser or \
+                self.request.user.groups.filter(name="Programme Committee").exists() or \
+                Submission.objects.get(uuid=self.kwargs.get('uuid')).user.id == self.request.user.id
 
     def get_context_data(self, **kwargs):
         """Return submission data"""
@@ -136,6 +140,19 @@ class UpdateSubmission(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, ge
 
     def get_success_url(self):
         return reverse("submission", args=[self.object.uuid])
+
+
+class SubmissionFileView(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, ObjectDownloadView):
+    login_url = "login"
+    redirect_field_name = "home"
+
+    def __init__(self):
+        self.model = Submission
+
+    def test_func(self):
+        return self.request.user.is_superuser or \
+                self.request.user.groups.filter(name="Programme Committee").exists() or \
+                Submission.objects.get(uuid=self.kwargs.get('pk')).user_id == self.request.user.id
 
 
 class ListSubmission(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, generic.TemplateView):

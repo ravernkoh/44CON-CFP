@@ -27,7 +27,7 @@ urlpatterns = [
     path("submissions/", views.ListSubmission.as_view(), name="list_submissions",),
 
     path("download/submission/<uuid:pk>/",
-        views.submission_file_view,
+        views.SubmissionFileView.as_view(),
         name="download_submission"
     ),
 
