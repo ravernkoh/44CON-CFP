@@ -28,7 +28,7 @@ urlpatterns = [
 
     path("download/submission/<uuid:pk>/",
         views.SubmissionFileView.as_view(),
-        name="download_submission"
+        name="download_submission",
     ),
 
     path("password_change/",
