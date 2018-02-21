@@ -10,7 +10,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 try:
     configuration = yaml.safe_load(open(os.path.join(BASE_DIR, "config.yaml")))
 except FileNotFoundError:
-    logger.error(f"[!!] Configuration file cannot be found. config.yaml should be present in {BASE_DIR!s}")
+    print(f"[!!] Configuration file cannot be found. config.yaml should be present in {BASE_DIR!s}")
     raise SystemExit(1)
 
 ALLOWED_HOSTS = [host for host in configuration["core"]["allowed_hosts"]]
@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.postgres',
     'anymail',
 ]
 
@@ -90,7 +91,7 @@ DATABASES = {
         'HOST': configuration['database']['host'],
         'PORT': configuration['database']['port'],
         'TEST': {
-            'NAME': 'test_gambit'
+            'NAME': 'test_gambit',
         },
     },
 }

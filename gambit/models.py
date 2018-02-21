@@ -1,13 +1,28 @@
 import os
+import sys
 import uuid
 import hashlib
 
-from django.db import models
 from django.utils import timezone
 from django.dispatch import receiver
+from django.db import models, connection
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_migrate
 from django.core.validators import MaxValueValidator, MinValueValidator
+
+
+# https://stackoverflow.com/a/23626000/4183348
+# The sender kwarg is optional but will be called for every pre_syncdb signal
+# if omitted. Specifying it ensures this callback to be called once.
+@receiver(pre_migrate, sender=sys.modules[__name__])
+def setup_postgres_hstore(sender, **kwargs):
+    """
+    Always create PostgreSQL HSTORE extension if it doesn't already exist
+    on the database before syncing the database.
+    Requires PostgreSQL 9.1 or newer.
+    """
+    cursor = connection.cursor()
+    cursor.execute("CREATE EXTENSION IF NOT EXISTS hstore")
 
 
 class Profile(models.Model):

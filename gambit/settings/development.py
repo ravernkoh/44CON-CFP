@@ -5,7 +5,7 @@ from .base import *
 try:
     configuration = yaml.safe_load(open(os.path.join(BASE_DIR, "config.yaml")))
 except FileNotFoundError:
-    logger.error(f"[!!] Configuration file cannot be found. config.yaml should be present in {BASE_DIR!s}")
+    print(f"[!!] Configuration file cannot be found. config.yaml should be present in {BASE_DIR!s}")
     raise SystemExit(1)
 
 DEBUG = True

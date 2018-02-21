@@ -1,5 +1,6 @@
 from django.urls import reverse
 from django_webtest import WebTest
+from django.test.utils import override_settings
 
 from . import factories
 
@@ -16,6 +17,7 @@ class AuthenticationTest(WebTest):
         self.assertEqual(self.resp, True)
         self.client.logout()
 
+    @override_settings(CSRF_COOKIE_SECURE=False, SESSION_COOKIE_SECURE=False)
     def test_user_login_view(self):
         login_view = self.app.get(reverse("login"))
         login_form = login_view.forms[0]
