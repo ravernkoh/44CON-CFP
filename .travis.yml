@@ -8,7 +8,9 @@ python:
   - "3.6"
 services: postgresql
 before_install:
-  - python -c 'import os,sys,fcntl; flags = fcntl.fcntl(sys.stdout, fcntl.F_GETFL); fcntl.fcntl(sys.stdout, fcntl.F_SETFL, flags&~os.O_NONBLOCK);'
+  # Disable non-blocking IO
+  # https://github.com/travis-ci/travis-ci/issues/4704
+  - python -c 'import os,sys; os.set_blocking(sys.stdout.fileno(), True)'
 install:
   - pip install coveralls -r requirements/base.txt
   - npm install -g bower less@2.7.2 less-plugin-clean-css
