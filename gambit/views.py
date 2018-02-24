@@ -144,6 +144,7 @@ class UpdateSubmission(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, ge
 class SubmissionFileView(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, ObjectDownloadView):
     login_url = "login"
     redirect_field_name = "home"
+    attachment = False  # Display files inline if possible
 
     def __init__(self):
         self.model = Submission
