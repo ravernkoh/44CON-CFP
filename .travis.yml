@@ -8,7 +8,9 @@ python:
   - "3.6"
 services: postgresql
 before_install:
-  - python -c 'import os,sys,fcntl; flags = fcntl.fcntl(sys.stdout, fcntl.F_GETFL); fcntl.fcntl(sys.stdout, fcntl.F_SETFL, flags&~os.O_NONBLOCK);'
+  # Disable non-blocking IO
+  # https://github.com/travis-ci/travis-ci/issues/4704
+  - python -c 'import os,sys; os.set_blocking(sys.stdout.fileno(), True)'
 install:
   - pip install coveralls -r requirements/base.txt
   - npm install -g bower less@2.7.2 less-plugin-clean-css
@@ -16,6 +18,7 @@ before_script:
   - psql -c "create database gambit;" -U postgres
   - psql -c "CREATE USER username WITH PASSWORD 'password';" -U postgres
   - psql -c "ALTER USER username CREATEDB;" -U postgres
+  - psql -c "CREATE EXTENSION IF NOT EXISTS hstore;" -U postgres
   - chmod +x build/build.sh
 script: bash build/build.sh
 after_success:
