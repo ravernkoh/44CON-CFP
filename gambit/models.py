@@ -132,6 +132,7 @@ class RegistrationStatus(ManagedContent):
 class FrontPage(ManagedContent):
     leading_paragraph = models.TextField()
     submission_paragraph = models.TextField()
+    speaker_paragraph = models.TextField()
 
 
     class Meta:
