@@ -22,6 +22,7 @@
           pageLength: 10,
           select: true,
           responsive: true,
+          order: [[5, 'asc'], [0, 'asc']],
           buttons: [
             {
               text: 'This Years Submissions',
@@ -53,16 +54,20 @@
         <div class='submissions-table'>
           <table id='submissions' class='table table-striped table-responsive table-submission-list'>
             <thead>
-              <th class='col-md-3'>Submission Title</th>
-              <th class='col-md-3'>Reviews</th>
-              <th class='col-md-3'>Average Score</th>
-              <th class='col-md-3'>Submission Date</th>
+              <th class='col-md-2'>Submission Title</th>
+              <th class='col-md-2'>Reviews</th>
+              <th class='col-md-2'>Average Score</th>
+              <th class='col-md-2'>Name</th>
+              <th class='col-md-2'>Country</th>
+              <th class='col-md-2'>Submission Date</th>
             </thead>
             <tbody>
               {% for submission in submissions %}<tr{% if user.id == submission.user_id %} class='info'{% endif %}>
-                <td><a title='{{ submission.title }}' href='{% url 'submission' submission.uuid %}'>{{ submission.title|truncatechars:32 }}</a></td>
+                <td><a title='{{ submission.title }}' href='{% url 'submission' submission.uuid %}'>{{ submission.title|truncatechars:16 }}</a></td>
                 <td>{{ submission.get_reviews.count }}</td>
                 <td>{{ submission.get_average_score|default_if_none:0 }}</td>
+                {% with submitter=submission.user.profile %}<td>{% if submitter.name %}{{ submitter.name }}{% else %}N/A{% endif %}</td>
+                <td>{{ submitter.country }}</td>{% endwith %}
                 <td>{{ submission.submitted_on|date:'Y-m-d' }}</td>
               </tr>{% empty %}<tr>
                 <td colspan='3'>No submissions yet!</td>
