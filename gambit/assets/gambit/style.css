@@ -51,5 +51,5 @@ td#file-hash:hover code#full-hash { display: inline; }
 p.auth-buttons { margin-bottom:0; }
 
 /* Front page */
-.front-page-login-box { margin: 0.2em; }
+.front-page-login-box { margin: 0.35em; }
 .front-page-tabs { padding: 15px; }
