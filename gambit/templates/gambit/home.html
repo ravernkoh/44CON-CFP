@@ -34,7 +34,7 @@
       {{ front_page.speaker_paragraph|safe|default:"No speaker guidance has been set!" }}
     </div>{% if front_page.important_dates %}
     <div class="tab-pane fade" id="important-dates">
-      {{ front_page.important_dates|safe|default:"No speaker guidance has been set!" }}
+      {{ front_page.important_dates|safe }}
     </div>{% endif %}
   </div>
 </div>{% endblock %}
