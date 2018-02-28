@@ -167,7 +167,7 @@ class ListSubmission(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, gene
     def get_context_data(self, **kwargs):
         """Return all submissions"""
         context = super(ListSubmission, self).get_context_data(**kwargs)
-        context["submissions"] = Submission.objects.all()
+        context["submissions"] = Submission.objects.all().prefetch_related('user__profile')
         return context
 
 
