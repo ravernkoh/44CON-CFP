@@ -37,13 +37,13 @@ ul.errorlist > li { color: #c9302c; }
 .submission-title { margin-top: 10px; margin-left: 8px; }
 
 /* Mousover for file hash */
-td#file-hash code#abbreviated-hash { display: inline; }
+#file-hash #abbreviated-hash { display: inline; }
 
-td#file-hash:hover code#abbreviated-hash { display: none; }
+#file-hash:hover #abbreviated-hash { display: none; }
 
-td#file-hash code#full-hash { display: none; }
+#file-hash #full-hash { display: none; }
 
-td#file-hash:hover code#full-hash { display: inline; }
+#file-hash:hover #full-hash { display: inline; }
 
 .smaller { font-size: 65%; }
 
