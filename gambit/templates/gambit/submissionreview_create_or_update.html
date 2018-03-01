@@ -3,65 +3,51 @@
 {% block scriptinject %}<script>$(function () {
   $('[data-toggle="tooltip"]').tooltip()
 })</script>{% endblock %}
-{% block content %}<div class='container'>
+{% block content %}{% load has_group %}{% with profile=submission.user.profile sub_user=submission.user_id pc=user|has_group:'Programme Committee' %}<div class='container'>
   <div class='row'>
     <div class='col-md-12'>
-      <div class='panel panel-default'>
-        <h3 class='submission-title'><strong>{{ submission.title }}</strong></h3>
-        <table class='table table-borderless table-responsive is_breakable'>
-          <thead>
-            <th class='col-md-2'></th>
-            <th class='col-md-10'></th>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Submission date:</strong></td>
-              <td><span title='{{ submission.submitted_on|date:'H:i O' }}'>{{ submission.submitted_on|date:'Y-m-d' }}</span></td>
-            </tr>
-            {% if submission.abstract %}<tr>
-              <td><strong>Abstract:</strong></td>
-              <td>{{ submission.abstract|linebreaks }}</td>
-            </tr>{% endif %}
-            {% if submission.authors %}<tr>
-              <td><strong>Author(s):</strong></td>
-              <td>{{ submission.authors|linebreaks }}</td>
-            </tr>{% endif %}
-            <tr>
-              <td><strong>Contact Email:</strong></td>
-              <td><a href='mailto:{{ submission.contact_email }}'>{{ submission.contact_email }}</a></td>
-            </tr>
-            {% if submission.file %}<tr>
-              <td><strong>Submission:</strong></td>
-              <td><a target='_blank' href='{% url 'download_submission' submission.uuid %}'>{{ submission_file_name }} <span class='glyphicon glyphicon-download' aria-hidden='true'></span></a> ({{ submission.file.size|filesizeformat }})</td>
-            </tr>
-            <tr>
-              <td><span class='small smaller'><strong>File Hash:</strong></span></td>
-              <td id='file-hash' data-toggle="tooltip" data-placement="bottom" title="SHA-512 checksum"><code id='abbreviated-hash' class='smaller'>{{ submission.file_hash|truncatechars:9 }}</code><code id='full-hash' class='smaller'>{{ submission.file_hash }}</code></td>
-            </tr>{% endif %}
-            {% if submission.conflicts %}<tr>
-              <td><strong class='text-danger'>Conflicts:</strong></td>
-              <td>{{ submission.conflicts|linebreaks }}</td>
-            </tr>{% endif %}
-          </tbody>
-        </table>
+      <div id='submission'>
+        <h3 class='submission-title'><strong>{{ submission.title }}</strong> {% if has_reviewed %}<span title='Reviewed!' class='fui-check review-checkmark text-success' aria-hidden='true'></span>{% endif %}</h3>
+        <ul class='list-inline small'>
+          <li>
+            <span title='Submitted on' class='fui-calendar submission-icon' aria-hidden='true'></span>
+            <span title='{{ submission.submitted_on|date:'c' }}'>{{ submission.submitted_on|date:'d F Y' }}</span>{% if pc %}
+          <li>&middot;</li>
+          <li title='Submitted by'>{{ profile.name }}</li>
+          <li>&middot;</li>
+          <li title='Country of residence'>{{ profile.country }}</li>
+          <li>&middot;</li>
+          <li title='Contact Email'><a href='mailto:{{ submission.contact_email }}'>{{ submission.contact_email }}</a></li>{% endif %}
+        </ul>
+        <hr>
+        {% if user.id == sub_user %}<a class='btn btn-success btn-wide pull-right' href='{% url 'update_submission' submission.uuid %}'>Edit your submission</a>{% endif %}
+        <p>
+          <span title='Submission' class='fui-upload submission-icon' aria-hidden='true'></span>
+          <a target='_blank' href='{% url 'download_submission' submission.uuid %}'>{{ submission_file_name }} <span class='glyphicon glyphicon-download' aria-hidden='true'></span></a> ({{ submission.file.size|filesizeformat }})<br>
+          <span class='small'><span title='Checksum' class='fui-check submission-icon' aria-hidden='true'></span> <span id='file-hash' data-toggle="tooltip" data-placement="bottom" title="SHA-512 checksum"><code id='abbreviated-hash'>{{ submission.file_hash|truncatechars:9 }}</code><code id='full-hash'>{{ submission.file_hash }}</code></span>
+        </p>
+        {% if submission.abstract %}<p class='submission-subtitle'><strong>Abstract</strong></p>
+        {{ submission.abstract|linebreaks }}{% endif %}
+        {% if submission.authors %}<p class='submission-subtitle'><strong>Author(s)</strong></p>
+        {{ submission.authors|linebreaks }}{% endif %}
+        {% if submission.conflicts %}<p class='submission-subtitle'><strong class='text-danger'>Conflicts</strong></p>
+        {{ submission.conflicts|linebreaks }}{% endif %}
       </div>
-      <div class='container'>
-        <div class='row'>
-          <div class='col-md-offset-1 col-md-10'>
-            <form method='post' enctype='multipart/form-data'>
-              {% csrf_token %}
-              {{ form.non_field_errors }}
-              {% for field in form %}<div class='form-group'>
-                {{ field.errors }}
-                <label for='{{ field.id_for_label }}'>{{ field.label }}</label>
-                {{ field }}
-                {% if field.help_text %}<p class='help-block'>{{ field.help_text|safe }}</p>{% endif %}
-              </div>{% endfor %}
-              <button type='submit' class='btn btn-primary'>Save review</button>
-            </form>
-          </div>
+      <div class='row' id='reviews'>
+        <div class='col-md-offset-1 col-md-10'>
+          <form method='post' enctype='multipart/form-data'>
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            {% for field in form %}<div class='form-group'>
+              {{ field.errors }}
+              <label for='{{ field.id_for_label }}'>{{ field.label }}</label>
+              {{ field }}
+              {% if field.help_text %}<p class='help-block'>{{ field.help_text|safe }}</p>{% endif %}
+            </div>{% endfor %}
+            <button type='submit' class='btn btn-primary'>Save review</button>
+          </form>
         </div>
       </div>
     </div>
   </div>
-</div>{% endblock %}
+</div>{% endwith %}{% endblock %}
