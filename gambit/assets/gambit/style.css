@@ -34,16 +34,22 @@ ul.errorlist > li { color: #c9302c; }
 
 .is_breakable { table-layout: fixed; word-wrap: break-word; }
 
-.submission-title { margin-top: 10px; margin-left: 8px; }
+/* Submission View */
+#submission { margin-bottom: 3em; }
+#reviews { margin-bottom: 3em; }
+.submission-title { margin-top: 0.4em; }
+.submission-icon { margin-right: 0.35em; }
+.submission-subtitle { border-bottom: 1px #EEE solid; }
+.review-checkmark { margin-left: 0.35em; font-size: 0.8em; }
 
 /* Mousover for file hash */
-td#file-hash code#abbreviated-hash { display: inline; }
+#file-hash #abbreviated-hash { display: inline; }
 
-td#file-hash:hover code#abbreviated-hash { display: none; }
+#file-hash:hover #abbreviated-hash { display: none; }
 
-td#file-hash code#full-hash { display: none; }
+#file-hash #full-hash { display: none; }
 
-td#file-hash:hover code#full-hash { display: inline; }
+#file-hash:hover #full-hash { display: inline; }
 
 .smaller { font-size: 65%; }
 
