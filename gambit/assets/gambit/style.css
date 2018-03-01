@@ -44,11 +44,8 @@ ul.errorlist > li { color: #c9302c; }
 
 /* Mousover for file hash */
 #file-hash #abbreviated-hash { display: inline; }
-
 #file-hash:hover #abbreviated-hash { display: none; }
-
 #file-hash #full-hash { display: none; }
-
 #file-hash:hover #full-hash { display: inline; }
 
 .smaller { font-size: 65%; }
