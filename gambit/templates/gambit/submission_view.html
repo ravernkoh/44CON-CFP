@@ -20,12 +20,13 @@
           <li title='Contact Email'><a href='mailto:{{ submission.contact_email }}'>{{ submission.contact_email }}</a></li>{% endif %}
         </ul>
         <hr>
+        <div>
         {% if user.id == sub_user %}<a class='btn btn-success btn-wide pull-right' href='{% url 'update_submission' submission.uuid %}'>Edit your submission</a>{% endif %}
-        <p>
+        {% if submission.file %}<p>
           <span title='Submission' class='fui-upload submission-icon' aria-hidden='true'></span>
           <a target='_blank' href='{% url 'download_submission' submission.uuid %}'>{{ submission_file_name }} <span class='glyphicon glyphicon-download' aria-hidden='true'></span></a> ({{ submission.file.size|filesizeformat }})<br>
           <span class='small'><span title='Checksum' class='fui-check submission-icon' aria-hidden='true'></span> <span id='file-hash' data-toggle="tooltip" data-placement="bottom" title="SHA-512 checksum"><code id='abbreviated-hash'>{{ submission.file_hash|truncatechars:9 }}</code><code id='full-hash'>{{ submission.file_hash }}</code></span>
-        </p>
+        </p>{% endif %}
         {% if submission.abstract %}<p class='submission-subtitle'><strong>Abstract</strong></p>
         {{ submission.abstract|linebreaks }}{% endif %}
         {% if submission.authors %}<p class='submission-subtitle'><strong>Author(s)</strong></p>
