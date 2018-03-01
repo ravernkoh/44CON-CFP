@@ -9,6 +9,8 @@
       <div id='submission'>
         <h3 class='submission-title'><strong>{{ submission.title }}</strong> {% if has_reviewed %}<span title='Reviewed!' class='fui-check review-checkmark text-success' aria-hidden='true'></span>{% endif %}</h3>
         <ul class='list-inline small'>
+          {% if user.id == sub_user %}<li><a class='btn btn-success btn-sm' href='{% url 'update_submission' submission.uuid %}'>Edit your submission</a></li>
+          <li>&middot;</li>{% endif %}
           <li>
             <span title='Submitted on' class='fui-calendar submission-icon' aria-hidden='true'></span>
             <span title='{{ submission.submitted_on|date:'c' }}'>{{ submission.submitted_on|date:'d F Y' }}</span>{% if pc %}
@@ -20,8 +22,6 @@
           <li title='Contact Email'><a href='mailto:{{ submission.contact_email }}'>{{ submission.contact_email }}</a></li>{% endif %}
         </ul>
         <hr>
-        <div>
-        {% if user.id == sub_user %}<a class='btn btn-success btn-wide pull-right' href='{% url 'update_submission' submission.uuid %}'>Edit your submission</a>{% endif %}
         {% if submission.file %}<p>
           <span title='Submission' class='fui-upload submission-icon' aria-hidden='true'></span>
           <a target='_blank' href='{% url 'download_submission' submission.uuid %}'>{{ submission_file_name }} <span class='glyphicon glyphicon-download' aria-hidden='true'></span></a> ({{ submission.file.size|filesizeformat }})<br>
