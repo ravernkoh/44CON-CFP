@@ -2,7 +2,7 @@
 {% block content %}<div class='container'>
   <div class='row'>
     <h1 class='text-center'>44CON {{ CONFERENCE_YEAR }} Call For Papers</h1>
-    {% if front_page.alert %}<p class='alert alert-danger alert-dismissible'><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ front_page.alert|safe }}</p>{% endif %}
+    {% if front_page.alert %}<p class='alert alert-danger alert-dismissible'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>{{ front_page.alert|safe }}</p>{% endif %}
     <div class='col-md-12'>
       {% if not user.is_authenticated %}<div class='login-form pull-right front-page-login-box'>
         <form method='post'>
@@ -17,23 +17,23 @@
           <button type='submit' class='btn btn-primary group-button-spacing'>Login</button> <a class='btn btn-inverse group-button-spacing' href='{% url 'signup' %}'>Create an account</a> <a class='btn btn-inverse group-button-spacing' href='{% url 'password_reset' %}'>Forgot your password?</a>
         </form>
       </div>{% endif %}
-      {{ front_page.leading_paragraph|safe|default:"No lead paragraph has been set!" }}
+      {{ front_page.leading_paragraph|safe|default:'No lead paragraph has been set!' }}
     </div>
   </div>
-  <ul class="nav nav-tabs nav-justified">
-    <li class="nav active"><a href="#submission-guidance" data-toggle="tab"><h6>Submission Guidance</h6></a></li>
-    <li class="nav"><a href="#speaker-privileges" data-toggle="tab"><h6>Speaker Privileges</h6></a></li>{% if front_page.important_dates %}
-    <li class="nav"><a href="#important-dates" data-toggle="tab"><h6>Important Dates</h6></a></li>{% endif %}
+  <ul class='nav nav-tabs nav-justified'>
+    <li class='nav active'><a href='#submission-guidance' data-toggle='tab'><h6>Submission Guidance</h6></a></li>
+    <li class='nav'><a href='#speaker-privileges' data-toggle='tab'><h6>Speaker Privileges</h6></a></li>{% if front_page.important_dates %}
+    <li class='nav'><a href='#important-dates' data-toggle='tab'><h6>Important Dates</h6></a></li>{% endif %}
   </ul>
 
-  <div class="tab-content clearfix front-page-tabs">
-    <div class="tab-pane fade in active" id="submission-guidance">
-      {{ front_page.submission_paragraph|safe|default:"No submission guidance has been set!" }}
+  <div class='tab-content clearfix front-page-tabs'>
+    <div class='tab-pane fade in active' id='submission-guidance'>
+      {{ front_page.submission_paragraph|safe|default:'No submission guidance has been set!' }}
     </div>
-    <div class="tab-pane fade" id="speaker-privileges">
-      {{ front_page.speaker_paragraph|safe|default:"No speaker guidance has been set!" }}
+    <div class='tab-pane fade' id='speaker-privileges'>
+      {{ front_page.speaker_paragraph|safe|default:'No speaker guidance has been set!' }}
     </div>{% if front_page.important_dates %}
-    <div class="tab-pane fade" id="important-dates">
+    <div class='tab-pane fade' id='important-dates'>
       {{ front_page.important_dates|safe }}
     </div>{% endif %}
   </div>
