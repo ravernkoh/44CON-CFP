@@ -323,8 +323,8 @@ class SubmitForm(forms.ModelForm):
             'file': (
                 'If you have any specific requirements, constraints, supporting content, or just pictures of your cat '
                 'then please upload them using this form.<br>If you have multiple files to upload, the form will accept'
-                ' a zip file.<br> File size limit: <span class=\'text-danger\'>50MiB</span>. Permitted data types: pdf,'
-                ' doc/x, ppt/s, zip'
+                ' a zip file.<br> File size limit: <span class=\'text-danger\'>50MiB</span>. Permitted data types: '
+                '<code>pdf</code>, <code>doc/x</code>, <code>ppt/s</code>, <code>zip</code>'
             ),
         }
         widgets = {
