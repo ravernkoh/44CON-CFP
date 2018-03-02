@@ -73,9 +73,25 @@
       </div>
     </nav>
 
-    <div class='container' role='main'>
-      {% block content %}{% endblock %}
-    </div>
+    <div class='container'>{% if messages %}{% for message in messages %}
+      <div class='row'>
+        <div class='col-md-12'>
+          {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}<div class='alert alert-danger alert-dismissible fade in' role='alert'>
+            <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
+            <span class='fui-alert-circle messages-icon' aria-hidden='true'></span> {{ message }}
+          </div>{% endif %}
+          {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}<div class='alert alert-warning alert-dismissible fade in' role='alert'>
+            <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
+            <span class='fui-info-circle messages-icon' aria-hidden='true'></span> {{ message }}
+          </div>{% endif %}
+          {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}<div class='alert alert-success alert-dismissible fade in' role='alert'>
+            <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
+            <span class='fui-check-circle messages-icon' aria-hidden='true'></span> {{ message }}
+          </div>{% endif %}
+        </div>
+      </div>{% endfor %}
+    </div>{% endif %}
+    {% block content %}{% endblock %}
 
     {% compress js file %}<script type='text/javascript' charset='utf-8' src='{% static 'flat-ui/dist/js/flat-ui.min.js' %}'></script>{% endcompress %}
 

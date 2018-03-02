@@ -1,6 +1,7 @@
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
+from django.contrib import messages
 from django.contrib.auth.models import User
 from django.shortcuts import render_to_response
 from django_downloadview import ObjectDownloadView
@@ -8,6 +9,7 @@ from django.template.loader import render_to_string
 from django.utils.encoding import force_text, force_bytes
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
+from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, mixins, REDIRECT_FIELD_NAME
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -68,11 +70,12 @@ class ViewProfile(mixins.LoginRequiredMixin, generic.TemplateView):
         return context
 
 
-class UpdateProfile(mixins.LoginRequiredMixin, generic.edit.UpdateView):
+class UpdateProfile(SuccessMessageMixin, mixins.LoginRequiredMixin, generic.edit.UpdateView):
     model = Profile
     form_class = UpdateProfileForm
     template_name_suffix = "_update"
     login_required = "login"
+    success_message = "Profile updated successfully"
 
     def get_context_data(self, **kwargs):
         context = super(UpdateProfile, self).get_context_data(**kwargs)
@@ -126,12 +129,13 @@ class ViewSubmission(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, gene
         return context
 
 
-class UpdateSubmission(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, generic.edit.UpdateView):
+class UpdateSubmission(SuccessMessageMixin, mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, generic.edit.UpdateView):
     model = Submission
     form_class = SubmitForm
     template_name_suffix = "_update"
     login_url = "login"
     redirect_field_name = "home"
+    success_message = "Submission updated successfully"
 
     # Is model owned by editor?
     def test_func(self):
@@ -171,12 +175,13 @@ class ListSubmission(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, gene
         return context
 
 
-class CreateReview(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, generic.edit.CreateView):
+class CreateReview(SuccessMessageMixin, mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, generic.edit.CreateView):
     model = SubmissionReview
     form_class = SubmissionReviewForm
     template_name_suffix = "_create_or_update"
     login_url = "login"
     redirect_field_name = "home"
+    success_message = "Review has been added"
 
     # Is the logged in user an admin or a member of the PC?
     def test_func(self):
@@ -199,12 +204,13 @@ class CreateReview(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, generi
         return reverse("submission", args=[self.kwargs["uuid"]])
 
 
-class UpdateReview(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, generic.edit.UpdateView):
+class UpdateReview(SuccessMessageMixin, mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, generic.edit.UpdateView):
     model = SubmissionReview
     form_class = SubmissionReviewForm
     template_name_suffix = "_create_or_update"
     login_url = "login"
     redirect_field_name = "home"
+    success_message = "Review has been updated"
 
     # Is the logged in user an admin or a member of the PC?
     def test_func(self):
@@ -310,6 +316,7 @@ def submit_form_upload(request):
                 f.user = request.user
                 f.save()
                 f.refresh_from_db()
+                messages.success(request, "Submission added successfully")
                 return redirect(reverse("submission", args=[f.uuid]))
         else:
             form = SubmitForm()
