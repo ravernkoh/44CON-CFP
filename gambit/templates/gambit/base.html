@@ -30,7 +30,20 @@
     <link rel='stylesheet' type='text/css' href='{% static 'gambit/style.css' %}'>
     {% load hijack_tags %}<link rel="stylesheet" type="text/css" href="{% static 'hijack/hijack-styles.css' %}">{% endcompress %}
     {% block styleinject %}{% endblock %}
-    {% compress js file %}<script type='text/javascript' charset='utf-8' src='{% static 'jquery/dist/jquery.min.js' %}'></script>{% endcompress %}
+    {% compress js file %}<script type='text/javascript' charset='utf-8' src='{% static 'jquery/dist/jquery.min.js' %}'></script>
+    <script type='text/javascript' charset='utf-8' src='{% static 'js-cookie/src/js.cookie.js' %}'></script>
+    <script type='text/javascript' charset='utf-8'>
+      jQuery(function($){
+        if (Cookies.get("dismiss_alert")=="dismissed") {
+          $("div#alert-box").hide();
+        }
+        $("button#close-alert").click(
+          function(){
+            Cookies.set("dismiss_alert","dismissed",{expires: 64});
+          }
+        );
+      });
+    </script>{% endcompress %}
 
   </head>
 
