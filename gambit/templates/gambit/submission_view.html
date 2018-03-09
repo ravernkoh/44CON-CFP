@@ -51,7 +51,7 @@
             <strong>{{ review.get_reviewer_name }}</strong> &mdash;
             <strong>Expertise:</strong> <span class='label label-{% if review.expertise_score >= 4 %}success{% elif review.expertise_score == 2 or review.expertise_score == 3 %}warning{% else %}danger{% endif %}'>{{ review.expertise_score }}/5</span> &middot; <strong>Score:</strong> <span class='label label-{% if review.submission_score >= 4 %}success{% elif review.submission_score == 2 or review.submission_score == 3 %}warning{% else %}danger{% endif %}'>{{ review.submission_score }}/5</span>
           </p>
-          <p>{{ review.comments }}</p>
+          <p>{{ review.comments|linebreaks }}</p>
         </div>{% empty %}
         <p class='well well-sm'>No reviews submitted yet!</p>
         {% endfor %}{% endif %}{% endif %}
