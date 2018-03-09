@@ -73,7 +73,7 @@
       </div>
     </nav>
 
-    <div class='container'>{% if messages %}{% for message in messages %}
+    {% if messages %}{% for message in messages %}<div class='container'>
       <div class='row'>
         <div class='col-md-12'>
           {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}<div class='alert alert-danger alert-dismissible fade in' role='alert'>
