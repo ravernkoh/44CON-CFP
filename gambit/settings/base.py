@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.postgres',
     'anymail',
+    'django_unused_media',
 ]
 
 if configuration["django_hijack"]["enabled"]:

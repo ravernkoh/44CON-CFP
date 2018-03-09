@@ -10,6 +10,7 @@ django-downloadview>=1.9
 django-hijack>=2.1.6
 django-hijack-admin>=2.1.6
 django-htmlmin>=0.10.0
+django-unused-media>=0.1.11
 django-webtest>=1.9.2
 factory-boy>=2.10.0
 html5lib>=1.0.1
