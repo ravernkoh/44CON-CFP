@@ -10,7 +10,8 @@ body{ padding-bottom: 20px; }
   float: right;
 }
 
-/* Submission List table */
+/* Submission List */
+.submissions-list-container { margin: 1.5em; }
 .submissions-table { padding: 0.75em; }
 .table-submission-list { width: 100% !important; }
 
