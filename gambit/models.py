@@ -95,7 +95,7 @@ class SubmissionReview(models.Model):
         return '{0!s}'.format(self.uuid)
 
     def get_reviewer_name(self):
-        return Profile.objects.filter(user_id=self.user_id).first().name
+        return Profile.objects.get(user_id=self.user_id).name
 
 
     class Meta:

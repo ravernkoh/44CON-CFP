@@ -40,7 +40,7 @@
         {% if user.id == sub_user %}
           <p>For the sake of impartiality, reviews of your own submission have been hidden.</p>{% else %}
         <ul class='list-inline'>
-          <li><strong>Average Score:</strong> {{ submission.get_average_score }}</li>
+          {% with avg_score=submission.get_average_score %}<li><strong>Average Score:</strong> <span class='label label-{% if avg_score >= 4.0 %}success{% elif avg_score >= 2.0 or avg_score <= 3.9 %}warning{% else %}danger{% endif %}'>{{ avg_score }}</span></li>{% endwith %}
           <li>&middot;</li>
           <li><strong>Total Score:</strong> {{ submission.get_total_score }}</li>
           <li>&middot;</li>
@@ -49,7 +49,7 @@
         {% for review in reviews %}<div class='well well-sm'>
           <p>
             <strong>{{ review.get_reviewer_name }}</strong> &mdash;
-            <strong>Expertise:</strong> {{ review.expertise_score }}/5 &middot; <strong>Score:</strong> {{ review.submission_score }}/5
+            <strong>Expertise:</strong> <span class='label label-{% if review.expertise_score >= 4 %}success{% elif review.expertise_score == 2 or review.expertise_score == 3 %}warning{% else %}danger{% endif %}'>{{ review.expertise_score }}/5</span> &middot; <strong>Score:</strong> <span class='label label-{% if review.submission_score >= 4 %}success{% elif review.submission_score == 2 or review.submission_score == 3 %}warning{% else %}danger{% endif %}'>{{ review.submission_score }}/5</span>
           </p>
           <p>{{ review.comments }}</p>
         </div>{% empty %}
