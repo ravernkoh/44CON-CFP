@@ -72,13 +72,16 @@ class SubmissionAdmin(admin.ModelAdmin):
         response = HttpResponse(content_type="text/csv")
         response["Content-Disposition"] = "attachment; filename=44CON-CFP-submissions.csv"
         writer = csv.writer(response)
-        writer.writerow(['Title', 'Authors', 'Contact', 'Score',])
-        submissions = queryset.values_list('title', 'authors', 'contact_email',)
+        writer.writerow(['Title', 'Authors', 'Contact', 'Submitted On', 'Score', 'Submitter', 'Submitter Email', 'Country',])
+        submissions = queryset.values_list('title', 'authors', 'contact_email', 'submitted_on',)
         for index, submission in enumerate(submissions):
             # submission is iterated out to create a list instead of a tuple so that the score can be appended
             # I was lazy with this and there's probably a far more elegant way to do it
             submission = [field for field in submission]
             submission.append(queryset[index].get_average_score())
+            submission.append(queryset[index].user.profile.name)
+            submission.append(queryset[index].user.email)
+            submission.append(queryset[index].user.profile.country)
             writer.writerow(submission)
         return response
     _export_to_csv.short_description = "Export to CSV"
