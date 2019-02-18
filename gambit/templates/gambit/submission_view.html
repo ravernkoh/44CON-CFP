@@ -34,13 +34,36 @@
         {% if submission.conflicts %}<p class='submission-subtitle'><strong class='text-danger'>Conflicts</strong></p>
         {{ submission.conflicts|linebreaks }}{% endif %}
       </div>{% if pc %}
+      <div id='related-submissions'>
+        <h5>Previous/Related Submissions</h5>
+        <table class='table table-striped table-responsive'>
+          <thead>
+            <th class='col-md-6'>Submission Title</th>
+            <th class='col-md-1'>Reviews</th>
+            <th class='col-md-1'>Score</th>
+            <th class='col-md-2'>Country</th>
+            <th class='col-md-2'>Submitted</th>
+          </thead>
+          <tbody>
+            {% for submission in related_submissions %}<tr>
+              <td><a title='{{ submission.title }}' href='{% url 'submission' submission.uuid %}'>{{ submission.title|truncatechars:80 }}</a></td>
+              <td>{{ submission.get_reviews.count }}</td>
+              <td>{% with avg_score=submission.get_average_score %}<span class='label label-{% if avg_score >= 4.0 %}success{% elif avg_score >= 2.0 and avg_score <= 3.9 %}warning{% else %}danger{% endif %}'>{{ avg_score }}</span>{% endwith %}</td>
+              {% with submitter=submission.user.profile %}<td title='{{ submitter.country }}'>{{ submitter.country|truncatechars:16 }}</td>{% endwith %}
+              <td title='{{ submission.submitted_on|date:'d N Y' }}'>{{ submission.submitted_on|date:'Y-m-d' }}</td>
+            </tr>{% empty %}<tr>
+              <td colspan='3'>This account has not made any other submissions.</td>
+            </tr>{% endfor %}
+          </tbody>
+        </table>
+      </div>
       <div id='reviews'>
         <p class='pull-right'>{% if not user.id == sub_user %}{% if has_reviewed %}<a class='btn btn-success btn-wide' href='{% url 'update_review' review_uuid %}'>Edit your review</a>{% else %}<a class='btn btn-success btn-wide' href='{% url 'new_review' submission.uuid %}'>Submit a review</a>{% endif %}{% endif %}</p>
         <h5>Reviews</h5>
         {% if user.id == sub_user %}
           <p>For the sake of impartiality, reviews of your own submission have been hidden.</p>{% else %}
         <ul class='list-inline'>
-          {% with avg_score=submission.get_average_score %}<li><strong>Average Score:</strong> <span class='label label-{% if avg_score >= 4.0 %}success{% elif avg_score >= 2.0 or avg_score <= 3.9 %}warning{% else %}danger{% endif %}'>{{ avg_score }}</span></li>{% endwith %}
+          {% with avg_score=submission.get_average_score %}<li><strong>Average Score:</strong> <span class='label label-{% if avg_score >= 4.0 %}success{% elif avg_score >= 2.0 and avg_score <= 3.9 %}warning{% else %}danger{% endif %}'>{{ avg_score }}</span></li>{% endwith %}
           <li>&middot;</li>
           <li><strong>Total Score:</strong> {{ submission.get_total_score }}</li>
           <li>&middot;</li>

@@ -77,6 +77,10 @@ class Submission(models.Model):
             _, tail = os.path.split(self.file.name)  # Discarding path prefix
             return tail
 
+    def get_related_submissions(self):
+        related_submissions = [s for s in self.user.profile.get_submissions() if s.uuid != self.uuid]
+        return related_submissions
+
 
     class Meta:
         ordering = ["submitted_on"]
