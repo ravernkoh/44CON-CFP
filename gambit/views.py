@@ -118,6 +118,7 @@ class ViewSubmission(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, gene
         context["submission"] = get_object_or_404(Submission, uuid=self.kwargs["uuid"])
         context["submission_file_name"] = context["submission"].get_file_name()
         context["reviews"] = context["submission"].get_reviews()
+        context["related_submissions"] = context["submission"].get_related_submissions()
         context["has_reviewed"] = (
             True
             if SubmissionReview.objects.filter(submission=context["submission"], user=self.request.user).exists()

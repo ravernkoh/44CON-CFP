@@ -25,7 +25,7 @@ Steps 6 to 9 can be achieved with `bash prepare_assets.sh`.
 Some database objects are currently critical for certain pages due to bad coding decisions. This will be rectified in future releases but for now, the singular FrontPage and SubmissionDeadline objects should be generated using the admin interface after creating a superuser account. When created, the admin UI will restrict from creating more objects under these models. Again, this is poor design choice and will be corrected in the future but, for the time being, avoid trying to create more of these objects. The logic of the application shouldn't really be affected if you do but shit happens and it likely will.
 
 ## Contribute
-Yes, absolutely. Contributions to the project are very welcome. This project is entirely open source and hopefully will eventually become a stable option for conferences looking for a modular, modifiable, and simple CFP. For more information on contributing, please read our [Contribution](https://github.com/nimxj/44CON-CFP/blob/master/LICENSE) doc.
+Yes, absolutely. Contributions to the project are very welcome. This project is entirely open source and hopefully will eventually become a stable option for conferences looking for a modular, modifiable, and simple CFP. For more information on contributing, please read our [Contribution](https://github.com/rawhex/44CON-CFP/blob/master/CONTRIBUTING.md) doc.
 
 ## License
 [GPLv3](https://github.com/nimxj/44CON-CFP/blob/master/LICENSE) (c) 2017-2018 Sense/Net Ltd.

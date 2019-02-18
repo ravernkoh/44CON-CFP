@@ -67,7 +67,7 @@ class Submission(models.Model):
         return SubmissionReview.objects.filter(submission=self)
 
     def get_average_score(self):
-        return self.get_reviews().aggregate(models.Avg("submission_score"))["submission_score__avg"] or 0
+        return float("{0:.2f}".format(self.get_reviews().aggregate(models.Avg("submission_score"))["submission_score__avg"])) or 0
 
     def get_total_score(self):
         return self.get_reviews().aggregate(models.Sum("submission_score"))["submission_score__sum"] or 0
@@ -76,6 +76,10 @@ class Submission(models.Model):
         if self.file:
             _, tail = os.path.split(self.file.name)  # Discarding path prefix
             return tail
+
+    def get_related_submissions(self):
+        related_submissions = [s for s in self.user.profile.get_submissions() if s.uuid != self.uuid]
+        return related_submissions
 
 
     class Meta:
