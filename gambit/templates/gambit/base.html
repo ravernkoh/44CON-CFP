@@ -26,7 +26,7 @@
     <title>{% block title %}{% endblock %}{{ CONFERENCE_NAME}} {{ CONFERENCE_YEAR }}</title>
 
     {% load compress %}{% compress css file %}<link rel='stylesheet' type='text/css' href='{% static 'flat-ui/dist/css/vendor/bootstrap/css/bootstrap.min.css' %}'>
-    <link rel='stylesheet' type='text/css' href='{% static 'flat-ui/dist/css/flat-ui-44con.min.css' %}'>
+    <link rel='stylesheet' type='text/css' href='{% static 'flat-ui/dist/css/flat-ui.min.css' %}'>
     <link rel='stylesheet' type='text/css' href='{% static 'gambit/style.css' %}'>
     {% load hijack_tags %}<link rel="stylesheet" type="text/css" href="{% static 'hijack/hijack-styles.css' %}">{% endcompress %}
     {% block styleinject %}{% endblock %}
