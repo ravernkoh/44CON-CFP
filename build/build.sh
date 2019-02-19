@@ -9,6 +9,18 @@ readonly PROGDIR=$(readlink -m "$(dirname "$0")")
 readonly PROJECT_ROOT="$(readlink -m "$(dirname "$PROGDIR")")"
 readonly ARGS="$@"
 
+usage() {
+    printf "usage: %s options
+
+    OPTIONS:
+    \t-s --settings\tproduction or development
+    \t-h --help\tshow this help
+
+    Examples:
+    \tRun in development mode:
+    \t  %s -s development\n\n" "$PROGNAME" "$PROGNAME"
+}
+
 cmdline() {
     local arg=
     local args=
@@ -109,18 +121,6 @@ main() {
     if [[ -n ${RUN_TESTS+0} ]]; then
         run_tests
     fi
-}
-
-usage() {
-    printf "usage: %s options
-
-    OPTIONS:
-    \t-s --settings\tproduction or development
-    \t-h --help\tshow this help
-
-    Examples:
-    \tRun in development mode:
-    \t  %s -s development\n\n" "$PROGNAME" "$PROGNAME"
 }
 
 main
