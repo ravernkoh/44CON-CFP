@@ -7,6 +7,7 @@ core:
   debug: False
   allowed_hosts:
     - '127.0.0.1'
+    - 'localhost'
   secret_key: 'HKAZSJ4fg9zPwXnuWdBiqhHkfxeTb8ExRzwXZtneZouSvpX1VSETiLzRfbWlAZ8y'
   cache: 'local'
   minimum_password_length: 12
