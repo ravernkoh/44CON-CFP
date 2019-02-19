@@ -29,12 +29,12 @@ Building, running, and maintaining this project requires at-minimum the followin
 These are extremely rudimentary instructions to build the development environment - some of which will be relevant for preparing a production environment. Previous experience with a Django project is probably necessary to troubleshoot through setup.
 
 1. Get dependencies for Django: `pip install -r requirements/base.txt`
-2. Copy `gambit/config.example.yaml` to `gambit/config.yaml` and update it with your own secret key, anymail settings, postgresql details, and sentry DSN. If you've got your own mail setup, alternative database deployment, or use a different error tracking solution, you will need to make the relevant changes in settings/base.py or override them in settings/YOUR-OWN-SETTINGS-FILE.py
+2. Copy `gambit/config.example.yaml` to `gambit/config.yaml` and update it with your own secret key, anymail settings, postgresql details, and sentry DSN. If you've got your own mail setup, alternative database deployment, or use a different error tracking solution, you will need to make the relevant changes in `settings/base.py` or override them in `settings/YOUR-OWN-SETTINGS-FILE.py`
 3. Prepare the project-specific tables: `python manage.py makemigrations gambit`
 4. Initialise the database by adding the core database tables and integrating migrations: `python manage.py migrate`
 6. Collect CSS and JavaScript assets: `bower install --save --production build/bower.json`
 7. *Optional* Modify the variables.less file to change the site colour scheme: `cp build/variables.less bower_components/flat-ui/less`
-8. *Optional (dependent on 7)* Generate minified CSS and source map: `lessc --source-map-less-inline --source-map-map-inline --clean-css bower_components/flat-ui/less/flat-ui.less bower_components/flat-ui/dist/css/flat-ui.min.css`
+8. *Optional (dependent on 6)* Generate minified CSS and source map: `lessc --source-map-less-inline --source-map-map-inline --clean-css bower_components/flat-ui/less/flat-ui.less bower_components/flat-ui/dist/css/flat-ui.min.css`
 9. Copy bower assets and project assets to static directory: `python manage.py collectstatic --clear`
 10. Compress JS/CSS assets: `python manage.py compress`
 
