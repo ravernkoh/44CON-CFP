@@ -9,6 +9,18 @@ readonly PROGDIR=$(readlink -m "$(dirname "$0")")
 readonly PROJECT_ROOT="$(readlink -m "$(dirname "$PROGDIR")")"
 readonly ARGS="$@"
 
+usage() {
+    printf "usage: %s options
+
+    OPTIONS:
+    \t-s --settings\tproduction or development
+    \t-h --help\tshow this help
+
+    Examples:
+    \tRun in development mode:
+    \t  %s -s development\n\n" "$PROGNAME" "$PROGNAME"
+}
+
 cmdline() {
     local arg=
     local args=
@@ -73,23 +85,23 @@ prepare_env() {
     python "$PROJECT_ROOT"/manage.py migrate
 
     # Construct front-end assets
-    if [[ ! -z ${DEBUG+0} ]]; then
+    if [[ -n ${DEBUG+0} ]]; then
         printf "\e[31;1m[?]\e[0m Install assets from bower\n" >&2
     fi
     bower install --save --production "$build_dir"/bower.json
     # If variables.less has been modified, this will update the dist copy with your own values otherwise it will use the 44CON-CFP defaults
-    if [[ ! -z ${DEBUG+0} ]]; then
+    if [[ -n ${DEBUG+0} ]]; then
         printf "\e[31;1m[?]\e[0m Copying custom LESS variables to dist dir\n" >&2
     fi
     cp "$custom_less_vars" "$flat_ui_less_vars"
     lessc --source-map-less-inline --source-map-map-inline --clean-css "$flat_ui_less" "$css_dst"
     # Aggregate static resources
-    if [[ ! -z ${DEBUG+0} ]]; then
+    if [[ -n ${DEBUG+0} ]]; then
         printf "\e[31;1m[?]\e[0m Collecting the static assets for Django\n" >&2
     fi
     python "$PROJECT_ROOT"/manage.py collectstatic --noinput --clear --verbosity 0
     # Apply django_compressor
-    if [[ ! -z ${DEBUG+0} ]]; then
+    if [[ -n ${DEBUG+0} ]]; then
         printf "\e[31;1m[?]\e[0m Attempting to compress the various HTML, CSS, and JS front-end assets\n" >&2
     fi
     python "$PROJECT_ROOT"/manage.py compress --force --verbosity 0
@@ -97,7 +109,7 @@ prepare_env() {
 
 run_tests() {
     cd "$PROJECT_ROOT" || exit 1
-    if [[ ! -z ${DEBUG+0} ]]; then
+    if [[ -n ${DEBUG+0} ]]; then
         printf "\e[31;1m[?]\e[0m Running coverage tests\n"
     fi
     coverage run --source="$PROJECT_ROOT" "$PROJECT_ROOT"/manage.py test gambit
@@ -106,21 +118,9 @@ run_tests() {
 main() {
     cmdline "$ARGS"
     prepare_env
-    if [[ ! -z ${RUN_TESTS+0} ]]; then
+    if [[ -n ${RUN_TESTS+0} ]]; then
         run_tests
     fi
-}
-
-usage() {
-    printf "usage: %s options
-
-    OPTIONS:
-    \t-s --settings\tproduction or development
-    \t-h --help\tshow this help
-
-    Examples:
-    \tRun in development mode:
-    \t  %s -s development\n\n" "$PROGNAME" "$PROGNAME"
 }
 
 main

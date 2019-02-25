@@ -67,7 +67,7 @@ class Submission(models.Model):
         return SubmissionReview.objects.filter(submission=self)
 
     def get_average_score(self):
-        return float("{0:.2f}".format(self.get_reviews().aggregate(models.Avg("submission_score"))["submission_score__avg"])) or 0
+        return float("{0:.2f}".format(self.get_reviews().aggregate(models.Avg("submission_score"))["submission_score__avg"] or 0))
 
     def get_total_score(self):
         return self.get_reviews().aggregate(models.Sum("submission_score"))["submission_score__sum"] or 0
