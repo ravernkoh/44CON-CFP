@@ -116,7 +116,9 @@ class ManagedContent(models.Model):
 
 
 class SubmissionDeadline(ManagedContent):
-    date = models.DateTimeField(default=timezone.now)
+    open_date = models.DateTimeField(default=timezone.now)
+    close_date = models.DateTimeField(default=timezone.now)
+    message = models.TextField(blank=True)
 
 
     class Meta:

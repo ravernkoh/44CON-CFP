@@ -303,10 +303,11 @@ def account_activation_sent(request):
 def submit_form_upload(request):
     # Prevent submissions after deadline has passed
     try:
-        deadline = SubmissionDeadline.objects.first().date
+        open_date = SubmissionDeadline.objects.first().open_date
+        deadline = SubmissionDeadline.objects.first().close_date
     except AttributeError as e:
         raise SystemExit(f"No submission deadline has been added!\n{e!s}")
-    if timezone.now() <= deadline:
+    if (timezone.now() >= open_date and timezone.now() <= deadline) or request.user.is_superuser:
         if request.method == "POST":
             form = SubmitForm(request.POST, request.FILES)
             if form.is_valid():
