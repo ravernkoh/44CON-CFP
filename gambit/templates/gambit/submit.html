@@ -3,8 +3,8 @@
 {% block content %}{% if deadline_passed %}<div class='container'>
   <div class='row'>
     <div class='col-md-offset-1 col-md-10'>
-      <h2>The deadline to submit talks and workshops has passed.</h2>
-      <a href='{% url 'home' %}'>&laquo; Return home</a>
+      {{ SUBMISSION_MESSAGE|safe|default:'Submissions are closed.' }}
+      <p><a href='{% url 'home' %}'>&laquo; Return home</a></p>
     </div>
   </div>
 </div>{% else %}<div class='container'>
