@@ -3,7 +3,7 @@ beautifulsoup4==4.7.1
 colorlog==4.0.2
 coverage==4.5.2
 Django==2.1.7
-django-anymail==5.0
+django-anymail==6.0
 django_compressor==2.2
 django-debug-toolbar==1.11
 django-downloadview==1.9
