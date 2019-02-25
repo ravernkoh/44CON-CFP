@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
@@ -119,6 +121,7 @@ class ViewSubmission(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, gene
         context["submission_file_name"] = context["submission"].get_file_name()
         context["reviews"] = context["submission"].get_reviews()
         context["related_submissions"] = context["submission"].get_related_submissions()
+        context["can_edit"] = (datetime.now().date() - context["submission"].submitted_on.date()).days < 180
         context["has_reviewed"] = (
             True
             if SubmissionReview.objects.filter(submission=context["submission"], user=self.request.user).exists()
@@ -139,8 +142,11 @@ class UpdateSubmission(SuccessMessageMixin, mixins.LoginRequiredMixin, mixins.Us
     success_message = "Submission updated successfully"
 
     # Is model owned by editor?
+    # TEMP: Is the submission over 6 months old? If so, prevent edits.
+    # This should be done at admin/CRM level with a variable value but I want to save that for the new DRF-based design.
     def test_func(self):
-        return Submission.objects.get(uuid=self.kwargs.get('pk')).user.id == self.request.user.id
+        return Submission.objects.get(uuid=self.kwargs.get('pk')).user.id == self.request.user.id and \
+                (datetime.now().date() - Submission.objects.get(uuid=self.kwargs.get('pk')).submitted_on.date()).days < 180
 
     def get_success_url(self):
         return reverse("submission", args=[self.object.uuid])
