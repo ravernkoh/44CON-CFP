@@ -191,8 +191,11 @@ class CreateReview(SuccessMessageMixin, mixins.LoginRequiredMixin, mixins.UserPa
     success_message = "Review has been added"
 
     # Is the logged in user an admin or a member of the PC?
+    # Is there an existing review from this user for this submission?
     def test_func(self):
-        return self.request.user.is_superuser or self.request.user.groups.filter(name="Programme Committee").exists()
+        return (self.request.user.is_superuser or \
+            self.request.user.groups.filter(name="Programme Committee").exists()) and not \
+                Submission.objects.get(uuid=self.kwargs.get("uuid")).has_reviewed(self.request.user.id)
 
     def get_context_data(self, **kwargs):
         """Return submission data"""
