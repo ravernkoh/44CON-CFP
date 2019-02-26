@@ -65,6 +65,10 @@ class Submission(models.Model):
 
     def get_reviews(self):
         return SubmissionReview.objects.filter(submission=self)
+    
+    def has_reviewed(self, user_id):
+        review_objects = [review.user.id for review in self.get_reviews()]
+        return user_id in review_objects
 
     def get_average_score(self):
         return float("{0:.2f}".format(self.get_reviews().aggregate(models.Avg("submission_score"))["submission_score__avg"] or 0))
