@@ -5,5 +5,5 @@ Please click the link below or paste it into your browser address bar to confirm
 
 http://{{ domain }}{% url 'activate' uidb64=uid token=token %}
 
-Your username is {{% user.username %}}.
+Your username is {{ user.username }}.
 {% endautoescape %}
