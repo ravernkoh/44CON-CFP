@@ -116,6 +116,9 @@ prepare_env() {
     python "$gambit_dir"/manage.py migrate
 
     # Create a super user account using env vars
+    if [[ -n ${DEBUG+0} ]]; then
+        printf "\e[31;1m[?]\e[0m Adding admin account if it doesn't exist; username: \"%s\" password: \"%s\"\n" "$DJANGO_ADMIN_USERNAME" "$DJANGO_ADMIN_PASSWORD" >&2
+    fi
     if [[ -n ${CREATE_ADMIN+0} ]]; then
         su_script="from django.contrib.auth.models import User;
 username = '$DJANGO_ADMIN_USERNAME';
