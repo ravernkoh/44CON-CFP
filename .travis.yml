@@ -21,7 +21,7 @@ before_script:
   - psql -c "CREATE EXTENSION IF NOT EXISTS hstore;" -U postgres
   - chmod +x build/build.sh
   - cp gambit/config.example.yaml gambit/config.yaml
-script: bash build/build.sh -s development
+script: bash build/build.sh -s production -pcl
 after_success:
   - coveralls
 notifications:
