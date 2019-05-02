@@ -73,6 +73,8 @@
             <thead>
               <th class='col-md-4'>Submission Title</th>
               <th class='col-md-1 text-center'>Reviewed?</th>
+              <th class='col-md-1 text-center'>Reviews</th>
+              <th class='col-md-1 text-center'>Avg. Score</th>
               <th class='col-md-2'>Name</th>
               <th class='col-md-1'>Country</th>
               <th class='col-md-2'>Submitted</th>
@@ -81,6 +83,8 @@
               {% for submission in submissions %}<tr {% if user.id == submission.user_id %} class='info'{% endif %}>
                 <td><a title='{{ submission.title }}' href="{% url 'submission' submission.uuid %}">{{ submission.title|truncatechars:80 }}</a></td>
                 <td class='text-center'>{% if submission.uuid in reviewed %}<span alt='0' title='Reviewed!' class='fui-check review-checkmark text-success' aria-hidden='true'></span>{% else %}<span alt='1' title='Not reviewed yet' class='fui-cross review-checkmark text-danger' aria-hidden='true'></span>{% endif %}</td>
+                <td class='text-center'>{{ submission.review_count }}</td>
+                <td class='text-center'><span class='label label-primary'>{{ submission.average_score }}</span></td>
                 <td title='{{ submission.user__profile__name }}'>{% if submission.user__profile__name %}{{ submission.user__profile__name|truncatechars:24 }}{% else %}N/A{% endif %}</td>
                 <td title='{{ submission.user__profile__country }}'>{{ submission.user__profile__country|truncatechars:16 }}</td>
                 <td title="{{ submission.submitted_on|date:'d N Y H:i:s' }}">{{ submission.submitted_on|date:'Y-m-d' }}</td>

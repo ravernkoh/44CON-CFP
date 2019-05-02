@@ -6,7 +6,7 @@ from django.utils import timezone
 from django.dispatch import receiver
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 
@@ -51,6 +51,9 @@ class Submission(models.Model):
     conflicts = models.TextField(blank=True)
     file = models.FileField(upload_to="uploads/submissions/%Y/%m/%d/", blank=True)
     file_hash = models.CharField(max_length=128, blank=True)
+    review_count = models.IntegerField(default=0)
+    average_score = models.FloatField(default=0)
+    total_score = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
         if self.file:
@@ -111,6 +114,21 @@ class SubmissionReview(models.Model):
         ordering = ["submitted_on"]
         verbose_name = "Review"
         verbose_name_plural = "Reviews"
+
+
+@receiver(post_save, sender=SubmissionReview, dispatch_uid="update_submission_details_save")
+def update_submission_save(sender, instance, **kwargs):
+    instance.submission.review_count = SubmissionReview.objects.filter(submission=instance.submission).count()
+    instance.submission.average_score = float("{0:.2f}".format(instance.submission.get_reviews().aggregate(models.Avg("submission_score"))["submission_score__avg"] or 0))
+    instance.submission.total_score = instance.submission.get_reviews().aggregate(models.Sum("submission_score"))["submission_score__sum"] or 0
+    instance.submission.save()
+
+@receiver(post_delete, sender=SubmissionReview, dispatch_uid="update_submission_details_delete")
+def update_submission_delete(sender, instance, **kwargs):
+    instance.submission.review_count = SubmissionReview.objects.filter(submission=instance.submission).count()
+    instance.submission.average_score = float("{0:.2f}".format(instance.submission.get_reviews().aggregate(models.Avg("submission_score"))["submission_score__avg"] or 0))
+    instance.submission.total_score = instance.submission.get_reviews().aggregate(models.Sum("submission_score"))["submission_score__sum"] or 0
+    instance.submission.save()
 
 
 class ManagedContent(models.Model):
