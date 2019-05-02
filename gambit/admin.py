@@ -41,7 +41,6 @@ class SubmissionAdmin(admin.ModelAdmin):
         'title',
         '_username',
         '_timestamp',
-        '_score',
     )
     list_filter = (
         'user__username',
@@ -63,9 +62,6 @@ class SubmissionAdmin(admin.ModelAdmin):
     # ISO 8601 date formatting or GTFO
     def _timestamp(self, obj):
         return defaultfilters.date(obj.submitted_on, "Y-m-d H:i")
-
-    def _score(self, obj):
-        return obj.get_average_score()
 
     def _export_to_csv(self, request, queryset):
         """I apologise for this horrendous method."""
