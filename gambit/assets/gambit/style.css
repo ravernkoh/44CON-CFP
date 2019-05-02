@@ -23,6 +23,8 @@ ul.errorlist > li { color: #c9302c; }
 
 .banner-alert { margin-bottom: 0; padding: 5px; }
 
+.scrolling-table { height: 250px; overflow-y: auto; }
+
 /* Borderless table */
 .table-borderless > tbody > tr > td,
 .table-borderless > tbody > tr > th,

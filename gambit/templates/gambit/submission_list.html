@@ -13,7 +13,20 @@
     <script type='text/javascript' charset='utf-8' src='{% static 'datatables.net-responsive/js/dataTables.responsive.min.js' %}'></script>
     <script type='text/javascript' charset='utf-8' src='{% static 'datatables.net-responsive-bs/js/responsive.bootstrap.min.js' %}'></script>
     <script type='text/javascript' charset='utf-8' src='{% static 'jzip/jzip.js' %}'></script>
-    <script type='text/javascript'>var editor;
+    <script type='text/javascript'>
+      jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+          "alt-string-pre": function ( a ) {
+              return a.match(/alt="(.*?)"/)[1].toLowerCase();
+          },
+      
+          "alt-string-asc": function( a, b ) {
+              return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+          },
+      
+          "alt-string-desc": function(a,b) {
+              return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+          }
+      } );
       $(document).ready(function(){
           $('#submissions').DataTable({
           dom: 'Blfrtip',
@@ -25,7 +38,10 @@
           oSearch: {
             "sSearch": "2019"
           },
-          order: [[5, 'asc'], [0, 'asc']],
+          order: [[4, 'asc'], [1, 'asc'], [0, 'asc']],
+          columnDefs: [
+            { type: 'alt-string', targets: 1 }
+          ],
           buttons: [
             {
               text: 'This Years Submissions',
@@ -55,22 +71,19 @@
         <div class='submissions-table'>
           <table id='submissions' class='table table-striped table-responsive table-submission-list'>
             <thead>
-              <th class='col-md-5'>Submission Title</th>
-              <th class='col-md-1'>Reviews</th>
-              <th class='col-md-1'>Score</th>
+              <th class='col-md-4'>Submission Title</th>
+              <th class='col-md-1 text-center'>Reviewed?</th>
               <th class='col-md-2'>Name</th>
               <th class='col-md-1'>Country</th>
               <th class='col-md-2'>Submitted</th>
             </thead>
             <tbody>
-              {% for submission in submissions %}<tr{% if user.id == submission.user_id %} class='info'{% endif %}>
-                <td><a title='{{ submission.title }}' href='{% url 'submission' submission.uuid %}'>{{ submission.title|truncatechars:80 }}</a></td>
-                {% if user.id == submission.user_id %}<td>&mdash;</td>
-                <td>&mdash;</td>{% else %}<td>{{ submission.get_reviews.count }}</td>
-                <td>{% with avg_score=submission.get_average_score %}<span class='label label-{% if avg_score >= 4.0 %}success{% elif avg_score >= 2.0 and avg_score <= 3.9 %}warning{% else %}danger{% endif %}'>{{ avg_score }}</span>{% endwith %}</td>{% endif %}
-                {% with submitter=submission.user.profile %}<td title='{{ submitter.name }}'>{% if submitter.name %}{{ submitter.name|truncatechars:24 }}{% else %}N/A{% endif %}</td>
-                <td title='{{ submitter.country }}'>{{ submitter.country|truncatechars:16 }}</td>{% endwith %}
-                <td title='{{ submission.submitted_on|date:'d N Y' }}'>{{ submission.submitted_on|date:'Y-m-d' }}</td>
+              {% for submission in submissions %}<tr {% if user.id == submission.user_id %} class='info'{% endif %}>
+                <td><a title='{{ submission.title }}' href="{% url 'submission' submission.uuid %}">{{ submission.title|truncatechars:80 }}</a></td>
+                <td class='text-center'>{% if submission.uuid in reviewed %}<span alt='0' title='Reviewed!' class='fui-check review-checkmark text-success' aria-hidden='true'></span>{% else %}<span alt='1' title='Not reviewed yet' class='fui-cross review-checkmark text-danger' aria-hidden='true'></span>{% endif %}</td>
+                <td title='{{ submission.user__profile__name }}'>{% if submission.user__profile__name %}{{ submission.user__profile__name|truncatechars:24 }}{% else %}N/A{% endif %}</td>
+                <td title='{{ submission.user__profile__country }}'>{{ submission.user__profile__country|truncatechars:16 }}</td>
+                <td title="{{ submission.submitted_on|date:'d N Y H:i:s' }}">{{ submission.submitted_on|date:'Y-m-d' }}</td>
               </tr>{% empty %}<tr>
                 <td colspan='3'>No submissions yet!</td>
               </tr>{% endfor %}

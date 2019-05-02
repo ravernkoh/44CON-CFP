@@ -82,12 +82,13 @@ class Submission(models.Model):
             return tail
 
     def get_related_submissions(self):
-        related_submissions = [s for s in self.user.profile.get_submissions() if s.uuid != self.uuid]
-        return related_submissions
+        return Submission.objects.filter(user=self.user).exclude(uuid=self.uuid).values('uuid', 'user__id', 'title', 'submitted_on')
 
 
     class Meta:
         ordering = ["submitted_on"]
+        verbose_name = "Submission"
+        verbose_name_plural = "Submissions"
 
 
 class SubmissionReview(models.Model):
