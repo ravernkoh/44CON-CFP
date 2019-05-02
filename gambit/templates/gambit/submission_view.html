@@ -53,7 +53,7 @@
               {% with submitter=submission.user.profile %}<td title='{{ submitter.country }}'>{{ submitter.country|truncatechars:16 }}</td>{% endwith %}
               <td title='{{ submission.submitted_on|date:'d N Y' }}'>{{ submission.submitted_on|date:'Y-m-d' }}</td>
             </tr>{% empty %}<tr>
-              <td colspan='3'>This account has not made any other submissions.</td>
+              <td colspan='12'>This account has not made any other submissions.</td>
             </tr>{% endfor %}
           </tbody>
         </table>
