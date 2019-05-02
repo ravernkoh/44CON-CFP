@@ -20,7 +20,7 @@ set -o pipefail
 readonly PROGNAME=$(basename "$0")
 readonly PROGDIR=$(readlink -m "$(dirname "$0")")
 readonly PROJECT_ROOT="$(readlink -m "$(dirname "$PROGDIR")")"
-readonly ARGS="$@"
+readonly ARGS=( "$@" )
 
 usage() {
     printf "usage: %s options
@@ -161,7 +161,7 @@ run_tests() {
 }
 
 main() {
-    cmdline "$ARGS"
+    cmdline "${ARGS[@]}"
     prepare_env
     if [[ -n ${RUN_TESTS+0} ]]; then
         run_tests
