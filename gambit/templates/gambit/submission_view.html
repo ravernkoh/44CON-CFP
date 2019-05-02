@@ -59,11 +59,11 @@
         {% if user.id == sub_user %}
           <p>For the sake of impartiality, reviews of your own submission have been hidden.</p>{% else %}
         <ul class='list-inline'>
-          {% with avg_score=submission.get_average_score %}<li><strong>Average Score:</strong> <span class='label label-primary'>{{ avg_score }}</span></li>{% endwith %}
+          <li><strong>Average Score:</strong> <span class='label label-primary'>{{ submission.average_score }}</span></li>
           <li>&middot;</li>
-          <li><strong>Total Score:</strong> {{ submission.get_total_score }}</li>
+          <li><strong>Total Score:</strong> {{ submission.total_score }}</li>
           <li>&middot;</li>
-          <li><strong>Total Votes:</strong> {{ submission.get_reviews.count }}</li>
+          <li><strong>Total Votes:</strong> {{ submission.review_count }}</li>
         </ul>
         {% for review in reviews %}<div class='well well-sm'>
           <p>
