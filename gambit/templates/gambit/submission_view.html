@@ -36,27 +36,22 @@
       </div>{% if pc %}
       <div id='related-submissions'>
         <h5>Previous/Related Submissions</h5>
-        <table class='table table-striped table-responsive'>
-          <thead>
-            <th class='col-md-6'>Submission Title</th>
-            <th class='col-md-1'>Reviews</th>
-            <th class='col-md-1'>Score</th>
-            <th class='col-md-2'>Country</th>
-            <th class='col-md-2'>Submitted</th>
-          </thead>
-          <tbody>
-            {% for submission in related_submissions %}<tr>
-              <td><a title='{{ submission.title }}' href='{% url 'submission' submission.uuid %}'>{{ submission.title|truncatechars:80 }}</a></td>
-              {% if user.id == submission.user_id %}<td>&mdash;</td>
-              <td>&mdash;</td>{% else %}<td>{{ submission.get_reviews.count }}</td>
-              <td>{% with avg_score=submission.get_average_score %}<span class='label label-{% if avg_score >= 4.0 %}success{% elif avg_score >= 2.0 and avg_score <= 3.9 %}warning{% else %}danger{% endif %}'>{{ avg_score }}</span>{% endwith %}</td>{% endif %}
-              {% with submitter=submission.user.profile %}<td title='{{ submitter.country }}'>{{ submitter.country|truncatechars:16 }}</td>{% endwith %}
-              <td title='{{ submission.submitted_on|date:'d N Y' }}'>{{ submission.submitted_on|date:'Y-m-d' }}</td>
-            </tr>{% empty %}<tr>
-              <td colspan='12'>This account has not made any other submissions.</td>
-            </tr>{% endfor %}
-          </tbody>
-        </table>
+        <div class='scrolling-table'>
+          <table class='table table-striped table-responsive'>
+            <thead>
+              <th class='col-md-8'>Submission Title</th>
+              <th class='col-md-4'>Submitted</th>
+            </thead>
+            <tbody>
+              {% for submission in related_submissions %}<tr>
+                <td><a title='{{ submission.title }}' href='{% url 'submission' submission.uuid %}'>{{ submission.title|truncatechars:80 }}</a></td>
+                <td title='{{ submission.submitted_on|date:'d N Y' }}'>{{ submission.submitted_on|date:'Y-m-d' }}</td>
+              </tr>{% empty %}<tr>
+                <td colspan='12'>This account has not made any other submissions.</td>
+              </tr>{% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
       <div id='reviews'>
         <p class='pull-right'>{% if not user.id == sub_user %}{% if has_reviewed %}<a class='btn btn-success btn-wide' href='{% url 'update_review' review_uuid %}'>Edit your review</a>{% else %}<a class='btn btn-success btn-wide' href='{% url 'new_review' submission.uuid %}'>Submit a review</a>{% endif %}{% endif %}</p>
@@ -64,7 +59,7 @@
         {% if user.id == sub_user %}
           <p>For the sake of impartiality, reviews of your own submission have been hidden.</p>{% else %}
         <ul class='list-inline'>
-          {% with avg_score=submission.get_average_score %}<li><strong>Average Score:</strong> <span class='label label-{% if avg_score >= 4.0 %}success{% elif avg_score >= 2.0 and avg_score <= 3.9 %}warning{% else %}danger{% endif %}'>{{ avg_score }}</span></li>{% endwith %}
+          {% with avg_score=submission.get_average_score %}<li><strong>Average Score:</strong> <span class='label label-primary'>{{ avg_score }}</span></li>{% endwith %}
           <li>&middot;</li>
           <li><strong>Total Score:</strong> {{ submission.get_total_score }}</li>
           <li>&middot;</li>
@@ -73,7 +68,7 @@
         {% for review in reviews %}<div class='well well-sm'>
           <p>
             <strong>{{ review.get_reviewer_name }}</strong> &mdash;
-            <strong>Expertise:</strong> <span class='label label-{% if review.expertise_score >= 4 %}success{% elif review.expertise_score == 2 or review.expertise_score == 3 %}warning{% else %}danger{% endif %}'>{{ review.expertise_score }}/5</span> &middot; <strong>Score:</strong> <span class='label label-{% if review.submission_score >= 4 %}success{% elif review.submission_score == 2 or review.submission_score == 3 %}warning{% else %}danger{% endif %}'>{{ review.submission_score }}/5</span>
+            <strong>Expertise:</strong> <span class='label label-{% if review.expertise_score >= 4 %}success{% elif review.expertise_score == 2 or review.expertise_score == 3 %}info{% else %}warning{% endif %}'>{{ review.expertise_score }}/5</span> &middot; <strong>Score:</strong> <span class='label label-primary'>{{ review.submission_score }}/5</span>
           </p>
           <p>{{ review.comments|linebreaks }}</p>
         </div>{% empty %}
