@@ -1,10 +1,10 @@
 {
-  "name": "44con-cfp",
-  "homepage": "https://github.com/nimxj/44CON-CFP",
+  "name": "gambit",
+  "homepage": "https://github.com/nimxj/gambit",
   "authors": [
     "Aidan Mitchell <aidan@44con.com>"
   ],
-  "description": "CSS and JS assets for 44CON-CFP",
+  "description": "CSS and JS assets for gambit",
   "main": "",
   "license": "MIT",
   "private": true,
