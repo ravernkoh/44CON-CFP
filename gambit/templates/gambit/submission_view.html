@@ -54,7 +54,7 @@
         </div>
       </div>
       <div id='reviews'>
-        <p class='pull-right'>{% if not user.id == sub_user %}{% if has_reviewed %}<a class='btn btn-success btn-wide' href='{% url 'update_review' review_uuid %}'>Edit your review</a>{% else %}<a class='btn btn-success btn-wide' href='{% url 'new_review' submission.uuid %}'>Submit a review</a>{% endif %}{% endif %}</p>
+        <p class='pull-right'>{% if not user.id == sub_user and can_edit %}{% if has_reviewed %}<a class='btn btn-success btn-wide' href='{% url 'update_review' review_uuid %}'>Edit your review</a>{% else %}<a class='btn btn-success btn-wide' href='{% url 'new_review' submission.uuid %}'>Submit a review</a>{% endif %}{% endif %}</p>
         <h5>Reviews</h5>
         {% if user.id == sub_user %}
           <p>For the sake of impartiality, reviews of your own submission have been hidden.</p>{% else %}
