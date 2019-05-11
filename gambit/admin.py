@@ -15,22 +15,20 @@ class ProfileAdmin(admin.ModelAdmin):
     list_display = (
         'name',
         '_username',
-        '_last_login',
     )
-    search_fields = [
+    search_fields = (
         'name',
         'user__username',
-    ]
+    )
+    list_per_page = 25
+    list_select_related = ('user',)
 
     # Renders the related username as a link to the edit page for the actual user object
     def _username(self, obj):
         link_to_user_object = reverse('admin:auth_user_change', args=(obj.user.id,))
         return mark_safe(f"<a href='{link_to_user_object}'>{obj.user.username}</a>")
     _username.short_description = "User"
-
-    def _last_login(self, obj):
-        return obj.user.last_login
-    _last_login.short_description = "Last login"
+    _username.admin_order_field = "user__username"  # Allows this field to be sortable
 
 
 admin.site.register(Profile, ProfileAdmin)
@@ -40,14 +38,21 @@ class SubmissionAdmin(admin.ModelAdmin):
     list_display = (
         'title',
         '_username',
-        '_timestamp',
     )
     list_filter = (
-        'user__username',
         'submitted_on',
     )
-    readonly_fields = ('file_hash',)
+    readonly_fields = (
+        'file_hash',
+        '_timestamp',
+    )
     actions = ['_export_to_csv']
+    list_select_related = ('user',)
+    list_per_page = 25
+    search_fields = (
+        'title',
+        'user__username',
+    )
 
     # Adds button in top right which will open the submission on the live site
     def view_on_site(self, obj):
@@ -58,10 +63,12 @@ class SubmissionAdmin(admin.ModelAdmin):
         link_to_user_object = reverse("admin:auth_user_change", args=(obj.user.id,))
         return mark_safe(f"<a href='{link_to_user_object}'>{obj.user.username}</a>")
     _username.short_description = "User"
+    _username.admin_order_field = "user__username"  # Allows this field to be sortable
 
     # ISO 8601 date formatting or GTFO
     def _timestamp(self, obj):
         return defaultfilters.date(obj.submitted_on, "Y-m-d H:i")
+    _timestamp.short_description = "Submitted on"
 
     def _export_to_csv(self, request, queryset):
         """I apologise for this horrendous method."""
@@ -91,13 +98,21 @@ class SubmissionReviewAdmin(admin.ModelAdmin):
         '_submission',
         '_reviewer',
         'submitted_on',
-        '_uuid_snip',
     )
     list_filter = (
-        'user__username',
         'submitted_on',
     )
     actions = ['_export_to_csv']
+    ordering = ["-submitted_on"]  # Descending order of submission
+    list_select_related = (
+        'user',
+        'submission',
+    )
+    list_per_page = 25
+    search_fields = (
+        'submission__title',
+        'user__username',
+    )
 
     # Adds button in top right which will open the related submission on the live site
     def view_on_site(self, obj):
@@ -105,16 +120,11 @@ class SubmissionReviewAdmin(admin.ModelAdmin):
 
     def _submission(self, obj):
         return obj.submission.title
+    _submission.admin_order_field = "submission__title"  # Allows this field to be sortable
 
     def _reviewer(self, obj):
         return obj.user.username
-
-    # Print the stripped hexadecimal of the object UUID for simple reference
-    # Provides no functional benefit but is useful for debugging
-    # Can be removed completely in production environment
-    def _uuid_snip(self, obj):
-        return obj.uuid.hex
-    _uuid_snip.short_description = "UUID"
+    _reviewer.admin_order_field = "user__username"  # Allows this field to be sortable
 
     def _export_to_csv(self, request, queryset):
         response = HttpResponse(content_type="text/csv")
@@ -136,6 +146,8 @@ class FrontPageAdmin(admin.ModelAdmin):
     # In later versions, this will be superceded by a content management system accessed through the website
     list_display = ('name',)
 
+    # Prevents adding additional FrontPage objects from the admin UI
+    # Can be overridden from the Django shell
     def has_add_permission(self, *args, **kwargs):
         return not FrontPage.objects.exists()
 
@@ -144,8 +156,11 @@ admin.site.register(FrontPage, FrontPageAdmin)
 
 
 class SubmissionDeadlineAdmin(admin.ModelAdmin):
+    # Naive object to handle deadline for submissions
     list_display = ('name',)
 
+    # Prevents adding additional SubmissionDeadline objects from the admin UI
+    # Can be overridden from the Django shell
     def has_add_permission(self, *args, **kwargs):
         return not SubmissionDeadline.objects.exists()
 
@@ -154,8 +169,11 @@ admin.site.register(SubmissionDeadline, SubmissionDeadlineAdmin)
 
 
 class RegistrationStatusAdmin(admin.ModelAdmin):
+    # Naive object to handle whether new users can be created
     list_display = ('name',)
 
+    # Prevents adding additional RegistrationStatus objects from the admin UI
+    # Can be overridden from the Django shell
     def has_add_permission(self, *args, **kwargs):
         return not RegistrationStatus.objects.exists()
 
@@ -166,10 +184,7 @@ admin.site.register(RegistrationStatus, RegistrationStatusAdmin)
 class HelpPageItemAdmin(admin.ModelAdmin):
     # This model is naively used to control the content display on the help page of the website
     # In later versions, this will be superceded by a content management system accessed through the website
-    list_display = (
-        'name',
-        'id',
-    )
+    list_display = ('name',)
 
 
 admin.site.register(HelpPageItem, HelpPageItemAdmin)
