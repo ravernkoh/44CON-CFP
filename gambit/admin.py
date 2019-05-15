@@ -86,20 +86,41 @@ class SubmissionAdmin(admin.ModelAdmin):
     _timestamp.short_description = "Submitted on"
 
     def _export_to_csv(self, request, queryset):
-        """I apologise for this horrendous method."""
         response = HttpResponse(content_type="text/csv")
         response["Content-Disposition"] = "attachment; filename=44CON-CFP-submissions.csv"
         writer = csv.writer(response)
-        writer.writerow(['Title', 'Authors', 'Contact', 'Submitted On', 'Score', 'Submitter', 'Submitter Email', 'Country',])
-        submissions = queryset.values_list('title', 'authors', 'contact_email', 'submitted_on',)
-        for index, submission in enumerate(submissions):
-            # submission is iterated out to create a list instead of a tuple so that the score can be appended
-            # I was lazy with this and there's probably a far more elegant way to do it
-            submission = [field for field in submission]
-            submission.append(queryset[index].get_average_score())
-            submission.append(queryset[index].user.profile.name)
-            submission.append(queryset[index].user.email)
-            submission.append(queryset[index].user.profile.country)
+        writer.writerow([
+            'Name',
+            'Authors',
+            'Account Email',
+            'Contact Email',
+            'Country',
+            'Submission Title',
+            'Average Expertise',
+            'Average Score',
+            'Cumulative Expertise',
+            'Cumulative Score',
+            'Number of votes',
+            'Submitted On',
+        ])
+        submissions = queryset.extra(
+            select={
+                'submitted_on_normalised': "to_char(submitted_on, 'YYYY-MM-DD HH24:MI:SS')"
+            }).values_list(
+                'user__profile__name',
+                'authors',
+                'user__email',
+                'contact_email',
+                'user__profile__country',
+                'title',                
+                'average_expertise_score',
+                'average_score',
+                'total_expertise_score',
+                'total_score',
+                'review_count',
+                'submitted_on_normalised',
+            )
+        for submission in submissions:
             writer.writerow(submission)
         return response
     _export_to_csv.short_description = "Export to CSV"
