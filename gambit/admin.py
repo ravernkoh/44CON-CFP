@@ -7,8 +7,15 @@ from django.template import defaultfilters
 from django.contrib.auth.models import User
 from django.utils.safestring import mark_safe
 
-from .models import (Profile, Submission, SubmissionReview, FrontPage, SubmissionDeadline, RegistrationStatus,
-    HelpPageItem)
+from .models import (
+    Profile,
+    Submission,
+    SubmissionReview,
+    FrontPage,
+    SubmissionDeadline,
+    RegistrationStatus,
+    HelpPageItem
+)
 
 
 class ProfileAdmin(admin.ModelAdmin):
@@ -25,8 +32,11 @@ class ProfileAdmin(admin.ModelAdmin):
 
     # Renders the related username as a link to the edit page for the actual user object
     def _username(self, obj):
-        link_to_user_object = reverse('admin:auth_user_change', args=(obj.user.id,))
-        return mark_safe(f"<a href='{link_to_user_object}'>{obj.user.username}</a>")
+        user_id = obj.user.id
+        username = obj.user.username
+        link_to_user_object = reverse(
+            'admin:auth_user_change', args=(user_id,))
+        return mark_safe(f"<a href='{link_to_user_object}'>{username}</a>")
     _username.short_description = "User"
     _username.admin_order_field = "user__username"  # Allows this field to be sortable
 
@@ -56,18 +66,23 @@ class SubmissionAdmin(admin.ModelAdmin):
 
     # Adds button in top right which will open the submission on the live site
     def view_on_site(self, obj):
-        return reverse("submission", args=(obj.uuid,))
+        uuid = obj.uuid
+        return reverse("submission", args=(uuid,))
 
     # Renders the related username as a link to the edit page for the actual user object
     def _username(self, obj):
-        link_to_user_object = reverse("admin:auth_user_change", args=(obj.user.id,))
-        return mark_safe(f"<a href='{link_to_user_object}'>{obj.user.username}</a>")
+        user_id = obj.user.id
+        username = obj.user.username
+        link_to_user_object = reverse(
+            "admin:auth_user_change", args=(user_id,))
+        return mark_safe(f"<a href='{link_to_user_object}'>{username}</a>")
     _username.short_description = "User"
     _username.admin_order_field = "user__username"  # Allows this field to be sortable
 
     # ISO 8601 date formatting or GTFO
     def _timestamp(self, obj):
-        return defaultfilters.date(obj.submitted_on, "Y-m-d H:i")
+        submission_date = obj.submitted_on
+        return defaultfilters.date(submission_date, "Y-m-d H:i")
     _timestamp.short_description = "Submitted on"
 
     def _export_to_csv(self, request, queryset):
@@ -116,22 +131,34 @@ class SubmissionReviewAdmin(admin.ModelAdmin):
 
     # Adds button in top right which will open the related submission on the live site
     def view_on_site(self, obj):
-        return reverse("submission", args=(obj.submission.uuid,))
+        uuid = obj.submission.uuid
+        return reverse("submission", args=(uuid,))
 
     def _submission(self, obj):
-        return obj.submission.title
-    _submission.admin_order_field = "submission__title"  # Allows this field to be sortable
+        submission_title = obj.submission.title
+        return submission_title
+    # Allows this field to be sortable
+    _submission.admin_order_field = "submission__title"
 
     def _reviewer(self, obj):
-        return obj.user.username
+        reviewer_username = obj.user.username
+        return reviewer_username
     _reviewer.admin_order_field = "user__username"  # Allows this field to be sortable
 
     def _export_to_csv(self, request, queryset):
         response = HttpResponse(content_type="text/csv")
         response["Content-Disposition"] = "attachment; filename=44CON-CFP-review-comments.csv"
         writer = csv.writer(response)
-        writer.writerow(['Reviewer', 'Comments', 'Submission Title'])
-        reviews = queryset.values_list('user__profile__name', 'comments', 'submission__title',)
+        writer.writerow([
+            'Reviewer',
+            'Comments',
+            'Submission Title',
+        ])
+        reviews = queryset.values_list(
+            'user__profile__name',
+            'comments',
+            'submission__title',
+        )
         for review in reviews:
             writer.writerow(review)
         return response
@@ -149,7 +176,9 @@ class FrontPageAdmin(admin.ModelAdmin):
     # Prevents adding additional FrontPage objects from the admin UI
     # Can be overridden from the Django shell
     def has_add_permission(self, *args, **kwargs):
-        return not FrontPage.objects.exists()
+        # Return value must be false to block additional objects
+        does_front_page_object_exist = FrontPage.objects.exists()
+        return not does_front_page_object_exist 
 
 
 admin.site.register(FrontPage, FrontPageAdmin)
@@ -162,7 +191,9 @@ class SubmissionDeadlineAdmin(admin.ModelAdmin):
     # Prevents adding additional SubmissionDeadline objects from the admin UI
     # Can be overridden from the Django shell
     def has_add_permission(self, *args, **kwargs):
-        return not SubmissionDeadline.objects.exists()
+        # Return value must be false to block additional objects
+        does_submission_deadline_exist = SubmissionDeadline.objects.exists()
+        return not does_submission_deadline_exist
 
 
 admin.site.register(SubmissionDeadline, SubmissionDeadlineAdmin)
@@ -175,7 +206,9 @@ class RegistrationStatusAdmin(admin.ModelAdmin):
     # Prevents adding additional RegistrationStatus objects from the admin UI
     # Can be overridden from the Django shell
     def has_add_permission(self, *args, **kwargs):
-        return not RegistrationStatus.objects.exists()
+        # Return value must be false to block additional objects
+        does_registration_status_exist = RegistrationStatus.objects.exists()
+        return not does_registration_status_exist
 
 
 admin.site.register(RegistrationStatus, RegistrationStatusAdmin)
