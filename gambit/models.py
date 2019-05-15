@@ -54,6 +54,8 @@ class Submission(models.Model):
     review_count = models.IntegerField(default=0)
     average_score = models.FloatField(default=0)
     total_score = models.IntegerField(default=0)
+    average_expertise_score = models.FloatField(default=0)
+    total_expertise_score = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
         if self.file:
