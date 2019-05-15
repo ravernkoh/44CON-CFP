@@ -12,6 +12,8 @@ DEBUG = True
 SESSION_COOKIE_SECURE = False
 CSRF_COOKIE_SECURE = False
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 if configuration["minification"]["compress_in_debug"]:
     COMPRESS_ENABLED = True
 
