@@ -118,19 +118,23 @@ class SubmissionReview(models.Model):
         verbose_name_plural = "Reviews"
 
 
+def update_submission(submission):
+    submission.review_count = SubmissionReview.objects.filter(submission=submission).count()
+    submission.average_score = float("{0:.2f}".format(submission.get_reviews().aggregate(models.Avg("submission_score"))["submission_score__avg"] or 0))
+    submission.average_expertise_score = float("{0:.2f}".format(submission.get_reviews().aggregate(models.Avg("expertise_score"))["expertise_score__avg"] or 0))
+    submission.total_score = submission.get_reviews().aggregate(models.Sum("submission_score"))["submission_score__sum"] or 0
+    submission.total_expertise_score = submission.get_reviews().aggregate(models.Sum("expertise_score"))["expertise_score__sum"] or 0
+    submission.save()
+
 @receiver(post_save, sender=SubmissionReview, dispatch_uid="update_submission_details_save")
 def update_submission_save(sender, instance, **kwargs):
-    instance.submission.review_count = SubmissionReview.objects.filter(submission=instance.submission).count()
-    instance.submission.average_score = float("{0:.2f}".format(instance.submission.get_reviews().aggregate(models.Avg("submission_score"))["submission_score__avg"] or 0))
-    instance.submission.total_score = instance.submission.get_reviews().aggregate(models.Sum("submission_score"))["submission_score__sum"] or 0
-    instance.submission.save()
+    submission = instance.submission
+    update_submission(submission)
 
 @receiver(post_delete, sender=SubmissionReview, dispatch_uid="update_submission_details_delete")
 def update_submission_delete(sender, instance, **kwargs):
-    instance.submission.review_count = SubmissionReview.objects.filter(submission=instance.submission).count()
-    instance.submission.average_score = float("{0:.2f}".format(instance.submission.get_reviews().aggregate(models.Avg("submission_score"))["submission_score__avg"] or 0))
-    instance.submission.total_score = instance.submission.get_reviews().aggregate(models.Sum("submission_score"))["submission_score__sum"] or 0
-    instance.submission.save()
+    submission = instance.submission
+    update_submission(submission)
 
 
 class ManagedContent(models.Model):
