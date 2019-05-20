@@ -1,5 +1,6 @@
 from django import forms
 from django.conf import settings
+from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.db.models.fields.files import FieldFile
 from django.contrib.auth.forms import UserCreationForm
@@ -32,7 +33,45 @@ class LoginForm(AuthenticationForm):
             }
         )
     )
+    error_messages = {
+        'inactive': (
+            "This account is inactive. Please check your inbox for an activation email. "
+            "If you do not have any such email or this issue persists, please contact aidan@44con.com."
+        ),
+        'invalid_login': (
+            "Please enter a correct username and password. Note that both "
+            "fields are case-sensitive."
+        )
+    }
 
+    def clean(self):
+        username = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
+
+        # If we get something for username and password, check if the account exists and if it's marked active
+        if username is not None and password:
+            self.user_cache = authenticate(self.request, username=username, password=password)
+            if self.user_cache is None:
+                try:
+                    user_temp = User.objects.get(username=username)
+                except:
+                    user_temp = None
+                
+                # Check that the password provided is correct before revealing whether account is active
+                # An incorrect password will return the generic invalid login error
+                if user_temp is not None and user_temp.check_password(password):
+                    if not user_temp.is_active:
+                        raise forms.ValidationError(
+                            self.error_messages['inactive'],
+                            code='inactive',
+                        )
+                else:
+                    raise forms.ValidationError(
+                        self.error_messages['invalid_login'],
+                        code='invalid_login',
+                    )
+        
+        return self.cleaned_data
 
 class FrontPageLoginForm(LoginForm):
     username = forms.CharField(
@@ -208,11 +247,13 @@ class SignUpForm(UserCreationForm):
     def clean(self):
         email = self.cleaned_data["email"]
         username = self.cleaned_data["username"]
+        email_exists = User.objects.filter(email=email).exists()
+        username_exists = User.objects.filter(username=username).exists()
 
-        if email and User.objects.filter(email=email).exists():
+        if email and email_exists:
             raise forms.ValidationError("Email address has already been used.")
 
-        if username and User.objects.filter(username=username).exists():
+        if username and username_exists:
             raise forms.ValidationError("Username already exists.")
 
         if username in reserved_usernames:

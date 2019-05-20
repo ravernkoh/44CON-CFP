@@ -18,13 +18,16 @@ class Profile(models.Model):
     email_confirmed = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.user.username
+        username = self.user.username
+        return username
 
     def get_submissions(self):
-        return Submission.objects.filter(user=self.user)
+        submissions = Submission.objects.filter(user=self.user)
+        return submissions
 
     def get_reviews(self):
-        return SubmissionReview.objects.filter(user=self.user)
+        reviews = SubmissionReview.objects.filter(user=self.user)
+        return reviews
 
 
     class Meta:
@@ -66,20 +69,27 @@ class Submission(models.Model):
         super(Submission, self).save(*args, **kwargs)
 
     def __str__(self):
-        return '{0!s}'.format(self.title)
+        title = f"{self.title!s}"
+        return title
 
     def get_reviews(self):
-        return SubmissionReview.objects.filter(submission=self)
+        reviews = SubmissionReview.objects.filter(submission=self)
+        return reviews
     
     def has_reviewed(self, user_id):
-        review_objects = [review.user.id for review in self.get_reviews()]
-        return user_id in review_objects
+        # Returns True if supplied user_id matches review for submission
+        reviews = [review.user.id for review in self.get_reviews()]
+        return user_id in reviews
 
     def get_average_score(self):
-        return float("{0:.2f}".format(self.get_reviews().aggregate(models.Avg("submission_score"))["submission_score__avg"] or 0))
+        reviews = self.get_reviews()
+        average_score = reviews.aggregate(models.Avg("submission_score"))["submission_score__avg"] or 0
+        return float(f"{average_score:.2f}")
 
     def get_total_score(self):
-        return self.get_reviews().aggregate(models.Sum("submission_score"))["submission_score__sum"] or 0
+        reviews = self.get_reviews()
+        total_score = reviews.aggregate(models.Sum("submission_score"))["submission_score__sum"]
+        return total_score or 0
 
     def get_file_name(self):
         if self.file:
@@ -106,10 +116,14 @@ class SubmissionReview(models.Model):
     comments = models.TextField(blank=True)
 
     def __str__(self):
-        return '{0!s}'.format(self.uuid)
+        uuid = f"{self.uuid!s}"
+        return uuid
 
     def get_reviewer_name(self):
-        return Profile.objects.get(user_id=self.user_id).name
+        user_id = self.user_id
+        profile = Profile.objects.get(user_id=user_id)
+        name = profile.name
+        return name
 
 
     class Meta:
@@ -141,7 +155,8 @@ class ManagedContent(models.Model):
     name = models.CharField(max_length=255)
 
     def __str__(self):
-        return self.name
+        name = self.name
+        return name
 
 
 class SubmissionDeadline(ManagedContent):

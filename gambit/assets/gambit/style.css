@@ -60,5 +60,10 @@ ul.errorlist > li { color: #c9302c; }
 p.auth-buttons { margin-bottom:0; }
 
 /* Front page */
-.front-page-login-box { margin: 0.35em; }
+@media only screen and (max-width: 1026px) {
+  #front-page-login-box {
+    display: none;
+  }
+}
+.front-page-login-box { margin: 0.35em; max-width: 50%; }
 .front-page-tabs { padding: 15px; }
