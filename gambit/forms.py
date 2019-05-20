@@ -50,7 +50,7 @@ class LoginForm(AuthenticationForm):
 
         # If we get something for username and password, check if the account exists and if it's marked active
         if username is not None and password:
-            self.user_cache = authenticate(self.request, username=username)
+            self.user_cache = authenticate(self.request, username=username, password=password)
             if self.user_cache is None:
                 try:
                     user_temp = User.objects.get(username=username)
