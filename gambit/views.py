@@ -226,15 +226,18 @@ class CreateReview(SuccessMessageMixin, mixins.LoginRequiredMixin, mixins.UserPa
 
     # Is the logged in user an admin or a member of the PC?
     # Is there an existing review from this user for this submission?
+    # Is the submission over 5 months old? If so, prevent edits.
     def test_func(self):
         user = self.request.user
         uuid = self.kwargs.get('uuid')
         submission = Submission.objects.get(uuid=uuid)
         submission_user_id = submission.user.id
+        submission_date = submission.submitted_on.date()
+        can_review = (datetime.now().date() - submission_date).days < 150
         is_su = user.is_superuser
         is_pc = user.groups.filter(name="Programme Committee").exists()
         has_reviewed = submission.has_reviewed(user.id)
-        return is_su or is_pc and not has_reviewed
+        return is_su or is_pc and can_review and not has_reviewed
 
     def get_context_data(self, **kwargs):
         """Return submission data"""
@@ -266,15 +269,18 @@ class UpdateReview(SuccessMessageMixin, mixins.LoginRequiredMixin, mixins.UserPa
     success_message = "Review has been updated"
 
     # Is the logged in user an admin or a member of the PC?
+    # Is the review over 5 months old? If so, prevent edits.
     def test_func(self):
         user = self.request.user
         uuid = self.kwargs.get('pk')
         review = SubmissionReview.objects.get(uuid=uuid)
         review_id = review.user.id
+        review_date = review.submitted_on.date()
+        can_review = (datetime.now().date() - review_date).days < 150
         is_su = user.is_superuser
         is_pc = user.groups.filter(name="Programme Committee").exists()
-        owns_review = review == user.id
-        return is_su or is_pc or owns_review
+        owns_review = review_id == user.id
+        return is_su or is_pc and owns_review and can_review
 
     def get_context_data(self, **kwargs):
         """Return submission data"""
