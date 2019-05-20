@@ -33,10 +33,11 @@ class Home(generic.edit.FormMixin, generic.TemplateView):
 
     def form_valid(self, form):
         login(self.request, form.get_user())
-        if self.request.session.test_cookie_worked():
-            self.request.session.delete_test_cookie()
+        session = self.request.session
+        if session.test_cookie_worked():
+            session.delete_test_cookie()
         else:
-            self.request.session.delete_test_cookie()
+            session.delete_test_cookie()
         return super(Home, self).form_valid(form)
 
     def get_success_url(self):
@@ -53,7 +54,8 @@ class Home(generic.edit.FormMixin, generic.TemplateView):
         """Return front page content"""
         context = super(Home, self).get_context_data(**kwargs)
         try:
-            context["front_page"] = FrontPage.objects.first()
+            front_page = FrontPage.objects.first()
+            context["front_page"] = front_page
         except FrontPage.DoesNotExist:
             context["front_page"] = None
         return context
@@ -66,9 +68,12 @@ class ViewProfile(mixins.LoginRequiredMixin, generic.TemplateView):
     def get_context_data(self, **kwargs):
         """Return submissions"""
         context = super(ViewProfile, self).get_context_data(**kwargs)
-        context["submissions"] = self.request.user.profile.get_submissions()
-        if self.request.user.groups.filter(name="Programme Committee").exists():
-            context["reviews"] = self.request.user.profile.get_reviews()
+        user = self.request.user
+        profile = user.profile
+        context["submissions"] = profile.get_submissions()
+        is_pc = user.groups.filter(name="Programme Committee").exists()
+        if is_pc:
+            context["reviews"] = profile.get_reviews()
         return context
 
 
@@ -97,7 +102,9 @@ class UpdateProfile(SuccessMessageMixin, mixins.LoginRequiredMixin, generic.edit
         return super(UpdateProfile, self).form_valid(form)
 
     def get_object(self):
-        return self.request.user.profile
+        user = self.request.user
+        profile = user.profile
+        return profile
 
     def get_success_url(self):
         return reverse("profile")
@@ -110,25 +117,34 @@ class ViewSubmission(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, gene
     redirect_field_name = "home"
 
     def test_func(self):
-        return self.request.user.is_superuser or \
-                self.request.user.groups.filter(name="Programme Committee").exists() or \
-                Submission.objects.get(uuid=self.kwargs.get('uuid')).user.id == self.request.user.id
+        user = self.request.user
+        uuid = self.kwargs.get('uuid')  # from URL <uuid>
+        submission = Submission.objects.get(uuid=uuid)
+        submission_user_id = submission.user.id
+        is_su = user.is_superuser
+        is_pc = user.groups.filter(name="Programme Committee").exists()
+        owns_submission = submission_user_id == user.id
+        return is_su or is_pc or owns_submission
 
     def get_context_data(self, **kwargs):
         """Return submission data"""
         context = super(ViewSubmission, self).get_context_data(**kwargs)
-        context["submission"] = get_object_or_404(Submission, uuid=self.kwargs["uuid"])
-        context["submission_file_name"] = context["submission"].get_file_name()
-        context["reviews"] = context["submission"].get_reviews()
-        context["related_submissions"] = context["submission"].get_related_submissions()
-        context["can_edit"] = (datetime.now().date() - context["submission"].submitted_on.date()).days < 180
-        context["has_reviewed"] = (
-            True
-            if SubmissionReview.objects.filter(submission=context["submission"], user=self.request.user).exists()
-            else False
-        )
+        uuid = self.kwargs["uuid"]
+        submission = get_object_or_404(Submission, uuid=uuid)
+        user = self.request.user
+        context["submission"] = submission
+        context["submission_file_name"] = submission.get_file_name()
+        context["reviews"] = submission.get_reviews()
+        context["related_submissions"] = submission.get_related_submissions()
+        # If submission older than 3 months (typically longer than the period the CFP is open), deny editing
+        # Prevents modification of submissions from previous years
+        submission_date = submission.submitted_on.date()
+        context["can_edit"] = (datetime.now().date() - submission_date).days < 90
+        has_reviewed = SubmissionReview.objects.filter(submission=submission, user=user).exists()
+        context["has_reviewed"] = has_reviewed
         if context["has_reviewed"]:
-            review = SubmissionReview.objects.filter(submission=context["submission"], user=self.request.user).first()
+            review = SubmissionReview.objects.filter(submission=submission, user=user).first()
+            # Return UUID for review edit button URL
             context["review_uuid"] = review.uuid
         return context
 
@@ -142,14 +158,20 @@ class UpdateSubmission(SuccessMessageMixin, mixins.LoginRequiredMixin, mixins.Us
     success_message = "Submission updated successfully"
 
     # Is model owned by editor?
-    # TEMP: Is the submission over 6 months old? If so, prevent edits.
-    # This should be done at admin/CRM level with a variable value but I want to save that for the new DRF-based design.
+    # Is the submission over 3 months old? If so, prevent edits.
     def test_func(self):
-        return Submission.objects.get(uuid=self.kwargs.get('pk')).user.id == self.request.user.id and \
-                (datetime.now().date() - Submission.objects.get(uuid=self.kwargs.get('pk')).submitted_on.date()).days < 180
+        user = self.request.user
+        uuid = self.kwargs.get('pk')
+        submission = Submission.objects.get(uuid=uuid)
+        submission_user_id = submission.user.id
+        submission_date = submission.submitted_on.date()
+        owns_submission = submission_user_id == user.id
+        can_edit = (datetime.now().date() - submission_date).days < 90
+        return owns_submission and can_edit
 
     def get_success_url(self):
-        return reverse("submission", args=[self.object.uuid])
+        uuid = self.object.uuid
+        return reverse("submission", args=[uuid])
 
 
 class SubmissionFileView(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, ObjectDownloadView):
@@ -161,9 +183,14 @@ class SubmissionFileView(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, 
         self.model = Submission
 
     def test_func(self):
-        return self.request.user.is_superuser or \
-                self.request.user.groups.filter(name="Programme Committee").exists() or \
-                Submission.objects.get(uuid=self.kwargs.get('pk')).user_id == self.request.user.id
+        user = self.request.user
+        uuid = self.kwargs.get('pk')
+        submission = Submission.objects.get(uuid=uuid)
+        submission_user_id = submission.user.id
+        is_su = user.is_superuser
+        is_pc = user.groups.filter(name="Programme Committee").exists()
+        owns_submission = submission_user_id == user.id
+        return is_su or is_pc or owns_submission
 
 
 class ListSubmission(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, generic.TemplateView):
@@ -173,13 +200,19 @@ class ListSubmission(mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, gene
 
     # Is the logged in user an admin or a member of the PC?
     def test_func(self):
-        return self.request.user.is_superuser or self.request.user.groups.filter(name="Programme Committee").exists()
+        user = self.request.user
+        is_su = user.is_superuser
+        is_pc = user.groups.filter(name="Programme Committee").exists()
+        return is_su or is_pc
 
     def get_context_data(self, **kwargs):
         """Return all submissions"""
         context = super(ListSubmission, self).get_context_data(**kwargs)
-        context["submissions"] = Submission.objects.all().values('uuid', 'user__profile__name', 'title', 'review_count', 'average_score', 'user__profile__country', 'submitted_on')
-        context["reviewed"] = SubmissionReview.objects.filter(user=self.request.user).values_list('submission', flat=True)
+        user = self.request.user
+        submissions = Submission.objects.all().values('uuid', 'user__profile__name', 'title', 'review_count', 'average_score', 'user__profile__country', 'submitted_on')
+        context["submissions"] = submissions
+        has_reviewed_list = SubmissionReview.objects.filter(user=user).values_list('submission', flat=True)
+        context["reviewed"] = has_reviewed_list
         return context
 
 
@@ -194,25 +227,34 @@ class CreateReview(SuccessMessageMixin, mixins.LoginRequiredMixin, mixins.UserPa
     # Is the logged in user an admin or a member of the PC?
     # Is there an existing review from this user for this submission?
     def test_func(self):
-        return (self.request.user.is_superuser or \
-            self.request.user.groups.filter(name="Programme Committee").exists()) and not \
-                Submission.objects.get(uuid=self.kwargs.get("uuid")).has_reviewed(self.request.user.id)
+        user = self.request.user
+        uuid = self.kwargs.get('uuid')
+        submission = Submission.objects.get(uuid=uuid)
+        submission_user_id = submission.user.id
+        is_su = user.is_superuser
+        is_pc = user.groups.filter(name="Programme Committee").exists()
+        has_reviewed = submission.has_reviewed(user.id)
+        return is_su or is_pc and not has_reviewed
 
     def get_context_data(self, **kwargs):
         """Return submission data"""
         context = super(CreateReview, self).get_context_data(**kwargs)
-        context["submission"] = get_object_or_404(Submission, uuid=self.kwargs["uuid"])
-        context["submission_file_name"] = context["submission"].get_file_name()
+        uuid = self.kwargs["uuid"]
+        submission = get_object_or_404(Submission, uuid=uuid)
+        context["submission"] = submission
+        context["submission_file_name"] = submission.get_file_name()
         return context
 
     def form_valid(self, form):
         review = form.save(commit=False)
-        review.submission = get_object_or_404(Submission, uuid=self.kwargs["uuid"])
+        uuid = self.kwargs["uuid"]
+        review.submission = get_object_or_404(Submission, uuid=uuid)
         review.user = self.request.user
         return super(CreateReview, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse("submission", args=[self.kwargs["uuid"]])
+        uuid = self.kwargs["uuid"]
+        return reverse("submission", args=[uuid])
 
 
 class UpdateReview(SuccessMessageMixin, mixins.LoginRequiredMixin, mixins.UserPassesTestMixin, generic.edit.UpdateView):
@@ -225,19 +267,27 @@ class UpdateReview(SuccessMessageMixin, mixins.LoginRequiredMixin, mixins.UserPa
 
     # Is the logged in user an admin or a member of the PC?
     def test_func(self):
-        return (self.request.user.is_superuser or \
-                self.request.user.groups.filter(name="Programme Committee").exists()) and \
-                SubmissionReview.objects.get(uuid=self.kwargs.get('pk')).user_id == self.request.user.id
+        user = self.request.user
+        uuid = self.kwargs.get('pk')
+        review = SubmissionReview.objects.get(uuid=uuid)
+        review_id = review.user.id
+        is_su = user.is_superuser
+        is_pc = user.groups.filter(name="Programme Committee").exists()
+        owns_review = review == user.id
+        return is_su or is_pc or owns_review
 
     def get_context_data(self, **kwargs):
         """Return submission data"""
         context = super(UpdateReview, self).get_context_data(**kwargs)
-        context["submission"] = get_object_or_404(Submission, uuid=self.object.submission_id)
-        context["submission_file_name"] = context["submission"].get_file_name()
+        uuid = self.object.submission_id
+        submission = get_object_or_404(Submission, uuid=uuid)
+        context["submission"] = submission
+        context["submission_file_name"] = submission.get_file_name()
         return context
 
     def get_success_url(self):
-        return reverse("submission", args=[self.object.submission.uuid])
+        uuid = self.object.submission.uuid
+        return reverse("submission", args=[uuid])
 
 
 class Help(mixins.LoginRequiredMixin, generic.TemplateView):
@@ -247,7 +297,8 @@ class Help(mixins.LoginRequiredMixin, generic.TemplateView):
     def get_context_data(self, **kwargs):
         """Return help page content"""
         context = super(Help, self).get_context_data(**kwargs)
-        context["help_page_items"] = HelpPageItem.objects.all()
+        help_page_items = HelpPageItem.objects.all()
+        context["help_page_items"] = help_page_items
         return context
 
 
@@ -313,11 +364,17 @@ def account_activation_sent(request):
 def submit_form_upload(request):
     # Prevent submissions after deadline has passed
     try:
-        open_date = SubmissionDeadline.objects.first().open_date
-        deadline = SubmissionDeadline.objects.first().close_date
+        deadline = SubmissionDeadline.objects.first()
+        open_date = deadline.open_date
+        close_date = deadline.close_date
     except AttributeError as e:
         raise SystemExit(f"No submission deadline has been added!\n{e!s}")
-    if (timezone.now() >= open_date and timezone.now() <= deadline) or request.user.is_superuser:
+    
+    user = request.user
+    user_is_su = user.is_superuser
+    current_time = timezone.now()
+    
+    if (current_time >= open_date and current_time <= close_date) or user_is_su:
         if request.method == "POST":
             form = SubmitForm(request.POST, request.FILES)
             if form.is_valid():
