@@ -18,8 +18,8 @@ set -o nounset
 set -o pipefail
 
 readonly PROGNAME=$(basename "$0")
-readonly PROGDIR=$(readlink -m "$(dirname "$0")")
-readonly PROJECT_ROOT="$(readlink -m "$(dirname "$PROGDIR")")"
+readonly PROGDIR=$(dirname "$0")
+readonly PROJECT_ROOT="$(dirname "$PROGDIR")"
 readonly ARGS=( "$@" )
 
 usage() {
@@ -141,8 +141,8 @@ prepare_env() {
     # TODO: This should be split between the DB related stuff and the remote asset collection
     if [[ -n ${PREP_DATABASE+0} ]]; then
         # Initialise db with models/changes
-        python "$gambit_dir"/manage.py makemigrations gambit
-        python "$gambit_dir"/manage.py migrate
+        python3 "$gambit_dir"/manage.py makemigrations gambit
+        python3 "$gambit_dir"/manage.py migrate
 
         # Create a super user account using env vars
         if [[ -n ${DEBUG+0} ]]; then
@@ -158,7 +158,7 @@ if User.objects.filter(username=username).count()==0:
     User.objects.create_superuser(username, email, password);
 else:
     pass"
-            printf "%s" "$su_script" | python "$gambit_dir"/manage.py shell
+            printf "%s" "$su_script" | python3 "$gambit_dir"/manage.py shell
         fi
     fi
     if [[ -n ${PULL_BOWER+0} ]]; then
@@ -181,12 +181,12 @@ else:
     if [[ -n ${DEBUG+0} ]]; then
         printf "\e[31;1m[?]\e[0m Collecting the static assets for Django\n" >&2
     fi
-    python "$gambit_dir"/manage.py collectstatic --noinput --clear --verbosity 0
+    python3 "$gambit_dir"/manage.py collectstatic --noinput --clear --verbosity 0
     # Apply django_compressor
     if [[ -n ${DEBUG+0} ]]; then
         printf "\e[31;1m[?]\e[0m Attempting to compress the various HTML, CSS, and JS front-end assets\n" >&2
     fi
-    python "$gambit_dir"/manage.py compress --force --verbosity 0
+    python3 "$gambit_dir"/manage.py compress --force --verbosity 0
 }
 
 run_tests() {
