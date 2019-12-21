@@ -395,7 +395,7 @@ class SubmitForm(forms.ModelForm):
                 attrs={
                     'type': 'email',
                     'class': 'form-control',
-                    'placeholder': 'Primary email address that 44CON Speaker Ops should use for contact',
+                    'placeholder': 'Primary email address that SINCON Speaker Ops should use for contact',
                 }
             ),
             'conflicts': forms.Textarea(

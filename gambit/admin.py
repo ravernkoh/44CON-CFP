@@ -87,7 +87,7 @@ class SubmissionAdmin(admin.ModelAdmin):
 
     def _export_to_csv(self, request, queryset):
         response = HttpResponse(content_type="text/csv")
-        response["Content-Disposition"] = "attachment; filename=44CON-CFP-submissions.csv"
+        response["Content-Disposition"] = "attachment; filename=SINCON-CFP-submissions.csv"
         writer = csv.writer(response)
         writer.writerow([
             'Name',
@@ -168,7 +168,7 @@ class SubmissionReviewAdmin(admin.ModelAdmin):
 
     def _export_to_csv(self, request, queryset):
         response = HttpResponse(content_type="text/csv")
-        response["Content-Disposition"] = "attachment; filename=44CON-CFP-review-comments.csv"
+        response["Content-Disposition"] = "attachment; filename=SINCON-CFP-review-comments.csv"
         writer = csv.writer(response)
         writer.writerow([
             'Reviewer',

@@ -322,7 +322,7 @@ def signup(request):
                 user.is_active = False
                 user.save()
                 current_site = get_current_site(request)
-                subject = "[44CON] Activate your 44CON CFP account"
+                subject = "[SINCON] Activate your SINCON CFP account"
                 message = render_to_string("gambit/account_activation_email.html",
                     {
                         "user": user,
