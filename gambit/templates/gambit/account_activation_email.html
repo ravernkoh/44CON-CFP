@@ -1,7 +1,7 @@
 {% autoescape off %}
 Hi {% if user.profile.name %}{{ user.profile.name }}{% else %}{{ user.username }}{% endif %},
 
-Please click the link below or paste it into your browser address bar to confirm your account registration for cfp.44con.com:
+Please click the link below or paste it into your browser address bar to confirm your account registration for cfp.infosec-city.com:
 
 http://{{ domain }}{% url 'activate' uidb64=uid token=token %}
 

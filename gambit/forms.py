@@ -36,7 +36,7 @@ class LoginForm(AuthenticationForm):
     error_messages = {
         'inactive': (
             "This account is inactive. Please check your inbox for an activation email. "
-            "If you do not have any such email or this issue persists, please contact aidan@44con.com."
+            "If you do not have any such email or this issue persists, please contact emil@infosec-city.com."
         ),
         'invalid_login': (
             "Please enter a correct username and password. Note that both "
